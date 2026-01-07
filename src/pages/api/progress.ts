@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { translationStatusApi } from "../../lib/crowdin";
+import { translationStatusApi } from "@/lib/crowdin";
 import type {
   ResponseList,
   TranslationStatusModel,

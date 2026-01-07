@@ -3,8 +3,8 @@
   import Icon from "@iconify/svelte";
   import { type GetProgressResponse } from "../../type";
 
-  import NixieText from "../NixieText.svelte";
-  import IconLink from "../IconLink.svelte";
+  import NixieText from "@/components/NixieText.svelte";
+  import IconLink from "@/components/IconLink.svelte";
 
   let overallProgress: number;
   let translateProgress = $state(0);
