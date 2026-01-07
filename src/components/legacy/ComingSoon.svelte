@@ -1,10 +1,10 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import Icon from "@iconify/svelte";
-  import { type GetProgressResponse } from "../type";
+  import { type GetProgressResponse } from "../../type";
 
-  import NixieText from "./NixieText.svelte";
-  import IconLink from "./IconLink.svelte";
+  import NixieText from "../NixieText.svelte";
+  import IconLink from "../IconLink.svelte";
 
   let overallProgress: number;
   let translateProgress = $state(0);
