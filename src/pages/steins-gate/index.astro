@@ -1,0 +1,31 @@
+---
+import SteinsGateLayout from "@/layouts/steins-gate.astro";
+import LandingPage from "@/components/steins-gate/landing-page";
+
+const title =
+  "Operation Bifrost | ปฏิบัติการไบฟรอส - โปรเจกต์แปล Steins;Gate ภาษาไทย";
+const description =
+  "โครงการแปลเกมวิชวลโนเวล Steins;Gate เป็นภาษาไทย ทลายกำแพงภาษาสำหรับแฟนๆ ชาวไทยของซีรีส์ Science Adventure ติดตามความคืบหน้าการแปลแบบเรียลไทม์ได้ที่นี่";
+const ogDescription =
+  "โครงการแปลเกมวิชวลโนเวล Steins;Gate เป็นภาษาไทย ติดตามความคืบหน้าการแปลแบบเรียลไทม์และเข้าร่วมชุมชนของเราได้ที่นี่";
+const twitterDescription =
+  "โครงการแปลเกมวิชวลโนเวล Steins;Gate เป็นภาษาไทย ติดตามความคืบหน้าการแปลแบบเรียลไทม์ได้ที่นี่";
+---
+
+<SteinsGateLayout
+  title={title}
+  description={description}
+  canonical="https://operationbifrost.com/steins-gate/"
+  ogDescription={ogDescription}
+  twitterTitle="ปฏิบัติการไบฟรอส | Operation Bifrost"
+  twitterDescription={twitterDescription}
+>
+  <Fragment slot="head">
+    <meta
+      name="keywords"
+      content="Steins;Gate, การแปลภาษาไทย, fan translation, visual novel, Operation Bifrost, ปฏิบัติการไบฟรอส, Science Adventure, localization, สไตนส์เกต"
+    />
+  </Fragment>
+
+  <LandingPage />
+</SteinsGateLayout>

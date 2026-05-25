@@ -1,0 +1,22 @@
+---
+import BaseLayout from "@/layouts/base.astro";
+import "@/styles/themes/steins-gate.css";
+
+interface Props {
+  title: string;
+  description: string;
+  canonical: string;
+  ogImage?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  twitterTitle?: string;
+  twitterDescription?: string;
+}
+
+const props = Astro.props;
+---
+
+<BaseLayout {...props} htmlClass="theme-steins-gate dark" lang="th">
+  <slot name="head" slot="head" />
+  <slot />
+</BaseLayout>

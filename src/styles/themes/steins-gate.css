@@ -1,0 +1,224 @@
+/* Steins;Gate / Operation Bifrost theme
+ * Scoped to .theme-steins-gate so other projects can layer their own themes
+ * on top of the shared base in global.css.
+ */
+
+@layer base {
+  @font-face {
+    font-family: "bonx";
+    src: url("/fonts/BONX-Medium.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "bonx-frame";
+    src: url("/fonts/BONX-Frame.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "bonx-sihouette";
+    src: url("/fonts/BONX-Silhouette.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+}
+
+.theme-steins-gate {
+  --background: oklch(0.97 0.001 106.424);
+  --foreground: oklch(0.216 0.006 56.043);
+  --card: oklch(0.985 0.001 106.423);
+  --card-foreground: oklch(0.216 0.006 56.043);
+  --popover: oklch(0.985 0.001 106.423);
+  --popover-foreground: oklch(0.216 0.006 56.043);
+  --primary: oklch(0.852 0.199 91.936);
+  --primary-foreground: oklch(0.286 0.066 53.813);
+  --secondary: oklch(0.923 0.003 48.717);
+  --secondary-foreground: oklch(0.374 0.01 67.558);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.905 0.182 98.111);
+  --accent-foreground: oklch(0.286 0.066 53.813);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.852 0.199 91.936);
+  --chart-1: oklch(0.81 0.1 252);
+  --chart-2: oklch(0.62 0.19 260);
+  --chart-3: oklch(0.55 0.22 263);
+  --chart-4: oklch(0.49 0.22 264);
+  --chart-5: oklch(0.42 0.18 266);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+  --font-sans: "DM Sans", sans-serif;
+  --font-serif: "Libre Baskerville", serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+  --radius: 0.2rem;
+  --shadow-x: 4px;
+  --shadow-y: 5px;
+  --shadow-blur: 0px;
+  --shadow-spread: 0px;
+  --shadow-opacity: 0.49;
+  --shadow-color: oklch(0.869 0.005 56.366);
+  --shadow-2xs: 4px 5px 0px 0px hsl(24.0058 6.6869% 82.9784% / 0.24);
+  --shadow-xs: 4px 5px 0px 0px hsl(24.0058 6.6869% 82.9784% / 0.24);
+  --shadow-sm:
+    4px 5px 0px 0px hsl(24.0058 6.6869% 82.9784% / 0.49),
+    4px 1px 2px -1px hsl(24.0058 6.6869% 82.9784% / 0.49);
+  --shadow:
+    4px 5px 0px 0px hsl(24.0058 6.6869% 82.9784% / 0.49),
+    4px 1px 2px -1px hsl(24.0058 6.6869% 82.9784% / 0.49);
+  --shadow-md:
+    4px 5px 0px 0px hsl(24.0058 6.6869% 82.9784% / 0.49),
+    4px 2px 4px -1px hsl(24.0058 6.6869% 82.9784% / 0.49);
+  --shadow-lg:
+    4px 5px 0px 0px hsl(24.0058 6.6869% 82.9784% / 0.49),
+    4px 4px 6px -1px hsl(24.0058 6.6869% 82.9784% / 0.49);
+  --shadow-xl:
+    4px 5px 0px 0px hsl(24.0058 6.6869% 82.9784% / 0.49),
+    4px 8px 10px -1px hsl(24.0058 6.6869% 82.9784% / 0.49);
+  --shadow-2xl: 4px 5px 0px 0px hsl(24.0058 6.6869% 82.9784% / 1.23);
+  --tracking-normal: 0.025em;
+  --spacing: 0.22rem;
+
+  --color-nixie-base: rgb(251, 192, 0);
+  --font-bonx: "bonx", monospace;
+  --font-bonx-frame: "bonx-frame", monospace;
+  --font-bonx-sihouette: "bonx-sihouette", monospace;
+}
+
+.theme-steins-gate.dark {
+  --background: oklch(0.216 0.006 56.043);
+  --foreground: oklch(0.985 0.001 106.423);
+  --card: oklch(0.268 0.007 34.298);
+  --card-foreground: oklch(0.985 0.001 106.423);
+  --popover: oklch(0.268 0.007 34.298);
+  --popover-foreground: oklch(0.985 0.001 106.423);
+  --primary: oklch(0.852 0.199 91.936);
+  --primary-foreground: oklch(0.286 0.066 53.813);
+  --secondary: oklch(0.268 0.007 34.298);
+  --secondary-foreground: oklch(0.869 0.005 56.366);
+  --muted: oklch(0.268 0.007 34.298);
+  --muted-foreground: oklch(0.709 0.01 56.259);
+  --accent: oklch(0.795 0.184 86.047);
+  --accent-foreground: oklch(0.985 0.001 106.423);
+  --destructive: oklch(0.637 0.237 25.331);
+  --destructive-foreground: oklch(0.971 0.013 17.38);
+  --border: oklch(0.374 0.01 67.558);
+  --input: oklch(0.444 0.011 73.639);
+  --ring: oklch(0.795 0.184 86.047);
+  --chart-1: oklch(0.81 0.1 252);
+  --chart-2: oklch(0.62 0.19 260);
+  --chart-3: oklch(0.55 0.22 263);
+  --chart-4: oklch(0.49 0.22 264);
+  --chart-5: oklch(0.42 0.18 266);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(0.275 0 0);
+  --sidebar-ring: oklch(0.439 0 0);
+  --shadow-color: oklch(0.444 0.011 73.639);
+  --shadow-2xs: 4px 5px 0px 0px hsl(33.3488 6.2756% 32.2417% / 0.24);
+  --shadow-xs: 4px 5px 0px 0px hsl(33.3488 6.2756% 32.2417% / 0.24);
+  --shadow-sm:
+    4px 5px 0px 0px hsl(33.3488 6.2756% 32.2417% / 0.49),
+    4px 1px 2px -1px hsl(33.3488 6.2756% 32.2417% / 0.49);
+  --shadow:
+    4px 5px 0px 0px hsl(33.3488 6.2756% 32.2417% / 0.49),
+    4px 1px 2px -1px hsl(33.3488 6.2756% 32.2417% / 0.49);
+  --shadow-md:
+    4px 5px 0px 0px hsl(33.3488 6.2756% 32.2417% / 0.49),
+    4px 2px 4px -1px hsl(33.3488 6.2756% 32.2417% / 0.49);
+  --shadow-lg:
+    4px 5px 0px 0px hsl(33.3488 6.2756% 32.2417% / 0.49),
+    4px 4px 6px -1px hsl(33.3488 6.2756% 32.2417% / 0.49);
+  --shadow-xl:
+    4px 5px 0px 0px hsl(33.3488 6.2756% 32.2417% / 0.49),
+    4px 8px 10px -1px hsl(33.3488 6.2756% 32.2417% / 0.49);
+  --shadow-2xl: 4px 5px 0px 0px hsl(33.3488 6.2756% 32.2417% / 1.23);
+}
+
+.theme-steins-gate {
+  .frame {
+    color: rgba(255, 0, 0, 0.4);
+  }
+
+  .sihouette {
+    color: rgba(220, 42, 27, 0.4);
+  }
+
+  .title {
+    color: var(--color-nixie-base);
+    animation: bifrost-glow 3s ease-in-out infinite alternate;
+  }
+
+  .glow-all {
+    color: var(--color-nixie-base);
+    border-color: var(--color-nixie-base);
+    animation: bifrost-glow-all 3s ease-in-out infinite alternate;
+  }
+
+  .typing {
+    animation: bifrost-typing 400ms ease-in-out infinite alternate;
+  }
+}
+
+@keyframes bifrost-glow {
+  from {
+    text-shadow:
+      0 0 20px var(--color-nixie-base),
+      0 0 50px var(--color-nixie-base),
+      0 0 5px rgb(255, 212, 71);
+  }
+  to {
+    text-shadow:
+      0 0 30px rgb(255, 219, 101),
+      0 0 60px rgb(255, 219, 101),
+      0 0 15px rgb(255, 203, 30);
+  }
+}
+
+@keyframes bifrost-glow-all {
+  from {
+    text-shadow:
+      0 0 20px var(--color-nixie-base),
+      0 0 50px var(--color-nixie-base),
+      0 0 5px rgb(255, 212, 71);
+    border-color: var(--color-nixie-base);
+    filter: drop-shadow(0 0 20px var(--color-nixie-base));
+  }
+  to {
+    text-shadow:
+      0 0 30px rgb(255, 219, 101),
+      0 0 60px rgb(255, 219, 101),
+      0 0 15px rgb(255, 203, 30);
+    border-color: rgb(255, 219, 101);
+    filter: drop-shadow(0 0 30px rgb(255, 219, 101));
+  }
+}
+
+@keyframes bifrost-typing {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

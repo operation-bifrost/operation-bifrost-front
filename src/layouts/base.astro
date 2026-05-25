@@ -1,0 +1,73 @@
+---
+import "@fontsource/ibm-plex-sans-thai";
+import "@/styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+  canonical: string;
+  ogImage?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  twitterTitle?: string;
+  twitterDescription?: string;
+  lang?: string;
+  htmlClass?: string;
+  author?: string;
+}
+
+const {
+  title,
+  description,
+  canonical,
+  ogImage = "/og-image.png",
+  ogTitle = title,
+  ogDescription = description,
+  twitterTitle = title,
+  twitterDescription = description,
+  lang = "th",
+  htmlClass = "",
+  author = "Operation Bifrost Team",
+} = Astro.props;
+---
+
+<html lang={lang} class={htmlClass}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+    <meta name="author" content={author} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={ogTitle} />
+    <meta property="og:description" content={ogDescription} />
+    <meta property="og:image" content={ogImage} />
+
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonical} />
+    <meta property="twitter:title" content={twitterTitle} />
+    <meta property="twitter:description" content={twitterDescription} />
+    <meta property="twitter:image" content={ogImage} />
+
+    <link rel="canonical" href={canonical} />
+
+    <!-- Site-wide analytics: tracks all routes that use this layout (or any layout that wraps it). -->
+    <script
+      is:inline
+      defer
+      data-domain="operationbifrost.com"
+      src="https://plausible.io/js/script.js"></script>
+
+    <slot name="head" />
+  </head>
+
+  <body>
+    <slot />
+  </body>
+</html>
