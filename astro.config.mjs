@@ -9,6 +9,9 @@ import react from "@astrojs/react";
 export default defineConfig({
   integrations: [svelte(), react()],
   adapter: cloudflare(),
+  redirects: {
+    '/': { status: 302, destination: '/steins-gate/' }
+  },
   vite: {
     plugins: [tailwindcss()]
   }
