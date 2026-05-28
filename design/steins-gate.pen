@@ -81902,41 +81902,41 @@
   "fonts": [
     {
       "name": "BO NX Frame",
-      "url": "../../../../d%3A/Websites/operation-bifrost-front/public/fonts/BONX-Frame.otf",
+      "url": "../../../../d%3A/Websites/operation-bifrost-front/public/fonts/bonx/BONX-Frame.otf",
       "weight": 500
     },
     {
       "name": "BO NX Medium",
-      "url": "../../../../d%3A/Websites/operation-bifrost-front/public/fonts/BONX-Medium.otf",
+      "url": "../../../../d%3A/Websites/operation-bifrost-front/public/fonts/bonx/BONX-Medium.otf",
       "weight": 500
     },
     {
       "name": "BO NX Silhoette",
-      "url": "../../../../d%3A/Websites/operation-bifrost-front/public/fonts/BONX-Silhouette.otf",
+      "url": "../../../../d%3A/Websites/operation-bifrost-front/public/fonts/bonx/BONX-Silhouette.otf",
       "weight": 500
     },
     {
       "name": "LINE Seed Sans TH",
-      "url": "../../../../d%3A/Websites/operation-bifrost-front/design/fonts/line-seed-sans-th/LINESeedSansTH.otf",
+      "url": "../../../../d%3A/Websites/operation-bifrost-front/public/fonts/line-seed-sans-th/LINESeedSansTH.otf",
       "weight": 700
     },
     {
       "name": "LINE Seed Sans TH",
-      "url": "../../../../d%3A/Websites/operation-bifrost-front/design/fonts/line-seed-sans-th/LINESeedSansTH_He.otf",
+      "url": "../../../../d%3A/Websites/operation-bifrost-front/public/fonts/line-seed-sans-th/LINESeedSansTH_He.otf",
       "weight": 900
     },
     {
       "name": "LINE Seed Sans TH",
-      "url": "../../../../d%3A/Websites/operation-bifrost-front/design/fonts/line-seed-sans-th/LINESeedSansTH_Rg.otf"
+      "url": "../../../../d%3A/Websites/operation-bifrost-front/public/fonts/line-seed-sans-th/LINESeedSansTH_Rg.otf"
     },
     {
       "name": "LINE Seed Sans TH",
-      "url": "../../../../d%3A/Websites/operation-bifrost-front/design/fonts/line-seed-sans-th/LINESeedSansTH_Th.otf",
+      "url": "../../../../d%3A/Websites/operation-bifrost-front/public/fonts/line-seed-sans-th/LINESeedSansTH_Th.otf",
       "weight": 250
     },
     {
       "name": "LINE Seed Sans TH",
-      "url": "../../../../d%3A/Websites/operation-bifrost-front/design/fonts/line-seed-sans-th/LINESeedSansTH_XBd.otf",
+      "url": "../../../../d%3A/Websites/operation-bifrost-front/public/fonts/line-seed-sans-th/LINESeedSansTH_XBd.otf",
       "weight": 800
     }
   ]

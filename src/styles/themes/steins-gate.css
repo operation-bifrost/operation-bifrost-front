@@ -1,12 +1,19 @@
 /* Steins;Gate / Operation Bifrost theme
  * Scoped to .theme-steins-gate so other projects can layer their own themes
  * on top of the shared base in global.css.
+ *
+ * Structure:
+ *   1. @layer base       — font-face declarations
+ *   2. tokens (light)    — .theme-steins-gate { --* }
+ *   3. tokens (dark)     — .theme-steins-gate.dark { --* }
+ *   4. components        — one nested block with all .theme-scoped classes
+ *   5. keyframes         — free-floating, referenced by the components block
  */
 
 @layer base {
   @font-face {
     font-family: "bonx";
-    src: url("/fonts/BONX-Medium.otf") format("opentype");
+    src: url("/fonts/bonx/BONX-Medium.otf") format("opentype");
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -14,7 +21,7 @@
 
   @font-face {
     font-family: "bonx-frame";
-    src: url("/fonts/BONX-Frame.otf") format("opentype");
+    src: url("/fonts/bonx/BONX-Frame.otf") format("opentype");
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -22,13 +29,16 @@
 
   @font-face {
     font-family: "bonx-sihouette";
-    src: url("/fonts/BONX-Silhouette.otf") format("opentype");
+    src: url("/fonts/bonx/BONX-Silhouette.otf") format("opentype");
     font-weight: normal;
     font-style: normal;
     font-display: swap;
   }
 }
 
+/* ----------------------------------------------------------------------- */
+/* Tokens — light                                                          */
+/* ----------------------------------------------------------------------- */
 .theme-steins-gate {
   --background: oklch(0.97 0.001 106.424);
   --foreground: oklch(0.216 0.006 56.043);
@@ -96,11 +106,27 @@
   --spacing: 0.22rem;
 
   --color-nixie-base: rgb(251, 192, 0);
+  --color-brand-facebook: #0866ff;
+  --color-brand-discord: #5865f2;
+  --color-brand-youtube: #ff0033;
   --font-bonx: "bonx", monospace;
   --font-bonx-frame: "bonx-frame", monospace;
   --font-bonx-sihouette: "bonx-sihouette", monospace;
+  --hero-text-shadow: 0 0 17.5px #2f2f2f;
+  --navbar-gradient: linear-gradient(
+    180deg,
+    rgba(41, 37, 36, 0.9) 0%,
+    rgba(68, 64, 59, 0.9) 100%
+  );
+  --hero-stagger-step: 80ms;
+  --shadow-button: 4px 5px 0 rgba(87, 83, 78, 0.5);
+  --shadow-button-glow:
+    4px 5px 0 rgba(87, 83, 78, 0.5), 0 0 17.5px 4px rgba(255, 199, 0, 0.35);
 }
 
+/* ----------------------------------------------------------------------- */
+/* Tokens — dark                                                           */
+/* ----------------------------------------------------------------------- */
 .theme-steins-gate.dark {
   --background: oklch(0.216 0.006 56.043);
   --foreground: oklch(0.985 0.001 106.423);
@@ -155,7 +181,11 @@
   --shadow-2xl: 4px 5px 0px 0px hsl(33.3488 6.2756% 32.2417% / 1.23);
 }
 
+/* ----------------------------------------------------------------------- */
+/* Components — every theme-scoped class, grouped by feature               */
+/* ----------------------------------------------------------------------- */
 .theme-steins-gate {
+  /* --- Decorative text atoms (BONX layered title) --- */
   .frame {
     color: rgba(255, 0, 0, 0.4);
   }
@@ -178,8 +208,353 @@
   .typing {
     animation: bifrost-typing 400ms ease-in-out infinite alternate;
   }
+
+  /* --- Hero stagger reveal --- */
+  .bifrost-fade-up-0,
+  .bifrost-fade-up-1,
+  .bifrost-fade-up-2,
+  .bifrost-fade-up-3 {
+    animation: bifrost-fade-up 600ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .bifrost-fade-up-0 {
+    animation-delay: 0ms;
+  }
+
+  .bifrost-fade-up-1 {
+    animation-delay: calc(var(--hero-stagger-step) * 1);
+  }
+
+  .bifrost-fade-up-2 {
+    animation-delay: calc(var(--hero-stagger-step) * 2);
+  }
+
+  .bifrost-fade-up-3 {
+    animation-delay: calc(var(--hero-stagger-step) * 3);
+  }
+
+  /* --- Navbar link — terminal-style bracket markers on hover / active.
+   * Labels stay in the Thai sans body font; brackets use mono so they read
+   * as system UI markers rather than decoration. --- */
+  .nav-link {
+    position: relative;
+    transition:
+      color 220ms ease,
+      text-shadow 320ms ease;
+  }
+
+  .nav-link::before,
+  .nav-link::after {
+    position: absolute;
+    top: 50%;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    color: var(--color-nixie-base);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity 220ms ease,
+      transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .nav-link::before {
+    content: "[";
+    left: 0.2rem;
+    transform: translate(0.25rem, -50%);
+  }
+
+  .nav-link::after {
+    content: "]";
+    right: 0.2rem;
+    transform: translate(-0.25rem, -50%);
+  }
+
+  .nav-link:hover,
+  .nav-link:focus-visible {
+    color: var(--color-nixie-base);
+  }
+
+  .nav-link:hover::before,
+  .nav-link:focus-visible::before,
+  .nav-link:hover::after,
+  .nav-link:focus-visible::after {
+    opacity: 1;
+    transform: translate(0, -50%);
+  }
+
+  .nav-link.is-active {
+    color: var(--color-nixie-base);
+    text-shadow: 0 0 6px rgba(255, 199, 0, 0.35);
+  }
+
+  .nav-link.is-active::before,
+  .nav-link.is-active::after {
+    opacity: 1;
+    transform: translate(0, -50%);
+    text-shadow: 0 0 6px rgba(255, 199, 0, 0.45);
+    animation: bifrost-bracket-blink 2.4s steps(1, end) infinite;
+  }
+
+  /* --- Social-icon link — brand-color ignite on hover.
+   * react-icons/si sets fill="currentColor", so we drive color on the <a>
+   * and the SVG follows. Drop-shadow gives a faint glow in the same hue. --- */
+  .social-link {
+    transition: color 220ms ease;
+  }
+
+  .social-link svg {
+    transition:
+      filter 320ms ease,
+      transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .social-link:hover svg,
+  .social-link:focus-visible svg {
+    transform: translateY(-1px);
+  }
+
+  .social-link[data-brand="facebook"]:hover,
+  .social-link[data-brand="facebook"]:focus-visible {
+    color: var(--color-brand-facebook);
+  }
+
+  .social-link[data-brand="facebook"]:hover svg,
+  .social-link[data-brand="facebook"]:focus-visible svg {
+    filter: drop-shadow(0 0 4px rgba(8, 102, 255, 0.55))
+      drop-shadow(0 0 10px rgba(8, 102, 255, 0.3));
+  }
+
+  .social-link[data-brand="discord"]:hover,
+  .social-link[data-brand="discord"]:focus-visible {
+    color: var(--color-brand-discord);
+  }
+
+  .social-link[data-brand="discord"]:hover svg,
+  .social-link[data-brand="discord"]:focus-visible svg {
+    filter: drop-shadow(0 0 4px rgba(88, 101, 242, 0.6))
+      drop-shadow(0 0 10px rgba(88, 101, 242, 0.3));
+  }
+
+  .social-link[data-brand="youtube"]:hover,
+  .social-link[data-brand="youtube"]:focus-visible {
+    color: var(--color-brand-youtube);
+  }
+
+  .social-link[data-brand="youtube"]:hover svg,
+  .social-link[data-brand="youtube"]:focus-visible svg {
+    filter: drop-shadow(0 0 4px rgba(255, 0, 51, 0.55))
+      drop-shadow(0 0 10px rgba(255, 0, 51, 0.3));
+  }
+
+  /* --- Mobile menu burger — hamburger morphs to amber X when expanded --- */
+  .mobile-menu-burger {
+    position: relative;
+  }
+
+  .mobile-menu-burger .bar {
+    position: absolute;
+    left: 0.5rem;
+    right: 0.5rem;
+    height: 2px;
+    background: currentColor;
+    border-radius: 1px;
+    transition:
+      transform 320ms cubic-bezier(0.16, 1, 0.3, 1),
+      top 280ms cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 200ms ease;
+  }
+
+  .mobile-menu-burger .bar:nth-child(1) {
+    top: 0.75rem;
+  }
+
+  .mobile-menu-burger .bar:nth-child(2) {
+    top: 1.1875rem;
+  }
+
+  .mobile-menu-burger .bar:nth-child(3) {
+    top: 1.625rem;
+  }
+
+  .mobile-menu-burger[aria-expanded="true"] {
+    color: var(--color-nixie-base);
+    text-shadow: 0 0 8px var(--color-nixie-base);
+  }
+
+  .mobile-menu-burger[aria-expanded="true"] .bar:nth-child(1) {
+    top: 1.1875rem;
+    transform: rotate(45deg);
+  }
+
+  .mobile-menu-burger[aria-expanded="true"] .bar:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0.2);
+  }
+
+  .mobile-menu-burger[aria-expanded="true"] .bar:nth-child(3) {
+    top: 1.1875rem;
+    transform: rotate(-45deg);
+  }
+
+  /* --- Full-screen "lab terminal" mobile menu overlay --- */
+  .mobile-menu-overlay {
+    background:
+      radial-gradient(
+        ellipse at 50% 28%,
+        rgba(251, 192, 0, 0.14) 0%,
+        transparent 60%
+      ),
+      linear-gradient(180deg, rgb(20, 17, 15) 0%, rgb(15, 12, 10) 100%);
+    animation: bifrost-takeover-in 360ms ease both;
+  }
+
+  .mobile-menu-overlay.is-closing {
+    animation: bifrost-takeover-out 220ms ease both;
+  }
+
+  .mobile-menu-overlay.is-closing .mobile-menu-rise-1,
+  .mobile-menu-overlay.is-closing .mobile-menu-rise-2,
+  .mobile-menu-overlay.is-closing .mobile-menu-rise-3,
+  .mobile-menu-overlay.is-closing .mobile-menu-rise-4,
+  .mobile-menu-overlay.is-closing .mobile-menu-rise-5,
+  .mobile-menu-overlay.is-closing .mobile-menu-rise-6,
+  .mobile-menu-overlay.is-closing .mobile-menu-rise-7 {
+    animation: none;
+  }
+
+  .mobile-menu-overlay::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 2px,
+      rgba(0, 0, 0, 0.22) 2px,
+      rgba(0, 0, 0, 0.22) 3px
+    );
+    mix-blend-mode: overlay;
+    opacity: 0.55;
+  }
+
+  /* Stagger steps for overlay children. Same vocabulary as .bifrost-fade-up-*
+     but enters from below with a longer travel so it reads as a "page-shaped"
+     reveal rather than a small UI fade. Each step is --hero-stagger-step. */
+  .mobile-menu-rise-1,
+  .mobile-menu-rise-2,
+  .mobile-menu-rise-3,
+  .mobile-menu-rise-4,
+  .mobile-menu-rise-5,
+  .mobile-menu-rise-6,
+  .mobile-menu-rise-7 {
+    animation: bifrost-link-up 480ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .mobile-menu-rise-1 {
+    animation-delay: calc(var(--hero-stagger-step) * 1);
+  }
+  .mobile-menu-rise-2 {
+    animation-delay: calc(var(--hero-stagger-step) * 2);
+  }
+  .mobile-menu-rise-3 {
+    animation-delay: calc(var(--hero-stagger-step) * 3);
+  }
+  .mobile-menu-rise-4 {
+    animation-delay: calc(var(--hero-stagger-step) * 4);
+  }
+  .mobile-menu-rise-5 {
+    animation-delay: calc(var(--hero-stagger-step) * 5);
+  }
+  .mobile-menu-rise-6 {
+    animation-delay: calc(var(--hero-stagger-step) * 6);
+  }
+  .mobile-menu-rise-7 {
+    animation-delay: calc(var(--hero-stagger-step) * 7);
+  }
+
+  /* Big numbered nav row inside the takeover. Mono index + body label with
+     bracket markers around the label. Active row reuses bifrost-glow. */
+  .mobile-menu-link {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2.25rem 1fr;
+    column-gap: 0.875rem;
+    align-items: baseline;
+    padding: 0.5rem 0;
+    color: var(--foreground);
+    text-decoration: none;
+    transition: color 220ms ease;
+  }
+
+  .mobile-menu-link .idx {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+    transition: color 220ms ease;
+  }
+
+  .mobile-menu-link .label {
+    position: relative;
+    font-weight: bold;
+    font-size: 1.75rem;
+    line-height: 1.1;
+    transition: color 220ms ease;
+  }
+
+  .mobile-menu-link .label::before,
+  .mobile-menu-link .label::after {
+    font-family: var(--font-mono);
+    color: var(--color-nixie-base);
+    opacity: 0;
+    transition:
+      opacity 220ms ease,
+      margin 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .mobile-menu-link .label::before {
+    content: "[";
+    margin-right: 0.5rem;
+  }
+
+  .mobile-menu-link .label::after {
+    content: "]";
+    margin-left: 0.5rem;
+  }
+
+  .mobile-menu-link:hover .label,
+  .mobile-menu-link:focus-visible .label {
+    color: var(--color-nixie-base);
+  }
+
+  .mobile-menu-link:hover .label::before,
+  .mobile-menu-link:hover .label::after,
+  .mobile-menu-link:focus-visible .label::before,
+  .mobile-menu-link:focus-visible .label::after {
+    opacity: 1;
+  }
+
+  .mobile-menu-link.is-active .idx {
+    color: var(--color-nixie-base);
+  }
+
+  .mobile-menu-link.is-active .label {
+    color: var(--color-nixie-base);
+    animation: bifrost-glow 3s ease-in-out infinite alternate;
+  }
+
+  .mobile-menu-link.is-active .label::before,
+  .mobile-menu-link.is-active .label::after {
+    opacity: 1;
+    animation: bifrost-bracket-blink 2.4s steps(1, end) infinite;
+  }
 }
 
+/* ----------------------------------------------------------------------- */
+/* Keyframes — global, referenced by the components block above            */
+/* ----------------------------------------------------------------------- */
 @keyframes bifrost-glow {
   from {
     text-shadow:
@@ -220,5 +595,56 @@
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes bifrost-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bifrost-bracket-blink {
+  0%,
+  70% {
+    opacity: 1;
+  }
+  80%,
+  100% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes bifrost-takeover-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes bifrost-takeover-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes bifrost-link-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

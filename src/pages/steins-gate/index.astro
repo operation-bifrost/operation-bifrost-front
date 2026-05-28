@@ -1,6 +1,7 @@
 ---
 import SteinsGateLayout from "@/layouts/steins-gate.astro";
-import LandingPage from "@/components/steins-gate/landing-page";
+import { Navbar } from "@/components/steins-gate/navbar/navbar";
+import { Hero } from "@/components/steins-gate/hero/hero";
 
 const title =
   "Operation Bifrost | ปฏิบัติการไบฟรอส - โปรเจกต์แปล Steins;Gate ภาษาไทย";
@@ -27,5 +28,6 @@ const twitterDescription =
     />
   </Fragment>
 
-  <LandingPage />
+  <Navbar client:load />
+  <Hero />
 </SteinsGateLayout>

@@ -5,7 +5,8 @@
 
 /* Shared base typography across all projects on the site. */
 @theme {
-  --font-ibm: "IBM Plex Sans Thai", sans-serif;
+  --font-line-seed-th: "LINE Seed Sans TH", sans-serif;
+  --font-krub: "Krub", sans-serif;
 }
 
 /* shadcn-style design-token → utility mapping.
@@ -48,6 +49,9 @@
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
   --font-serif: var(--font-serif);
+  --font-bonx: var(--font-bonx);
+  --font-bonx-frame: var(--font-bonx-frame);
+  --font-bonx-sihouette: var(--font-bonx-sihouette);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -62,6 +66,8 @@
   --shadow-lg: var(--shadow-lg);
   --shadow-xl: var(--shadow-xl);
   --shadow-2xl: var(--shadow-2xl);
+  --shadow-button: var(--shadow-button);
+  --shadow-button-glow: var(--shadow-button-glow);
 
   --tracking-tighter: calc(var(--tracking-normal) - 0.05em);
   --tracking-tight: calc(var(--tracking-normal) - 0.025em);
@@ -72,11 +78,62 @@
 }
 
 @layer base {
+  @font-face {
+    font-family: "LINE Seed Sans TH";
+    src: url("/fonts/line-seed-sans-th/LINESeedSansTH_Th.otf") format("opentype"); /* Thin */
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "LINE Seed Sans TH";
+    src: url("/fonts/line-seed-sans-th/LINESeedSansTH_Rg.otf") format("opentype"); /* Regular */
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "LINE Seed Sans TH";
+    src: url("/fonts/line-seed-sans-th/LINESeedSansTH.otf") format("opentype"); /* Bold  */
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "LINE Seed Sans TH";
+    src: url("/fonts/line-seed-sans-th/LINESeedSansTH_XBd.otf") format("opentype"); /* Extra Bold */
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "LINE Seed Sans TH";
+    src: url("/fonts/line-seed-sans-th/LINESeedSansTH_He.otf") format("opentype"); /* Heavy */
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+  }
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-line-seed-th);
     letter-spacing: var(--tracking-normal);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

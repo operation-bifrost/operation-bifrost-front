@@ -1125,10 +1125,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fontsource/ibm-plex-sans-thai@npm:^5.2.8":
-  version: 5.2.8
-  resolution: "@fontsource/ibm-plex-sans-thai@npm:5.2.8"
-  checksum: 10c0/a890915a64e5104b6a9233c594c5c5ed9c31b38e52e49e9eb8d7eff026aee2fd39797b06b68c955fea62ef2308bd4f46ac4ac3c198e5209efa988ea74faa3731
+"@fontsource/krub@npm:^5.2.7":
+  version: 5.2.7
+  resolution: "@fontsource/krub@npm:5.2.7"
+  checksum: 10c0/78afd9e4a3a456720f804e851f90afeda61eb0ab7b915bb0182b987432dc3e6b92a119c622100d448b22b76526cdaa47f4e911467e485fa4e8b28998bafadd3d
   languageName: node
   linkType: hard
 
@@ -4987,15 +4987,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lucide-react@npm:^1.16.0":
-  version: 1.16.0
-  resolution: "lucide-react@npm:1.16.0"
-  peerDependencies:
-    react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/d1c4b7f1abdc8b5c729a5bd74d875f0b0db732b2e8d0cc8c76f9e167818b81a6b246a64986ab2fc1ae74cf9f8d16ce2cefe98fe5a6420b31f4fd6742b3181d5a
-  languageName: node
-  linkType: hard
-
 "magic-string@npm:^0.30.11, magic-string@npm:^0.30.21":
   version: 0.30.21
   resolution: "magic-string@npm:0.30.21"
@@ -6303,6 +6294,15 @@ __metadata:
   peerDependencies:
     react: ^19.2.6
   checksum: 10c0/dbf2aef67857c03a612bc9316a4562e5066f43fa04bf28f7f0734963fc1350da2c9f8eb973930655453281079f30cc8222bab383dbec4b5097084e2c081e3334
+  languageName: node
+  linkType: hard
+
+"react-icons@npm:^5.6.0":
+  version: 5.6.0
+  resolution: "react-icons@npm:5.6.0"
+  peerDependencies:
+    react: "*"
+  checksum: 10c0/addba1ebfd45cdf7f69291d0c93df64fca1271cfdb66df657abd223e3451c73356b035f50e75858627dd182b02129596c79eaaaa45d32eb52658e443a992645c
   languageName: node
   linkType: hard
 
@@ -8117,7 +8117,7 @@ __metadata:
     "@astrojs/cloudflare": "npm:^13.5.4"
     "@astrojs/react": "npm:^5.0.5"
     "@astrojs/svelte": "npm:^8.1.1"
-    "@fontsource/ibm-plex-sans-thai": "npm:^5.2.8"
+    "@fontsource/krub": "npm:^5.2.7"
     "@tailwindcss/vite": "npm:^4.3.0"
     "@types/node": "npm:^25.9.1"
     "@types/react": "npm:^19.2.15"
@@ -8125,9 +8125,9 @@ __metadata:
     astro: "npm:^6.3.7"
     class-variance-authority: "npm:^0.7.1"
     clsx: "npm:^2.1.1"
-    lucide-react: "npm:^1.16.0"
     react: "npm:^19.2.6"
     react-dom: "npm:^19.2.6"
+    react-icons: "npm:^5.6.0"
     shadcn: "npm:^4.8.0"
     svelte: "npm:^5.55.9"
     tailwind-merge: "npm:^3.6.0"

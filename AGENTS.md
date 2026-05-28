@@ -70,6 +70,16 @@ When you add a component, prefer **shadcn first**, then DiceUI, then React Bits,
 
 After installing from `@diceui` or `@react-bits`, **read the added files** and rewrite any hardcoded imports (e.g. `@/components/ui/...`) that don't match the project's actual aliases. The CLI only rewrites imports for its own UI files.
 
+## Theme tokens & styling discipline
+
+The point of the `.theme-<project>` system (see "Routing & per-project architecture") is that **components are theme-agnostic and the theme owns the palette**. Components should not reach into the raw Tailwind palette.
+
+- **Use theme tokens, not raw Tailwind colors.** In project-scoped components, prefer `bg-background`, `text-foreground`, `text-primary`, `text-primary-foreground`, `bg-secondary`, `bg-accent`, `border-border`, `ring-ring`, etc. Do **not** use `stone-*`, `amber-*`, `yellow-*`, `slate-*`, or any other concrete palette class — those bypass the theme and silently break when a sibling project adds a second `.theme-*` class.
+- **Brand yellow → `primary` (or `accent` for the darker active/pressed state).** In the Steins;Gate dark theme, `--accent` is the darker variant of `--primary`, so the standard pressed-state pattern is: primary buttons go `bg-primary` → `bg-accent`, outlined buttons go `bg-background` → `bg-secondary`. Matches shadcn conventions.
+- **Never hardcode hex/rgb for theme colors.** No inline `style={{ color: "#ffc700" }}` and no arbitrary classes like `bg-[#1c1917]`. If you need the Nixie yellow specifically, use `var(--color-nixie-base)` (already declared in `steins-gate.css`); if you need it as a Tailwind utility, add a `--color-*` mapping to `global.css` `@theme inline` first.
+- **Don't fight the theme's marker classes.** Classes like `.title`, `.frame`, `.sihouette`, `.nav-link`, `.social-link` are defined inside `.theme-steins-gate { … }` and already set color, animation, and hover behavior. Layering `text-white/30`, `style={{ color: … }}`, or another `text-*` utility on top either overrides the theme (wrong) or gets silently overridden by it (dead code). Use the marker class and let the theme decide.
+- **Adding a new project theme = supply new token values, not new utility mappings.** The token-to-utility mapping in `global.css` `@theme inline` is shared; each project's CSS file just provides concrete `--<token>` values under its `.theme-<project>` class.
+
 ## Design source: `design/`
 
 `design/steins-gate.pen` is a Pencil (https://pencil.dev) source file containing layout scaffolding for the Steins;Gate section. Treat it as **directional, not contractual** — the .pen is a rough page-shape sketch, not a strict spec. Designers can change it.
@@ -77,6 +87,7 @@ After installing from `@diceui` or `@react-bits`, **read the added files** and r
 - `.pen` files are just json files, but **don't** open them with `Read`/`Grep`/`cat` directly. Use the **pencil MCP server** tools (`pencil` server is declared in `.mcp.json`; tools include `open_document`, `batch_get`, `get_screenshot`, etc.).
 - **Always read the notes inside the .pen file** before implementing a section — that's where the designer's intent lives. The visual scaffold alone is not enough.
 - If the pencil MCP server is not running locally (Pencil extension not installed), say so and proceed from the existing implementation; do not invent design intent.
+- **Never copy exact pixel values from `.pen` into Tailwind arbitrary classes** (e.g. `max-w-[1416px]`, `h-[620px]`, `px-[80px]`). The .pen is directional — its frame widths and spacings are sketches sized to the designer's canvas, not contracts. Use standard Tailwind tokens (`max-w-7xl`, `max-w-3xl`, `h-16`, `px-6 lg:px-8`, `gap-8`, `py-24`, etc.) or theme tokens. Exception: actual image intrinsic dimensions on `<img width/height>` attributes (those describe the file, not the design).
 
 ## File & naming conventions
 
@@ -85,10 +96,32 @@ After installing from `@diceui` or `@react-bits`, **read the added files** and r
 - Import via the `@/*` alias (`tsconfig.json` `paths`) — do not use long relative paths.
 - The repo is in the middle of moving off Svelte; new interactive UI should use React unless there's a concrete reason otherwise.
 
+## Where things live
+
+- **`src/data/`** — static content modules (`<project>-content.ts`) that hold copy, nav config, CTAs, image src lists, social links, etc. Components import from `@/data/<project>-content`. Treat these as the single source of truth for per-project content; do not inline strings in components.
+- **`src/lib/`** — true utilities only (`cn`, formatters, generic helpers). Anything project-specific or content-shaped belongs in `src/data/`, not here.
+- **`src/components/<project>/`** — project-scoped compositions, grouped by section (`hero/`, `navbar/`, ...). Project-internal primitives go in `src/components/<project>/ui/`.
+- **`src/components/ui/`** — generic shadcn primitives only (per `components.json`).
+
+## Documentation lookup
+
+**Always reach for an MCP docs source first** when querying docs for any library, framework, SDK, API, CLI tool, or cloud service — even well-known ones like React, Astro, Tailwind, or shadcn. Use it before web search, and before guessing from training data, which may be out of date.
+
+Order of preference for docs:
+
+1. **`astro-docs` MCP** — for Astro 6 specifics. Astro's release cadence outpaces training data, so check this first for anything Astro-shaped.
+2. **`shadcn` MCP** — for component registry search / view / add across `@shadcn`, `@diceui`, `@react-bits` (this is registry data, not prose docs).
+3. **`context7`** — default for any other library/framework/API. Resolve the library id, then query. Use this before web search for React, Tailwind, Cloudflare Workers, Wrangler, etc.
+4. **Web search** — last resort, when MCP docs sources don't cover the question.
+
+Do **not** use context7 for: refactoring, debugging business logic, code review, or general programming concepts — those don't need docs lookup.
+
 ## MCP servers wired in this repo (`.mcp.json`)
 
 - **`astro-docs`** — Astro documentation (http). Use it for Astro 6 specifics; the model's training data may pre-date this release.
 - **`shadcn`** — the shadcn MCP server (`npx shadcn@latest mcp`). It reads `components.json` `registries` and exposes search / view / add across **all** declared registries (`@shadcn`, `@diceui`, `@react-bits`). One server, three sources. Init/refresh with `npx shadcn@latest mcp init --client claude`.
+
+`context7` is available as a plugin MCP (not in this repo's `.mcp.json`) — see the "Documentation lookup" section above for ordering.
 
 When a new tool/library category is introduced (e.g. another component registry), wire its MCP server into `.mcp.json` and document it here so future sessions know it exists.
 

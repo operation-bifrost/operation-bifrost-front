@@ -1,0 +1,833 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Navbar Treatment Trials — Operation Bifrost</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Major+Mono+Display&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --nixie: rgb(251, 192, 0);
+        --nixie-soft: rgba(255, 199, 0, 0.55);
+        --nixie-glow: rgba(255, 199, 0, 0.35);
+        --stone-50: #fafaf9;
+        --stone-200: #e7e5e4;
+        --stone-300: #d6d3d1;
+        --stone-400: #a8a29e;
+        --stone-500: #78716c;
+        --stone-700: #44403c;
+        --stone-800: #292524;
+        --stone-900: #1c1917;
+        --bg-deep: #15110f;
+
+        --shadow-button: 4px 5px 0 rgba(87, 83, 78, 0.5);
+        --navbar-gradient: linear-gradient(
+          180deg,
+          rgba(41, 37, 36, 0.9) 0%,
+          rgba(68, 64, 59, 0.9) 100%
+        );
+
+        --font-sans: "DM Sans", system-ui, sans-serif;
+        --font-mono: "JetBrains Mono", ui-monospace, monospace;
+        --font-display: "Major Mono Display", monospace;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        min-height: 100vh;
+        font-family: var(--font-sans);
+        color: var(--stone-200);
+        background:
+          radial-gradient(
+            ellipse at 50% 0%,
+            rgba(251, 192, 0, 0.06) 0%,
+            transparent 55%
+          ),
+          radial-gradient(
+            ellipse at 80% 90%,
+            rgba(251, 192, 0, 0.04) 0%,
+            transparent 50%
+          ),
+          var(--bg-deep);
+        background-attachment: fixed;
+        position: relative;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      /* Faint CRT scanline overlay — sits above bg, below content */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image: repeating-linear-gradient(
+          to bottom,
+          transparent 0px,
+          transparent 2px,
+          rgba(0, 0, 0, 0.18) 2px,
+          rgba(0, 0, 0, 0.18) 3px
+        );
+        mix-blend-mode: overlay;
+        opacity: 0.4;
+        z-index: 1;
+      }
+
+      /* Vignette */
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background: radial-gradient(
+          ellipse at center,
+          transparent 40%,
+          rgba(0, 0, 0, 0.55) 100%
+        );
+        z-index: 1;
+      }
+
+      main {
+        position: relative;
+        z-index: 2;
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 64px 32px 120px;
+      }
+
+      /* ------------------------------------------------------------------
+         Page header — Future Gadget Lab terminal chrome
+         ------------------------------------------------------------------ */
+      .page-header {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        margin-bottom: 80px;
+      }
+
+      .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--stone-500);
+      }
+
+      .breadcrumb .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--nixie);
+        box-shadow:
+          0 0 8px var(--nixie),
+          0 0 14px rgba(255, 199, 0, 0.5);
+        animation: pulse 2.4s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.6;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      h1 {
+        font-family: var(--font-display);
+        font-size: clamp(2.5rem, 1rem + 4vw, 4.25rem);
+        line-height: 1;
+        margin: 0;
+        color: var(--stone-50);
+        letter-spacing: -0.01em;
+        text-transform: lowercase;
+      }
+
+      h1 .accent {
+        color: var(--nixie);
+        text-shadow:
+          0 0 8px var(--nixie),
+          0 0 24px rgba(255, 199, 0, 0.45);
+      }
+
+      .intro {
+        max-width: 56ch;
+        font-size: 16px;
+        line-height: 1.65;
+        color: var(--stone-300);
+      }
+
+      .intro code {
+        font-family: var(--font-mono);
+        font-size: 0.85em;
+        background: rgba(251, 192, 0, 0.1);
+        color: var(--nixie);
+        padding: 2px 6px;
+        border-radius: 2px;
+        border: 1px solid rgba(251, 192, 0, 0.2);
+      }
+
+      /* ------------------------------------------------------------------
+         Variant sections
+         ------------------------------------------------------------------ */
+      .variant {
+        margin-bottom: 96px;
+      }
+
+      .variant-meta {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: end;
+        gap: 24px;
+        padding-bottom: 16px;
+        border-bottom: 1px dashed rgba(168, 162, 158, 0.25);
+        margin-bottom: 40px;
+      }
+
+      .variant-index {
+        font-family: var(--font-mono);
+        font-size: 56px;
+        font-weight: 700;
+        line-height: 0.85;
+        color: rgba(251, 192, 0, 0.85);
+        text-shadow: 0 0 12px rgba(251, 192, 0, 0.3);
+      }
+
+      .variant-titleblock h2 {
+        font-family: var(--font-display);
+        font-size: 28px;
+        margin: 0 0 6px 0;
+        color: var(--stone-50);
+        letter-spacing: -0.01em;
+        text-transform: lowercase;
+      }
+
+      .variant-titleblock p {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.55;
+        color: var(--stone-400);
+        max-width: 60ch;
+      }
+
+      .variant-tag {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--nixie);
+        padding: 4px 10px;
+        border: 1px solid rgba(251, 192, 0, 0.45);
+        white-space: nowrap;
+      }
+
+      /* ------------------------------------------------------------------
+         Stage — where the navbar lives
+         ------------------------------------------------------------------ */
+      .stage {
+        position: relative;
+        padding: 56px 24px;
+        background-image:
+          linear-gradient(rgba(168, 162, 158, 0.06) 1px, transparent 1px),
+          linear-gradient(
+            90deg,
+            rgba(168, 162, 158, 0.06) 1px,
+            transparent 1px
+          );
+        background-size: 24px 24px;
+        border: 1px solid rgba(120, 113, 108, 0.3);
+        border-radius: 4px;
+      }
+
+      .stage::before,
+      .stage::after {
+        content: "";
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        border: 1px solid var(--nixie);
+      }
+      .stage::before {
+        top: -1px;
+        left: -1px;
+        border-right: none;
+        border-bottom: none;
+      }
+      .stage::after {
+        bottom: -1px;
+        right: -1px;
+        border-left: none;
+        border-top: none;
+      }
+
+      .stage-label {
+        position: absolute;
+        top: -10px;
+        left: 24px;
+        padding: 0 10px;
+        background: var(--bg-deep);
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--stone-500);
+      }
+
+      /* ------------------------------------------------------------------
+         The navbar (matches the project's actual navbar.tsx shell)
+         ------------------------------------------------------------------ */
+      .navbar {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 32px;
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 8px 16px;
+        border: 1px solid var(--stone-500);
+        border-radius: 6px;
+        background: var(--navbar-gradient);
+        box-shadow: var(--shadow-button);
+        backdrop-filter: blur(8px);
+      }
+
+      @media (min-width: 1024px) {
+        .navbar {
+          padding: 8px 32px;
+        }
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--font-display);
+        font-size: 18px;
+        color: var(--stone-50);
+        text-transform: lowercase;
+      }
+
+      .brand .brand-mark {
+        width: 28px;
+        height: 28px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--nixie);
+        color: var(--nixie);
+        font-family: var(--font-mono);
+        font-size: 14px;
+        font-weight: 700;
+        text-shadow: 0 0 6px var(--nixie);
+        box-shadow: inset 0 0 8px rgba(251, 192, 0, 0.2);
+      }
+
+      .nav-cluster {
+        display: flex;
+        align-items: center;
+        gap: 32px;
+      }
+
+      .nav-menu {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .nav-cta {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--stone-900);
+        background: var(--nixie);
+        padding: 8px 14px;
+        border: 1px solid var(--nixie);
+        border-radius: 4px;
+        text-decoration: none;
+        box-shadow:
+          4px 5px 0 rgba(87, 83, 78, 0.5),
+          0 0 12px rgba(255, 199, 0, 0.25);
+        transition: transform 200ms ease;
+      }
+
+      .nav-cta:hover {
+        transform: translate(-1px, -1px);
+      }
+
+      /* ------------------------------------------------------------------
+         Shared link base (applies to BOTH variants)
+         ------------------------------------------------------------------ */
+      .nav-link {
+        position: relative;
+        display: inline-block;
+        font-family: var(--font-mono);
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--stone-200);
+        text-decoration: none;
+        padding: 8px 4px;
+        transition:
+          color 220ms ease,
+          letter-spacing 220ms ease,
+          text-shadow 320ms ease;
+      }
+
+      /* ==================================================================
+         VARIANT 1 — Nixie ignite (text glow + drawn underline)
+         ================================================================== */
+      .nav-link--glow::after {
+        content: "";
+        position: absolute;
+        left: 4px;
+        right: 4px;
+        bottom: 4px;
+        height: 1px;
+        background: var(--nixie);
+        transform: scaleX(0);
+        transform-origin: left center;
+        transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 0 0 6px var(--nixie-soft);
+      }
+
+      .nav-link--glow:hover,
+      .nav-link--glow:focus-visible {
+        color: var(--nixie);
+        text-shadow:
+          0 0 6px rgba(255, 199, 0, 0.55),
+          0 0 14px rgba(255, 199, 0, 0.25);
+        outline: none;
+      }
+
+      .nav-link--glow:hover::after,
+      .nav-link--glow:focus-visible::after {
+        transform: scaleX(1);
+      }
+
+      .nav-link--glow.is-active {
+        color: var(--nixie);
+        animation: glow-breathe 3.2s ease-in-out infinite alternate;
+      }
+
+      .nav-link--glow.is-active::after {
+        transform: scaleX(1);
+        animation: underline-breathe 3.2s ease-in-out infinite alternate;
+      }
+
+      @keyframes glow-breathe {
+        from {
+          text-shadow:
+            0 0 5px rgba(255, 199, 0, 0.45),
+            0 0 10px rgba(255, 199, 0, 0.18);
+        }
+        to {
+          text-shadow:
+            0 0 9px rgba(255, 199, 0, 0.7),
+            0 0 18px rgba(255, 199, 0, 0.32);
+        }
+      }
+
+      @keyframes underline-breathe {
+        from {
+          box-shadow: 0 0 4px rgba(255, 199, 0, 0.35);
+          opacity: 0.85;
+        }
+        to {
+          box-shadow: 0 0 8px rgba(255, 199, 0, 0.65);
+          opacity: 1;
+        }
+      }
+
+      /* ==================================================================
+         VARIANT 2 — Bracket markers (terminal selection)
+         ================================================================== */
+      .nav-link--bracket {
+        padding: 8px 14px;
+      }
+
+      .nav-link--bracket::before,
+      .nav-link--bracket::after {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        font-family: var(--font-mono);
+        font-weight: 500;
+        color: var(--nixie);
+        opacity: 0;
+        transition:
+          opacity 220ms ease,
+          transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .nav-link--bracket::before {
+        content: "[";
+        left: 4px;
+        transform: translate(4px, -50%);
+      }
+
+      .nav-link--bracket::after {
+        content: "]";
+        right: 4px;
+        transform: translate(-4px, -50%);
+      }
+
+      .nav-link--bracket:hover,
+      .nav-link--bracket:focus-visible {
+        color: var(--stone-50);
+        outline: none;
+      }
+
+      .nav-link--bracket:hover::before,
+      .nav-link--bracket:focus-visible::before {
+        opacity: 1;
+        transform: translate(0, -50%);
+      }
+
+      .nav-link--bracket:hover::after,
+      .nav-link--bracket:focus-visible::after {
+        opacity: 1;
+        transform: translate(0, -50%);
+      }
+
+      .nav-link--bracket.is-active {
+        color: var(--nixie);
+        text-shadow: 0 0 6px rgba(255, 199, 0, 0.35);
+      }
+
+      .nav-link--bracket.is-active::before,
+      .nav-link--bracket.is-active::after {
+        opacity: 1;
+        transform: translate(0, -50%);
+        text-shadow: 0 0 6px rgba(255, 199, 0, 0.45);
+        animation: bracket-blink 2.4s steps(1, end) infinite;
+      }
+
+      @keyframes bracket-blink {
+        0%,
+        70% {
+          opacity: 1;
+        }
+        80%,
+        100% {
+          opacity: 0.4;
+        }
+      }
+
+      /* ------------------------------------------------------------------
+         Per-variant notes panel
+         ------------------------------------------------------------------ */
+      .notes {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1px;
+        margin-top: 32px;
+        background: rgba(120, 113, 108, 0.25);
+        border: 1px solid rgba(120, 113, 108, 0.25);
+      }
+
+      .notes > div {
+        background: var(--bg-deep);
+        padding: 18px 20px;
+      }
+
+      .notes dt {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--stone-500);
+        margin-bottom: 8px;
+      }
+
+      .notes dd {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.55;
+        color: var(--stone-300);
+      }
+
+      .notes dd strong {
+        color: var(--nixie);
+        font-weight: 500;
+      }
+
+      /* ------------------------------------------------------------------
+         Footer line
+         ------------------------------------------------------------------ */
+      .meta-footer {
+        margin-top: 80px;
+        padding-top: 24px;
+        border-top: 1px dashed rgba(168, 162, 158, 0.2);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--stone-500);
+      }
+
+      .meta-footer .right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .meta-footer .blinker {
+        width: 8px;
+        height: 14px;
+        background: var(--nixie);
+        box-shadow: 0 0 8px var(--nixie);
+        animation: caret 1s steps(1, end) infinite;
+      }
+
+      @keyframes caret {
+        0%,
+        50% {
+          opacity: 1;
+        }
+        51%,
+        100% {
+          opacity: 0;
+        }
+      }
+
+      /* ------------------------------------------------------------------
+         Reduced motion
+         ------------------------------------------------------------------ */
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation: none !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+
+      /* ------------------------------------------------------------------
+         Responsive — collapse nav cluster
+         ------------------------------------------------------------------ */
+      @media (max-width: 760px) {
+        .nav-cluster {
+          gap: 16px;
+        }
+        .nav-menu {
+          flex-wrap: wrap;
+          justify-content: flex-end;
+        }
+        .variant-meta {
+          grid-template-columns: auto 1fr;
+        }
+        .variant-tag {
+          grid-column: 1 / -1;
+          justify-self: start;
+        }
+        .notes {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <header class="page-header">
+        <div class="breadcrumb">
+          <span class="dot" aria-hidden="true"></span>
+          <span>FGL / Bifrost / Navbar / Treatment Trials</span>
+        </div>
+        <h1>navigation <span class="accent">treatments</span></h1>
+        <p class="intro">
+          Two ways to make the active route and hover state read clearly on the
+          floating glass navbar — without a pale rectangle background. Both
+          reuse the existing Nixie vocabulary
+          (<code>--color-nixie-base</code>, the
+          <code>bifrost-glow</code> family). Hover any link; the third item is
+          set to the persistent <em>active</em> state in both rows.
+        </p>
+      </header>
+
+      <!-- ============================================================ -->
+      <!-- VARIANT 1 — Nixie ignite                                     -->
+      <!-- ============================================================ -->
+      <section class="variant" aria-labelledby="v1-title">
+        <div class="variant-meta">
+          <div class="variant-index">01</div>
+          <div class="variant-titleblock">
+            <h2 id="v1-title">nixie ignite</h2>
+            <p>
+              The label itself lights up. Amber text-shadow at low intensity
+              warms in on hover, with a 1px underline drawing from the left.
+              Active route is the looping version of the same state — like a
+              Nixie filament holding its glow.
+            </p>
+          </div>
+          <span class="variant-tag">Recommended</span>
+        </div>
+
+        <div class="stage">
+          <span class="stage-label">— LIVE PREVIEW</span>
+          <nav class="navbar" aria-label="Variant 1 navigation">
+            <div class="brand">
+              <span class="brand-mark" aria-hidden="true">β</span>
+              <span>operation bifrost</span>
+            </div>
+            <div class="nav-cluster">
+              <ul class="nav-menu">
+                <li>
+                  <a class="nav-link nav-link--glow" href="#">About</a>
+                </li>
+                <li>
+                  <a class="nav-link nav-link--glow" href="#">Progress</a>
+                </li>
+                <li>
+                  <a class="nav-link nav-link--glow is-active" href="#"
+                    >Project</a
+                  >
+                </li>
+                <li>
+                  <a class="nav-link nav-link--glow" href="#">Team</a>
+                </li>
+              </ul>
+              <a class="nav-cta" href="#">Join Discord</a>
+            </div>
+          </nav>
+        </div>
+
+        <dl class="notes">
+          <div>
+            <dt>Hover</dt>
+            <dd>
+              Label color shifts to <strong>--color-nixie-base</strong> with a
+              low-intensity text-shadow (~6–14px). Underline draws in left → right over 320ms.
+            </dd>
+          </div>
+          <div>
+            <dt>Active</dt>
+            <dd>
+              Persistent glow + underline, gently breathing on a 3.2s loop —
+              quieter than the hero <strong>bifrost-glow</strong> so it doesn't
+              fight for attention.
+            </dd>
+          </div>
+          <div>
+            <dt>Tradeoff</dt>
+            <dd>
+              Brightest of the two. Looks like the tubes warming up — but watch
+              the glow budget on dense menus.
+            </dd>
+          </div>
+        </dl>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- VARIANT 2 — Bracket markers                                  -->
+      <!-- ============================================================ -->
+      <section class="variant" aria-labelledby="v2-title">
+        <div class="variant-meta">
+          <div class="variant-index">02</div>
+          <div class="variant-titleblock">
+            <h2 id="v2-title">bracket markers</h2>
+            <p>
+              Terminal selection metaphor. Square brackets fade in around the
+              label on hover, slide into final position. Active route holds the
+              brackets and blinks them like a console cursor — almost zero glow
+              budget, reads as system UI.
+            </p>
+          </div>
+          <span class="variant-tag">Quieter</span>
+        </div>
+
+        <div class="stage">
+          <span class="stage-label">— LIVE PREVIEW</span>
+          <nav class="navbar" aria-label="Variant 2 navigation">
+            <div class="brand">
+              <span class="brand-mark" aria-hidden="true">β</span>
+              <span>operation bifrost</span>
+            </div>
+            <div class="nav-cluster">
+              <ul class="nav-menu">
+                <li>
+                  <a class="nav-link nav-link--bracket" href="#">About</a>
+                </li>
+                <li>
+                  <a class="nav-link nav-link--bracket" href="#">Progress</a>
+                </li>
+                <li>
+                  <a class="nav-link nav-link--bracket is-active" href="#"
+                    >Project</a
+                  >
+                </li>
+                <li>
+                  <a class="nav-link nav-link--bracket" href="#">Team</a>
+                </li>
+              </ul>
+              <a class="nav-cta" href="#">Join Discord</a>
+            </div>
+          </nav>
+        </div>
+
+        <dl class="notes">
+          <div>
+            <dt>Hover</dt>
+            <dd>
+              <strong>[</strong> and <strong>]</strong> fade in over 220ms and
+              ease inward 4px. Label brightens to stone-50, no glow.
+            </dd>
+          </div>
+          <div>
+            <dt>Active</dt>
+            <dd>
+              Brackets persist and blink on a 2.4s console-cursor cadence. Label
+              gets a faint amber tint so the active item is still legible at a
+              glance.
+            </dd>
+          </div>
+          <div>
+            <dt>Tradeoff</dt>
+            <dd>
+              Reads more like a terminal HUD than a decorative nav. Less
+              expressive, but stays out of the way of the hero.
+            </dd>
+          </div>
+        </dl>
+      </section>
+
+      <footer class="meta-footer">
+        <span>REV 2026.05.28 · NAVIGATION TREATMENT TRIALS · DRAFT</span>
+        <div class="right">
+          <span>STAND BY</span>
+          <span class="blinker" aria-hidden="true"></span>
+        </div>
+      </footer>
+    </main>
+  </body>
+</html>
