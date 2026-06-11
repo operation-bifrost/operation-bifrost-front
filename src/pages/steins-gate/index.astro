@@ -2,9 +2,9 @@
 import SteinsGateLayout from "@/layouts/steins-gate.astro";
 import { Navbar } from "@/components/steins-gate/navbar/navbar";
 import { Hero } from "@/components/steins-gate/hero/hero";
+import { Features } from "@/components/steins-gate/features/features";
 
-const title =
-  "Operation Bifrost | ปฏิบัติการไบฟรอส - โปรเจกต์แปล Steins;Gate ภาษาไทย";
+const title = "Operation Bifrost | ปฏิบัติการไบฟรอส - โปรเจกต์แปล Steins;Gate ภาษาไทย";
 const description =
   "โครงการแปลเกมวิชวลโนเวล Steins;Gate เป็นภาษาไทย ทลายกำแพงภาษาสำหรับแฟนๆ ชาวไทยของซีรีส์ Science Adventure ติดตามความคืบหน้าการแปลแบบเรียลไทม์ได้ที่นี่";
 const ogDescription =
@@ -30,4 +30,5 @@ const twitterDescription =
 
   <Navbar client:load />
   <Hero />
+  <Features client:load />
 </SteinsGateLayout>
