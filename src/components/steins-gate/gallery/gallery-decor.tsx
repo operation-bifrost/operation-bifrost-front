@@ -12,7 +12,7 @@ export function GalleryDecor() {
         <GearIcon
           className="text-secondary/40 absolute top-0 left-0 size-36 -rotate-[31deg] md:size-44 lg:size-56"
           spin="forward"
-          durationSec={100}
+          durationSec={60}
         />
         {/* Larger gear — below-right, teeth meshing with the smaller gear */}
         <GearIcon
@@ -26,6 +26,20 @@ export function GalleryDecor() {
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute bottom-1/4 left-10 origin-center -translate-x-1/4 rotate-90 opacity-40 select-none md:opacity-60">
           <DivergenceRail value="0.571024%" />
+        </div>
+
+        {/* Bottom-right gears — matched to en1At in design */}
+        <div className="absolute -right-24 -bottom-36 size-[28rem] -rotate-[31deg]">
+          <GearIcon
+            className="text-secondary/30 absolute top-[9rem] left-[8rem] size-[20rem]"
+            spin="reverse"
+            durationSec={130}
+          />
+          <GearIcon
+            className="text-secondary/40 absolute -top-6 left-[14rem] size-[12.5rem] -rotate-[22deg]"
+            spin="forward"
+            durationSec={60}
+          />
         </div>
       </div>
     </>
