@@ -60,7 +60,7 @@ export function GalleryVideos({ videos }: GalleryVideosProps) {
 
                 {/* Video info overlay */}
                 <div className="absolute right-0 bottom-0 left-0 p-3 text-start">
-                  <p className="text-foreground line-clamp-2 text-sm leading-snug font-medium">
+                  <p className="text-foreground line-clamp-1 text-sm leading-snug font-medium">
                     {video.title}
                   </p>
                   {video.channel && (
