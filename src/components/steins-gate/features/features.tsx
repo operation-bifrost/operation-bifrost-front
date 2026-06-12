@@ -8,7 +8,7 @@ export function Features() {
   return (
     <section
       id="features"
-      className="bg-background relative isolate overflow-hidden pt-8 pb-24 md:pt-10 md:pb-32 lg:pt-12 lg:pb-40"
+      className="bg-background relative isolate overflow-hidden py-8 md:py-10 lg:py-12"
     >
       <FeaturesDecor />
 

@@ -3,6 +3,7 @@ import SteinsGateLayout from "@/layouts/steins-gate.astro";
 import { Navbar } from "@/components/steins-gate/navbar/navbar";
 import { Hero } from "@/components/steins-gate/hero/hero";
 import { Features } from "@/components/steins-gate/features/features";
+import { Gallery } from "@/components/steins-gate/gallery/gallery";
 
 const title = "Operation Bifrost | ปฏิบัติการไบฟรอส - โปรเจกต์แปล Steins;Gate ภาษาไทย";
 const description =
@@ -31,4 +32,5 @@ const twitterDescription =
   <Navbar client:load />
   <Hero />
   <Features client:load />
+  <Gallery client:load />
 </SteinsGateLayout>
