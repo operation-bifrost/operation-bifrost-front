@@ -594,6 +594,29 @@
     mix-blend-mode: overlay;
     opacity: 0.4;
   }
+
+  /* --- Download section: terminal card, scanline overlay --- */
+  .download-terminal {
+    background: linear-gradient(180deg, rgba(41, 37, 36, 0.95) 0%, rgba(28, 25, 23, 0.98) 100%);
+    position: relative;
+  }
+
+  .download-terminal::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 3px,
+      rgba(0, 0, 0, 0.12) 3px,
+      rgba(0, 0, 0, 0.12) 4px
+    );
+    mix-blend-mode: overlay;
+    opacity: 0.3;
+    border-radius: inherit;
+  }
 }
 
 /* ----------------------------------------------------------------------- */
