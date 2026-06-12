@@ -47,7 +47,7 @@ export function FeatureRow({ item, index }: FeatureRowProps) {
 
   return (
     <div ref={ref} className={cn("relative", cascade.rowMargin)} style={{ zIndex: cascade.zIndex }}>
-      <div className="lg:relative lg:flex lg:min-h-[440px] lg:items-center">
+      <div className="lg:relative lg:flex lg:min-h-110 lg:items-center">
         <div
           className="relative z-20 flex flex-col gap-5 lg:w-[42%] lg:will-change-[opacity,transform]"
           style={{
