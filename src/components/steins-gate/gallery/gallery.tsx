@@ -8,7 +8,7 @@ export function Gallery() {
   const { eyebrow, heading, videos, photos } = steinsGateContent.gallery;
 
   return (
-    <section id="gallery" className="bg-background relative isolate py-8 md:py-10 lg:py-12">
+    <section id="gallery" className="relative py-8 md:py-10 lg:py-12">
       <GalleryDecor />
 
       <div className="relative mx-auto max-w-7xl px-6 md:px-12 lg:px-20">

@@ -31,8 +31,17 @@ const twitterDescription =
   </Fragment>
 
   <Navbar client:load />
-  <Hero />
-  <Features client:load />
-  <Gallery client:load />
-  <Download client:load />
+
+  {
+    /* Single page-level stacking context: section decorations sit at -z-10
+      behind all content and bleed across section seams. overflow-x-clip
+      stops rotated/oversized decor from spawning a horizontal scrollbar
+      (replaces the per-section overflow-hidden that used to clip gears). */
+  }
+  <div class="relative isolate overflow-x-clip">
+    <Hero />
+    <Features client:load />
+    <Gallery client:load />
+    <Download client:load />
+  </div>
 </SteinsGateLayout>

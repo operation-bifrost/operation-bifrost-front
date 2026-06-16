@@ -8,10 +8,7 @@ export function Download() {
   const { eyebrow, heading } = steinsGateContent.download;
 
   return (
-    <section
-      id="download"
-      className="bg-background relative isolate overflow-hidden py-8 md:py-10 lg:py-12"
-    >
+    <section id="download" className="relative py-8 md:py-10 lg:py-12">
       <div className="relative mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
         {/* Section heading — full width, left-aligned */}
         <SectionHeading heading={heading} eyebrow={eyebrow} className="mb-10 md:mb-14" />

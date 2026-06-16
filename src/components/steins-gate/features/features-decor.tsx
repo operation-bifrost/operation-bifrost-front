@@ -6,7 +6,7 @@ export function FeaturesDecor() {
   const { divergence } = steinsGateContent.features;
 
   return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
       <GearIcon
         className="text-secondary/40 absolute top-[2%] right-[6%] size-44 md:size-64 lg:size-[22rem]"
         spin="forward"

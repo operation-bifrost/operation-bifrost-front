@@ -6,7 +6,7 @@ export function GalleryDecor() {
     <>
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-36 left-2 hidden md:left-6 lg:left-10 lg:block"
+        className="pointer-events-none absolute -top-36 left-2 -z-10 hidden md:left-6 lg:left-10 lg:block"
       >
         {/* Smaller gear — upper-left, behind section title */}
         <GearIcon
@@ -22,8 +22,10 @@ export function GalleryDecor() {
         />
       </div>
 
-      {/* Bottom decor — clipped to prevent horizontal scrollbar */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+      {/* Bottom decor — not clipped, so the bottom-right gears bleed past the
+          section seam into Download. Horizontal scrollbar is held off by the
+          page wrapper's overflow-x-clip (see steins-gate/index.astro). */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute bottom-1/4 left-10 origin-center -translate-x-1/4 rotate-90 opacity-40 select-none md:opacity-60">
           <DivergenceRail value="0.571024%" />
         </div>
