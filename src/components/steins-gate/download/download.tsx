@@ -10,7 +10,7 @@ export function Download() {
   return (
     <section
       id="download"
-      className="bg-background relative isolate overflow-hidden py-20 md:py-28 lg:py-32"
+      className="bg-background relative isolate overflow-hidden py-8 md:py-10 lg:py-12"
     >
       <div className="relative mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
         {/* Section heading — full width, left-aligned */}
