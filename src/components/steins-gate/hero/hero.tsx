@@ -3,13 +3,16 @@ import { HeroTitleBlock } from "@/components/steins-gate/hero/hero-title-block";
 
 export function Hero() {
   return (
-    <section
-      id="hero"
-      className="relative isolate h-screen overflow-hidden bg-background"
-    >
+    <section id="hero" className="bg-background relative isolate h-screen overflow-hidden">
       <HeroBanner />
-      <div className="relative mx-auto flex h-full flex-col justify-end px-6 py-24 md:px-20">
-        <HeroTitleBlock />
+      {/* Container mirrors the navbar (outer px-4 lg:px-12 gutter + inner
+          mx-auto max-w-7xl px-4 lg:px-8) so the title's start edge tracks the
+          navbar content at every width, including ultra-wide viewports where a
+          flat padding would drift left of the centered, max-w-7xl nav. */}
+      <div className="relative flex h-full flex-col justify-end px-4 py-24 lg:px-12">
+        <div className="mx-auto w-full max-w-7xl px-4 lg:px-8">
+          <HeroTitleBlock />
+        </div>
       </div>
     </section>
   );

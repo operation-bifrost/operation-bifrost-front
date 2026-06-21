@@ -15,7 +15,9 @@ export function NavbarActions() {
                 href={social.href}
                 aria-label={social.label}
                 data-brand={social.brand}
-                className="social-link inline-flex size-9 items-center justify-center rounded-md text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-link text-foreground focus-visible:ring-ring inline-flex size-9 items-center justify-center rounded-md focus-visible:ring-2 focus-visible:outline-none"
               >
                 <Icon className="size-5" aria-hidden="true" />
               </a>
@@ -24,11 +26,7 @@ export function NavbarActions() {
         })}
       </ul>
 
-      <Button
-        variant="primary"
-        className="font-bold"
-        href={primaryCta.href}
-      >
+      <Button variant="primary" className="font-bold" href={primaryCta.href}>
         {primaryCta.label}
       </Button>
     </div>
