@@ -1,4 +1,4 @@
-import type { FaqItem } from "@/data/steins-gate-content";
+import type { FaqItem } from "@/data/steins-gate";
 import { useReveal } from "@/hooks/use-reveal";
 import { cn } from "@/lib/utils";
 

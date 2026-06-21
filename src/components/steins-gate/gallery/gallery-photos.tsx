@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { LuX, LuChevronLeft, LuChevronRight } from "react-icons/lu";
-import type { GalleryPhoto } from "@/data/steins-gate-content";
+import type { GalleryPhoto } from "@/data/steins-gate";
 import { cn } from "@/lib/utils";
 
 interface GalleryPhotosProps {

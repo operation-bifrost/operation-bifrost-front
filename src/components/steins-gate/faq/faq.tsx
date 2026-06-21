@@ -1,7 +1,7 @@
 import { FaqCard } from "@/components/steins-gate/faq/faq-card";
 import { FaqDecor } from "@/components/steins-gate/faq/faq-decor";
 import { SectionHeading } from "@/components/steins-gate/ui/section-heading";
-import { steinsGateContent } from "@/data/steins-gate-content";
+import { steinsGateContent } from "@/data/steins-gate";
 
 export function Faq() {
   const { eyebrow, heading, items } = steinsGateContent.faq;

@@ -4,7 +4,7 @@ import {
   CompareSliderBefore,
   CompareSliderHandle,
 } from "@/components/ui/compare-slider";
-import type { FeatureItem } from "@/data/steins-gate-content";
+import type { FeatureItem } from "@/data/steins-gate";
 import { cn } from "@/lib/utils";
 
 interface FeatureTerminalProps {

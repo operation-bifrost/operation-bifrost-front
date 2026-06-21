@@ -1,6 +1,6 @@
 import { FeatureRow } from "@/components/steins-gate/features/feature-row";
 import { FeaturesDecor } from "@/components/steins-gate/features/features-decor";
-import { steinsGateContent } from "@/data/steins-gate-content";
+import { steinsGateContent } from "@/data/steins-gate";
 
 export function Features() {
   const { items } = steinsGateContent.features;

@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { CreditPerson } from "@/components/steins-gate/credits/credit-person";
 import { CreditsDecor } from "@/components/steins-gate/credits/credits-decor";
 import { SectionHeading } from "@/components/steins-gate/ui/section-heading";
-import { steinsGateContent } from "@/data/steins-gate-content";
+import { steinsGateContent } from "@/data/steins-gate";
 import { cn } from "@/lib/utils";
 
 interface GroupHeadingProps {

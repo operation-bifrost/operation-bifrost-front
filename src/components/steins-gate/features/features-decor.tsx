@@ -1,6 +1,6 @@
 import { DivergenceRail } from "@/components/steins-gate/decor/divergence-rail";
 import { Gear } from "@/components/steins-gate/decor/gear";
-import { steinsGateContent } from "@/data/steins-gate-content";
+import { steinsGateContent } from "@/data/steins-gate";
 
 export function FeaturesDecor() {
   const { divergence } = steinsGateContent.features;

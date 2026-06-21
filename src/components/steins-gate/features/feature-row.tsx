@@ -1,7 +1,7 @@
 import { LuCheck } from "react-icons/lu";
 import { FeatureTerminal } from "@/components/steins-gate/features/feature-terminal";
 import { useScrollProgress } from "@/hooks/use-scroll-progress";
-import type { FeatureItem } from "@/data/steins-gate-content";
+import type { FeatureItem } from "@/data/steins-gate";
 import { cn } from "@/lib/utils";
 
 interface FeatureRowProps {

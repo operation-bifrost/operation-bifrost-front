@@ -1,5 +1,5 @@
 import { Button } from "@/components/steins-gate/ui/button";
-import { steinsGateContent } from "@/data/steins-gate-content";
+import { steinsGateContent } from "@/data/steins-gate";
 import { LuDownload, LuFileText } from "react-icons/lu";
 
 export function DownloadCard() {

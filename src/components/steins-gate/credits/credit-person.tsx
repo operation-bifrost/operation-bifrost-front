@@ -1,4 +1,4 @@
-import type { CreditPerson as CreditPersonData } from "@/data/steins-gate-content";
+import type { CreditPerson as CreditPersonData } from "@/data/steins-gate";
 
 interface CreditPersonProps {
   person: CreditPersonData;

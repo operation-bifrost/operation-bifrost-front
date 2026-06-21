@@ -2,7 +2,7 @@ import { GalleryDecor } from "@/components/steins-gate/gallery/gallery-decor";
 import { GalleryVideos } from "@/components/steins-gate/gallery/gallery-videos";
 import { GalleryPhotos } from "@/components/steins-gate/gallery/gallery-photos";
 import { SectionHeading } from "@/components/steins-gate/ui/section-heading";
-import { steinsGateContent } from "@/data/steins-gate-content";
+import { steinsGateContent } from "@/data/steins-gate";
 
 export function Gallery() {
   const { eyebrow, heading, videos, photos } = steinsGateContent.gallery;

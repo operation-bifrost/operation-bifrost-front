@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { LuPlay } from "react-icons/lu";
-import type { GalleryVideo } from "@/data/steins-gate-content";
+import type { GalleryVideo } from "@/data/steins-gate";
 import { cn } from "@/lib/utils";
 
 interface GalleryVideosProps {

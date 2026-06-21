@@ -1,5 +1,5 @@
 import { Button } from "@/components/steins-gate/ui/button";
-import { steinsGateContent } from "@/data/steins-gate-content";
+import { steinsGateContent } from "@/data/steins-gate";
 
 export function Support() {
   const { supportHeading, supportLinks } = steinsGateContent.download;

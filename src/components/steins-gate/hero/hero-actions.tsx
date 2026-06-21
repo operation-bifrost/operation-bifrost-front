@@ -1,6 +1,6 @@
 import { LuArrowDown } from "react-icons/lu";
 import { Button } from "@/components/steins-gate/ui/button";
-import { steinsGateContent } from "@/data/steins-gate-content";
+import { steinsGateContent } from "@/data/steins-gate";
 
 export function HeroActions() {
   const { detailsCta, downloadCta } = steinsGateContent.hero;
@@ -16,11 +16,7 @@ export function HeroActions() {
       >
         {detailsCta.label}
       </Button>
-      <Button
-        variant="primary"
-        href={downloadCta.href}
-        className="font-bold"
-      >
+      <Button variant="primary" href={downloadCta.href} className="font-bold">
         {downloadCta.label}
       </Button>
     </div>

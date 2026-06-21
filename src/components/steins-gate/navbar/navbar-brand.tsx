@@ -1,5 +1,5 @@
 import { BifrostWordmark } from "@/components/steins-gate/ui/bifrost-wordmark";
-import { steinsGateContent } from "@/data/steins-gate-content";
+import { steinsGateContent } from "@/data/steins-gate";
 
 export function NavbarBrand() {
   const { brand } = steinsGateContent.navbar;

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type AnimationEvent } from "react";
 import { Button } from "@/components/steins-gate/ui/button";
-import { steinsGateContent } from "@/data/steins-gate-content";
+import { steinsGateContent } from "@/data/steins-gate";
 import { cn } from "@/lib/utils";
 
 interface MobileMenuOverlayProps {

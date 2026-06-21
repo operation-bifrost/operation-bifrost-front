@@ -1,5 +1,5 @@
 import { SectionHeading } from "@/components/steins-gate/ui/section-heading";
-import { steinsGateContent } from "@/data/steins-gate-content";
+import { steinsGateContent } from "@/data/steins-gate";
 import { DownloadCard } from "@/components/steins-gate/download/download-card";
 import { DownloadDecor } from "@/components/steins-gate/download/download-decor";
 import { InstallationSteps } from "@/components/steins-gate/download/installation-steps";

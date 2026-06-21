@@ -1,4 +1,4 @@
-import { steinsGateContent } from "@/data/steins-gate-content";
+import { steinsGateContent } from "@/data/steins-gate";
 
 export function InstallationSteps() {
   const { installSteps } = steinsGateContent.download;
