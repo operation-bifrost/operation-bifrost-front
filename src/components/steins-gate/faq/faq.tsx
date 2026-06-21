@@ -11,7 +11,7 @@ export function Faq() {
       <FaqDecor />
 
       <div className="relative mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
-        <SectionHeading heading={heading} eyebrow={eyebrow} className="mb-10 md:mb-14" />
+        <SectionHeading heading={heading} eyebrow={eyebrow} />
 
         <div className="grid items-stretch gap-6 sm:grid-cols-2">
           {items.map((item, index) => (
