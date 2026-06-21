@@ -617,6 +617,15 @@
     opacity: 0.3;
     border-radius: inherit;
   }
+
+  /* --- FAQ section: "Minimal Glass" terminal card body.
+   * Stone-800 → stone-700 vertical gradient at 90% opacity, matching the
+   * Terminal/Minimal Glass component in the design (same palette as the
+   * navbar). The translucency lets the card's backdrop-blur soften the gear
+   * decor bleeding behind it. --- */
+  .faq-terminal {
+    background: linear-gradient(180deg, rgba(41, 37, 36, 0.9) 0%, rgba(68, 64, 59, 0.9) 100%);
+  }
 }
 
 /* ----------------------------------------------------------------------- */
