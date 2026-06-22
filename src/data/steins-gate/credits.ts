@@ -7,7 +7,7 @@ import type { CreditPerson } from "./types";
 // team credits before launch. Roles, partners, and volunteer list are drafts.
 export const credits = {
   eyebrow: "credits_",
-  heading: "ผูู้จัดทำ",
+  heading: "ผู้จัดทำ",
   labMembers: {
     title: "สมาชิกแล็บ",
     members: [
