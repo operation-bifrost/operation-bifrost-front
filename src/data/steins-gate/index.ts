@@ -3,6 +3,7 @@ import { donate } from "./donate";
 import { download } from "./download";
 import { faq } from "./faq";
 import { features } from "./features";
+import { footer } from "./footer";
 import { gallery } from "./gallery";
 import { hero } from "./hero";
 import { navbar } from "./navbar";
@@ -18,6 +19,7 @@ export const steinsGateContent = {
   faq,
   credits,
   donate,
+  footer,
 } as const;
 
 export type SteinsGateContent = typeof steinsGateContent;
