@@ -7,6 +7,7 @@ import { Gallery } from "@/components/steins-gate/gallery/gallery";
 import { Download } from "@/components/steins-gate/download/download";
 import { Faq } from "@/components/steins-gate/faq/faq";
 import { Credits } from "@/components/steins-gate/credits/credits";
+import { Donate } from "@/components/steins-gate/donate/donate";
 
 const title = "Operation Bifrost | ปฏิบัติการไบฟรอส - โปรเจกต์แปล Steins;Gate ภาษาไทย";
 const description =
@@ -47,5 +48,6 @@ const twitterDescription =
     <Download client:load />
     <Faq client:load />
     <Credits />
+    <Donate client:visible />
   </div>
 </SteinsGateLayout>

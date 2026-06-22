@@ -11,6 +11,7 @@ export const navbar = {
     { label: "รายละเอียดม็อด", href: "#features" },
     { label: "คำถามที่พบบ่อย", href: "#faq" },
     { label: "ผู้จัดทำ", href: "#credits" },
+    { label: "สนับสนุน", href: "#donate" },
   ] satisfies ReadonlyArray<NavItem>,
   socials: [
     {

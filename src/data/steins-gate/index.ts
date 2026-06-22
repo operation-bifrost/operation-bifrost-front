@@ -1,4 +1,5 @@
 import { credits } from "./credits";
+import { donate } from "./donate";
 import { download } from "./download";
 import { faq } from "./faq";
 import { features } from "./features";
@@ -16,6 +17,7 @@ export const steinsGateContent = {
   download,
   faq,
   credits,
+  donate,
 } as const;
 
 export type SteinsGateContent = typeof steinsGateContent;
