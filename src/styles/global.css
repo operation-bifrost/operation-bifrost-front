@@ -140,6 +140,15 @@
     font-family: var(--font-line-seed-th);
     letter-spacing: var(--tracking-normal);
   }
+
+  /* Smooth in-page navigation for #anchor links (navbar menu, hero CTAs,
+     back-to-top). scroll-padding-top offsets the landing point by the fixed
+     navbar's footprint (top gutter + height) so a target heading doesn't come
+     to rest tucked under the navbar when it's on screen. */
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -149,5 +158,9 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  html {
+    scroll-behavior: auto;
   }
 }

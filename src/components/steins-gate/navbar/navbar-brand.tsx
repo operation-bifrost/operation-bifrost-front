@@ -5,7 +5,7 @@ export function NavbarBrand() {
   const { brand } = steinsGateContent.navbar;
 
   return (
-    <a href="/" aria-label="Operation Bifrost — back to top" className="flex items-center gap-4">
+    <a href="#" aria-label="Operation Bifrost — back to top" className="flex items-center gap-4">
       <img
         src={brand.logoSrc}
         alt=""
