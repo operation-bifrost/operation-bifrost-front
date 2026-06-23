@@ -204,7 +204,7 @@ export function Donate() {
     <section id="donate" className="relative py-8 md:py-10 lg:py-12">
       <DonateDecor />
 
-      <div className="relative mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
+      <div className="2xl:max-w-8xl relative mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
         <SectionHeading heading={heading} eyebrow={eyebrow} className="mb-8 md:mb-10" />
 
         <p className="text-muted-foreground mx-auto mb-8 max-w-5xl text-sm leading-relaxed md:mb-10 md:text-base">

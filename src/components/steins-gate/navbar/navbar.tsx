@@ -27,10 +27,10 @@ export function Navbar() {
         <nav
           aria-label="Main navigation"
           className={cn(
-            "relative mx-auto flex max-w-7xl items-center justify-between gap-4 rounded-md px-4 py-2 backdrop-blur lg:px-8 xl:gap-8",
+            "2xl:max-w-8xl relative mx-auto flex max-w-7xl items-center justify-between gap-4 rounded-md px-4 py-2 backdrop-blur lg:px-8 xl:gap-8",
             mobileMenuOpen
               ? "border border-transparent shadow-none"
-              : "border border-border shadow-button",
+              : "border-border shadow-button border",
           )}
           style={{
             background: mobileMenuOpen ? "transparent" : "var(--navbar-gradient)",
@@ -52,7 +52,7 @@ export function Navbar() {
             aria-expanded={mobileMenuOpen}
             aria-controls="navbar-mobile-panel"
             onClick={() => setMobileMenuOpen((v) => !v)}
-            className="mobile-menu-burger inline-flex size-10 items-center justify-center rounded-md text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:hidden"
+            className="mobile-menu-burger text-foreground focus-visible:ring-ring inline-flex size-10 items-center justify-center rounded-md focus-visible:ring-2 focus-visible:outline-none lg:hidden"
           >
             <span className="bar" aria-hidden="true" />
             <span className="bar" aria-hidden="true" />
@@ -61,10 +61,7 @@ export function Navbar() {
         </nav>
       </div>
 
-      <MobileMenuOverlay
-        open={mobileMenuOpen}
-        onClose={() => setMobileMenuOpen(false)}
-      />
+      <MobileMenuOverlay open={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
     </>
   );
 }

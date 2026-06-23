@@ -43,7 +43,7 @@ export function Credits() {
     <section id="credits" className="relative py-8 md:py-10 lg:py-12">
       <CreditsDecor />
 
-      <div className="relative mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
+      <div className="2xl:max-w-8xl relative mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
         <SectionHeading heading={heading} eyebrow={eyebrow} />
 
         {/* Left column gets a bit more width than the volunteer list so longer

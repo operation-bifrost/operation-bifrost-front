@@ -12,7 +12,7 @@ export function Download() {
     <section id="download" className="relative py-8 md:py-10 lg:py-12">
       <DownloadDecor />
 
-      <div className="relative mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
+      <div className="2xl:max-w-8xl relative mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
         {/* Section heading — full width, left-aligned */}
         <SectionHeading heading={heading} eyebrow={eyebrow} className="mb-10 md:mb-14" />
 

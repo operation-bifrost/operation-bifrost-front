@@ -10,7 +10,7 @@ export function Hero() {
           navbar content at every width, including ultra-wide viewports where a
           flat padding would drift left of the centered, max-w-7xl nav. */}
       <div className="relative flex h-full flex-col justify-end px-4 py-24 lg:px-12">
-        <div className="mx-auto w-full max-w-7xl px-4 lg:px-8">
+        <div className="2xl:max-w-8xl mx-auto w-full max-w-7xl px-4 lg:px-8">
           <HeroTitleBlock />
         </div>
       </div>

@@ -10,7 +10,7 @@ export function Faq() {
     <section id="faq" className="relative py-8 md:py-10 lg:py-12">
       <FaqDecor />
 
-      <div className="relative mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
+      <div className="2xl:max-w-8xl relative mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
         <SectionHeading heading={heading} eyebrow={eyebrow} />
 
         <div className="grid items-stretch gap-6 sm:grid-cols-2">

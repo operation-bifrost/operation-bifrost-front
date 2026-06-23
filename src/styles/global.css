@@ -7,6 +7,13 @@
 @theme {
   --font-line-seed-th: "LINE Seed Sans TH", sans-serif;
   --font-krub: "Krub", sans-serif;
+
+  /* Wide-screen page-container cap (one step above Tailwind's 7xl/80rem).
+   * Powers `max-w-8xl`; applied as `2xl:max-w-8xl` on every section container
+   * so content fills viewports >=1536px instead of stranding huge side gutters
+   * (a 1920px @ 100% OS scale screen sees a 1920px CSS viewport; 7xl alone
+   * leaves ~320px empty each side). Single source of truth for that width. */
+  --container-8xl: 96rem;
 }
 
 /* shadcn-style design-token → utility mapping.
