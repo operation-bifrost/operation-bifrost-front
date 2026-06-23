@@ -11,7 +11,7 @@ export function Features() {
 
       {/* isolate keeps the feature-row z-cascade (10/20/30) contained here
           and above the -z-10 decor, now that the section is no longer isolated. */}
-      <div className="2xl:max-w-8xl relative isolate mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
+      <div className="wide:max-w-8xl relative isolate mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
         <div className="flex flex-col lg:gap-4">
           {items.map((item, index) => (
             <FeatureRow key={item.terminalSlug} item={item} index={index} />
