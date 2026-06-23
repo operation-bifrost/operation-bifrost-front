@@ -30,3 +30,13 @@ CLAUDE.local.md
 .mcp.local.json
 docs/superpowers
 .playwright-mcp/
+
+# Local Cloudflare ECC skills (installed via /reload-skills; not part of the project)
+.claude/skills/cloudflare/
+.claude/skills/web-perf/
+.claude/skills/workers-best-practices/
+.claude/skills/wrangler/
+.agents/skills/cloudflare/
+.agents/skills/web-perf/
+.agents/skills/workers-best-practices/
+.agents/skills/wrangler/
