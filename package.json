@@ -10,7 +10,7 @@
     "astro": "astro",
     "wrangler:dev": "wrangler dev",
     "wrangler:deploy": "wrangler deploy",
-    "wrangler:deploy:dev": "wrangler deploy --env dev",
+    "wrangler:deploy:dev": "CLOUDFLARE_ENV=dev yarn build && wrangler deploy",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",

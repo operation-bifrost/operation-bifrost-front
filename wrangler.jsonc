@@ -7,11 +7,15 @@
   "observability": {
     "enabled": true
   },
-  // Isolated dev/staging Worker. `wrangler deploy --env dev` ships a separate
-  // Worker named "operationbifrost-dev" on *.workers.dev, leaving the production
-  // "operationbifrost" deployment untouched. Bindings/secrets are NOT inherited
-  // by environments — redefine any here (and set secrets with
-  // `wrangler secret put --env dev`) if production gains them later.
+  // Isolated dev/staging Worker. With @astrojs/cloudflare (Astro 6) the target
+  // environment is resolved at BUILD time via CLOUDFLARE_ENV — NOT by
+  // `wrangler deploy --env`. Build with `CLOUDFLARE_ENV=dev` so the adapter bakes
+  // the "operationbifrost-dev" name into dist/server/wrangler.json, then deploy:
+  //   CLOUDFLARE_ENV=dev yarn build && wrangler deploy   (== yarn wrangler:deploy:dev)
+  // WARNING: `wrangler deploy --env dev` does NOT work here — --env is ignored and
+  // it deploys the current build to PRODUCTION (operationbifrost).
+  // Bindings/secrets are not inherited; set dev secrets with
+  //   wrangler secret put <NAME> --name operationbifrost-dev
   "env": {
     "dev": {
       "observability": {
