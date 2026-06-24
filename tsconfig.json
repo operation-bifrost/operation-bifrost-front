@@ -8,6 +8,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["legacy", "dist", "node_modules", ".astro", ".wrangler", ".vercel"]
+  "include": [".astro/types.d.ts", "src/**/*", "worker-configuration.d.ts"],
+  "exclude": ["legacy", "design", "dist", "node_modules", ".astro", ".wrangler", ".vercel"]
 }
