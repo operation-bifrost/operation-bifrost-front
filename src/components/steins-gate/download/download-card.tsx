@@ -1,17 +1,20 @@
 import { Button } from "@/components/steins-gate/ui/button";
 import { CountdownTimer } from "@/components/steins-gate/download/countdown-timer";
-import { useCountdown } from "@/hooks/use-countdown";
+import { useState } from "react";
 import { steinsGateContent } from "@/data/steins-gate";
 import { FaDownload } from "react-icons/fa6";
 
 export function DownloadCard() {
   const { version, versionDate, downloadState } = steinsGateContent.download;
   const hasTargetDate = !!downloadState.targetDate;
-  const { isExpired } = useCountdown(downloadState.targetDate);
+
+  const [isExpired, setIsExpired] = useState(() => {
+    if (!downloadState.targetDate) return true;
+    return new Date(downloadState.targetDate).getTime() <= Date.now();
+  });
 
   const showActiveDownload = hasTargetDate && isExpired;
   const showCountdown = hasTargetDate && !isExpired;
-
   return (
     <div className="download-card border-primary/40 bg-card/80 relative overflow-hidden rounded border backdrop-blur-sm">
       {/* Amber glow behind card */}
@@ -49,7 +52,10 @@ export function DownloadCard() {
               >
                 เร็ว ๆ นี้
               </Button>
-              <CountdownTimer targetDate={downloadState.targetDate!} />
+              <CountdownTimer
+                targetDate={downloadState.targetDate!}
+                onComplete={() => setIsExpired(true)}
+              />
             </>
           ) : (
             <Button

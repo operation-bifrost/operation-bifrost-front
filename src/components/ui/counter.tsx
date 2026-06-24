@@ -52,8 +52,13 @@ interface NumericDigitProps {
 
 function NumericDigit({ place, value, height, digitStyle }: NumericDigitProps) {
   const valueRoundedToPlace = getValueRoundedToPlace(value, place);
-  const animatedValue = useSpring(valueRoundedToPlace);
-
+  const animatedValue = useSpring(valueRoundedToPlace, {
+    stiffness: 120,
+    damping: 20,
+    mass: 0.8,
+    restDelta: 0.005,
+    restSpeed: 0.005,
+  });
   useEffect(() => {
     animatedValue.set(valueRoundedToPlace);
   }, [animatedValue, valueRoundedToPlace]);

@@ -1,9 +1,12 @@
 import Counter from "@/components/ui/counter";
 import { useCountdown } from "@/hooks/use-countdown";
+import { useEffect, memo } from "react";
 
 interface CountdownTimerProps {
   /** ISO-8601 date string the timer counts down to. */
   targetDate: string;
+  /** Callback fired when the countdown finishes. */
+  onComplete?: () => void;
 }
 
 /**
@@ -11,8 +14,14 @@ interface CountdownTimerProps {
  * Uses the React Bits Counter component for smooth digit transitions and the
  * project's existing Nixie glow aesthetic.
  */
-export function CountdownTimer({ targetDate }: CountdownTimerProps) {
+export function CountdownTimer({ targetDate, onComplete }: CountdownTimerProps) {
   const { days, hours, minutes, seconds, isExpired } = useCountdown(targetDate);
+
+  useEffect(() => {
+    if (isExpired && onComplete) {
+      onComplete();
+    }
+  }, [isExpired, onComplete]);
 
   if (isExpired) return null;
 
@@ -35,7 +44,7 @@ export function CountdownTimer({ targetDate }: CountdownTimerProps) {
 /* ── Internal pieces ─────────────────────────────────────────────────── */
 
 /** Two-digit animated segment with a label underneath. Supports scaling beyond 2 digits. */
-function TimeSegment({
+const TimeSegment = memo(function TimeSegment({
   value,
   label,
   minDigits = 2,
@@ -71,7 +80,7 @@ function TimeSegment({
       </span>
     </div>
   );
-}
+});
 
 /** Nixie-colored colon separator between time segments. */
 function Separator() {
