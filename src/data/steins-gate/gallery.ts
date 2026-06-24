@@ -25,36 +25,36 @@ export const gallery = {
   ] satisfies ReadonlyArray<GalleryVideo>,
   photos: [
     {
-      src: "/images/steins-gate/features/prologue-after.png",
-      alt: "สกรีนช็อตเกม Steins;Gate แปลไทย — ฉากบทสนทนา",
+      src: "/images/steins-gate/gallery/dialogue-1.webp",
+      alt: "บทพูดตัวละคร 1",
     },
     {
-      src: "/images/steins-gate/features/prologue-before.png",
-      alt: "สกรีนช็อตเกม Steins;Gate — ฉากต้นฉบับ",
+      src: "/images/steins-gate/gallery/dialogue-2.webp",
+      alt: "บทพูดตัวละคร 2",
     },
     {
-      src: "/images/steins-gate/features/whiteboard-after.png",
-      alt: "สารานุกรมฉบับแปลไทย",
+      src: "/images/steins-gate/gallery/dialogue-3.webp",
+      alt: "บทพูดตัวละคร 3",
     },
     {
-      src: "/images/steins-gate/features/whiteboard-before.png",
-      alt: "สารานุกรมต้นฉบับภาษาญี่ปุ่น",
+      src: "/images/steins-gate/gallery/dialogue-4.webp",
+      alt: "บทพูดตัวละคร 4",
     },
     {
-      src: "/images/steins-gate/features/dialogue-after.jpg",
-      alt: "ฉากบทสนทนาแปลไทย",
+      src: "/images/steins-gate/gallery/phone-interface.webp",
+      alt: "เมนูโทรศัพท์",
     },
     {
-      src: "/images/steins-gate/features/dialogue-before.jpg",
-      alt: "ฉากบทสนทนาต้นฉบับ",
+      src: "/images/steins-gate/gallery/main-menu.webp",
+      alt: "เมนูหลัก",
     },
     {
-      src: "/images/steins-gate/features/prologue-after.png",
-      alt: "อีกมุมของฉากแปลไทย",
+      src: "/images/steins-gate/gallery/tips-list.webp",
+      alt: "สารานุกรม",
     },
     {
-      src: "/images/steins-gate/features/prologue-before.png",
-      alt: "อีกมุมของฉากต้นฉบับ",
+      src: "/images/steins-gate/gallery/config.webp",
+      alt: "หน้าการตั้งค่า",
     },
   ] satisfies ReadonlyArray<GalleryPhoto>,
 } as const;

@@ -4,7 +4,7 @@ import type { CtaConfig, NavItem, SocialLink } from "./types";
 
 export const navbar = {
   brand: {
-    logoSrc: "/images/steins-gate/bifrost-logo.png",
+    logoSrc: "/images/steins-gate/bifrost-logo.webp",
     logoAlt: "Operation Bifrost",
   },
   navItems: [

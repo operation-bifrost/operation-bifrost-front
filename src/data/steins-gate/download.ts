@@ -5,12 +5,12 @@ import type { CtaConfig, InstallStep, SocialBrand, SocialLink } from "./types";
 export const download = {
   eyebrow: "download_",
   heading: "ดาวน์โหลดม็อด",
-  version: "v1.2.1",
-  versionDate: "อัปเดต 10 ต.ค. 2026",
+  version: "v1.0.0",
+  versionDate: "อัปเดต 06/07/2026",
   patchNotesLabel: "รายละเอียดแพตช์",
   patchNotesHref: "#",
   downloadCta: {
-    label: "ดาวน์โหลด (.zip ขนาด 150MB)",
+    label: "ดาวน์โหลด (.zip ขนาด 1.24GB)",
     href: "#",
   } satisfies CtaConfig,
   warning:
@@ -20,14 +20,14 @@ export const download = {
       number: "01",
       title: "เลื่อนลงมาในส่วน Download Assets แล้วกด",
       subtitle: "อุอิอาอุอิอาอุอิอาอุอิอาอุอิอา",
-      imageSrc: "/images/steins-gate/download/install-step-01.png",
+      imageSrc: "/images/steins-gate/download/install-step-01.webp",
       imageAlt: "ขั้นตอนที่ 1: กดดาวน์โหลดไฟล์",
     },
     {
       number: "02",
       title: "แตกไฟล์ zip แล้วรันไฟล์ถึงถึง ทำตามขั้นตอนในตัวติดตั้ง",
       subtitle: "อุอิอาอุอิอาอุอิอาอุอิอาอุอิอาอุอิอา",
-      imageSrc: "/images/steins-gate/download/install-step-02.png",
+      imageSrc: "/images/steins-gate/download/install-step-02.webp",
       imageAlt: "ขั้นตอนที่ 2: แตกไฟล์ zip",
     },
   ] satisfies ReadonlyArray<InstallStep>,
