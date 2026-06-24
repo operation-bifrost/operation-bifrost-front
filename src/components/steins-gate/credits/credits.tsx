@@ -77,7 +77,7 @@ export function Credits() {
 
           {/* Right column — volunteer translators. self-center keeps this block
               vertically centered against the taller left column at lg+. */}
-          <div className="lg:self-center">
+          <div className="lg:self-start">
             <CreditGroup title={volunteers.title}>
               <ul className="mx-auto grid w-fit grid-cols-2 gap-x-12 gap-y-3 text-left">
                 {volunteers.names.map((name) => (

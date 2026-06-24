@@ -248,6 +248,15 @@ function CompareSlider(props: CompareSliderProps) {
     [store, propsRef],
   );
 
+  React.useEffect(() => {
+    const node = rootRef.current;
+    if (!node || interaction !== "drag") return;
+
+    const handler = (e: TouchEvent) => e.preventDefault();
+    node.addEventListener("touchstart", handler, { passive: false });
+    return () => node.removeEventListener("touchstart", handler);
+  }, [interaction]);
+
   const contextValue = React.useMemo<CompareSliderContextValue>(
     () => ({
       interaction,
