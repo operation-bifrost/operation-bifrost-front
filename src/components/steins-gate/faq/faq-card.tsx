@@ -1,6 +1,6 @@
 import type { FaqItem } from "@/data/steins-gate";
 import { useReveal } from "@/hooks/use-reveal";
-import { cn } from "@/lib/utils";
+import { cn, renderTextWithLinks } from "@/lib/utils";
 
 interface FaqCardProps {
   item: FaqItem;
@@ -39,7 +39,9 @@ export function FaqCard({ item, index }: FaqCardProps) {
             {" >"}
           </span>
         </h3>
-        <p className="font-krub text-foreground/85 text-base leading-loose">{item.answer}</p>
+        <p className="font-krub text-foreground/85 text-base leading-loose">
+          {renderTextWithLinks(item.answer)}
+        </p>
       </div>
     </article>
   );

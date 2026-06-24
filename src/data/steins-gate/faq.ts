@@ -17,7 +17,7 @@ export const faq = {
     {
       question: "สามาถลงม็อดใน Linux หรือ macOS ได้ไหม?",
       answer:
-        "สามารถลง linux ได้ โดยมี tool automate ของทาง Committee of Zero อยู่ สามารถไปอ่านรายละเอียดได้ที่ลิงก์นี้ https://github.com/CommitteeOfZero/polyversal-coz-linux-patcher แต่สำหรับ macOS ยังไม่เคยมีใครลองเหมือนกันครับ",
+        "สามารถลง linux ได้ โดยมี tool automate ของทาง Committee of Zero อยู่ สามารถไปอ่านรายละเอียดได้ที่[ลิงก์นี้](https://github.com/CommitteeOfZero/polyversal-coz-linux-patcher) แต่สำหรับ macOS ยังไม่เคยมีใครลองเหมือนกันครับ",
     },
     {
       question: "ม็อดนี้แปลเนื้อหาส่วนไหนบ้าง?",
