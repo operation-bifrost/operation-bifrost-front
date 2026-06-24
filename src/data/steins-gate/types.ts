@@ -19,6 +19,26 @@ export interface CtaConfig {
   href: string;
 }
 
+/**
+ * Configuration controlling the download card's CTA state.
+ *
+ * If `targetDate` is specified, the state is derived:
+ * - If countdown hasn't ended yet: status is countdown (shows countdown timer + disabled button).
+ * - If countdown has ended: status is download (shows active link button + version details).
+ *
+ * If no `targetDate` is specified, it defaults to a disabled "เร็ว ๆ นี้" button.
+ */
+export type DownloadState = {
+  label: string;
+  href: string;
+  note?: string;
+  /**
+   * Optional ISO-8601 date string the timer counts down to.
+   * If not specified, displays the disabled "เร็ว ๆ นี้" button.
+   */
+  targetDate?: string;
+};
+
 export interface GalleryVideo {
   id: string;
   title: string;

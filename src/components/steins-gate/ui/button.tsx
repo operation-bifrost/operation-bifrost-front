@@ -4,8 +4,11 @@ import { cn } from "@/lib/utils";
 
 interface ButtonProps {
   variant: "primary" | "outlined";
-  href: string;
   children: ReactNode;
+  /** When provided the button renders as an `<a>`. Omit for a non-navigating element. */
+  href?: string;
+  /** Visually and functionally disables the button. */
+  disabled?: boolean;
   leadingIcon?: IconType;
   trailingIcon?: IconType;
   iconStrokeWidth?: number;
@@ -27,6 +30,7 @@ export function Button({
   variant,
   href,
   children,
+  disabled,
   leadingIcon: LeadingIcon,
   trailingIcon: TrailingIcon,
   iconStrokeWidth,
@@ -35,12 +39,9 @@ export function Button({
   className,
 }: ButtonProps) {
   const iconCls = iconClassName ?? "size-4";
-  return (
-    <a
-      href={href}
-      className={cn(BASE, VARIANTS[variant], className)}
-      {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-    >
+
+  const content = (
+    <>
       {LeadingIcon && (
         <LeadingIcon className={iconCls} strokeWidth={iconStrokeWidth} aria-hidden="true" />
       )}
@@ -48,6 +49,28 @@ export function Button({
       {TrailingIcon && (
         <TrailingIcon className={iconCls} strokeWidth={iconStrokeWidth} aria-hidden="true" />
       )}
+    </>
+  );
+
+  if (disabled || !href) {
+    return (
+      <span
+        role="button"
+        aria-disabled="true"
+        className={cn(BASE, VARIANTS[variant], "pointer-events-none opacity-50", className)}
+      >
+        {content}
+      </span>
+    );
+  }
+
+  return (
+    <a
+      href={href}
+      className={cn(BASE, VARIANTS[variant], className)}
+      {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+    >
+      {content}
     </a>
   );
 }

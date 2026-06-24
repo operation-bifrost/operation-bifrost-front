@@ -1,6 +1,6 @@
 import { SiDiscord, SiFacebook } from "react-icons/si";
 
-import type { CtaConfig, InstallStep, SocialBrand, SocialLink } from "./types";
+import type { DownloadState, InstallStep, SocialBrand, SocialLink } from "./types";
 
 export const download = {
   eyebrow: "download_",
@@ -9,12 +9,14 @@ export const download = {
   versionDate: "อัปเดต 06/07/2026",
   patchNotesLabel: "รายละเอียดแพตช์",
   patchNotesHref: "#",
-  downloadCta: {
+  downloadState: {
     label: "ดาวน์โหลด (.zip ขนาด 1.24GB)",
     href: "#",
-  } satisfies CtaConfig,
-  warning:
-    "*** แพตช์ภาษาไทยนี้พัฒนาจากแพตช์ภาษาอังกฤษของ Committee of Zero สามารถใช้ได้กับ STEINS;GATE เวอร์ชัน Steam ที่เป็นเวอร์ชันภาษาอังกฤษเท่านั้น ไม่สามารถทำงานบนเวอร์ชันอื่นได้",
+    // ISO-8601 target date for the countdown timer. Change this to set the release date.
+    // If not specified, displays the disabled "เร็ว ๆ นี้" button.
+    targetDate: "2026-07-06T00:00:00+07:00",
+    note: "*** แพตช์ภาษาไทยนี้พัฒนาจากแพตช์ภาษาอังกฤษของ Committee of Zero สามารถใช้ได้กับ STEINS;GATE เวอร์ชัน Steam ที่เป็นเวอร์ชันภาษาอังกฤษเท่านั้น ไม่สามารถทำงานบนเวอร์ชันอื่นได้",
+  } as DownloadState,
   installSteps: [
     {
       number: "01",
