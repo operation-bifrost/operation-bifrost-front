@@ -15,29 +15,25 @@ export function BifrostWordmark({ size = 32, className }: BifrostWordmarkProps) 
 
   return (
     <span
-      className={cn("relative inline-block whitespace-nowrap leading-none", className)}
+      className={cn("relative inline-block leading-none whitespace-nowrap", className)}
       style={{ height: `${size}px` }}
       aria-label={TEXT}
     >
       <span
         aria-hidden="true"
-        className="absolute inset-0 frame font-bonx-frame"
+        className="frame font-bonx-frame absolute inset-0"
         style={sharedTextStyle}
       >
         {TEXT}
       </span>
       <span
         aria-hidden="true"
-        className="absolute inset-0 sihouette font-bonx-sihouette"
+        className="sihouette font-bonx-sihouette absolute inset-0"
         style={sharedTextStyle}
       >
         {TEXT}
       </span>
-      <span
-        aria-hidden="true"
-        className="relative title font-bonx"
-        style={sharedTextStyle}
-      >
+      <span aria-hidden="true" className="title font-bonx relative" style={sharedTextStyle}>
         {TEXT}
       </span>
     </span>

@@ -1,28 +1,26 @@
 {
-	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "operationbifrost",
-	"main": "@astrojs/cloudflare/entrypoints/server",
-	"compatibility_date": "2026-05-21",
-	"compatibility_flags": [
-		"nodejs_compat"
-	],
-	"observability": {
-		"enabled": true
-	},
-	// Isolated dev/staging Worker. With @astrojs/cloudflare (Astro 6) the target
-	// environment is resolved at BUILD time via CLOUDFLARE_ENV — NOT by
-	// `wrangler deploy --env`. Build with `CLOUDFLARE_ENV=dev` so the adapter bakes
-	// the "operationbifrost-dev" name into dist/server/wrangler.json, then deploy:
-	//   CLOUDFLARE_ENV=dev yarn build && wrangler deploy   (== yarn wrangler:deploy:dev)
-	// WARNING: `wrangler deploy --env dev` does NOT work here — --env is ignored and
-	// it deploys the current build to PRODUCTION (operationbifrost).
-	// Bindings/secrets are not inherited; set dev secrets with
-	//   wrangler secret put <NAME> --name operationbifrost-dev
-	"env": {
-		"dev": {
-			"observability": {
-				"enabled": true
-			}
-		}
-	}
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "operationbifrost",
+  "main": "@astrojs/cloudflare/entrypoints/server",
+  "compatibility_date": "2026-05-21",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": {
+    "enabled": true,
+  },
+  // Isolated dev/staging Worker. With @astrojs/cloudflare (Astro 6) the target
+  // environment is resolved at BUILD time via CLOUDFLARE_ENV — NOT by
+  // `wrangler deploy --env`. Build with `CLOUDFLARE_ENV=dev` so the adapter bakes
+  // the "operationbifrost-dev" name into dist/server/wrangler.json, then deploy:
+  //   CLOUDFLARE_ENV=dev yarn build && wrangler deploy   (== yarn wrangler:deploy:dev)
+  // WARNING: `wrangler deploy --env dev` does NOT work here — --env is ignored and
+  // it deploys the current build to PRODUCTION (operationbifrost).
+  // Bindings/secrets are not inherited; set dev secrets with
+  //   wrangler secret put <NAME> --name operationbifrost-dev
+  "env": {
+    "dev": {
+      "observability": {
+        "enabled": true,
+      },
+    },
+  },
 }

@@ -7,18 +7,13 @@ interface NavMenuLinkProps {
   isActive?: boolean;
 }
 
-export function NavMenuLink({
-  label,
-  href,
-  className,
-  isActive = false,
-}: NavMenuLinkProps) {
+export function NavMenuLink({ label, href, className, isActive = false }: NavMenuLinkProps) {
   return (
     <a
       href={href}
       aria-current={isActive ? "page" : undefined}
       className={cn(
-        "nav-link inline-flex h-10 items-center whitespace-nowrap rounded-md px-4 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        "nav-link text-foreground focus-visible:ring-ring inline-flex h-10 items-center rounded-md px-4 whitespace-nowrap focus-visible:ring-2 focus-visible:outline-none",
         isActive && "is-active",
         className,
       )}
