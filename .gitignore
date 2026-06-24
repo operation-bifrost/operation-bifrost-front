@@ -2,10 +2,11 @@
 dist/
 .vercel/
 .wrangler/
-.yarn/
+.yarn/*
+!.yarn/releases/
+!.yarn/patches/
 # generated types
 .astro/
-.yarnrc.yml
 
 # dependencies
 node_modules/
