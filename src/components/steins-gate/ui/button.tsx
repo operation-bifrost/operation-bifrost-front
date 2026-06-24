@@ -15,6 +15,7 @@ interface ButtonProps {
   iconClassName?: string;
   external?: boolean;
   className?: string;
+  onClick?: () => void;
 }
 
 const BASE =
@@ -37,6 +38,7 @@ export function Button({
   iconClassName,
   external,
   className,
+  onClick,
 }: ButtonProps) {
   const iconCls = iconClassName ?? "size-4";
 
@@ -67,6 +69,7 @@ export function Button({
   return (
     <a
       href={href}
+      onClick={onClick}
       className={cn(BASE, VARIANTS[variant], className)}
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
     >

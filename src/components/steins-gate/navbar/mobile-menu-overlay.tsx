@@ -130,7 +130,12 @@ export function MobileMenuOverlay({ open, onClose }: MobileMenuOverlayProps) {
           </ul>
 
           <div className="mobile-menu-rise-7">
-            <Button variant="primary" href={primaryCta.href} className="w-full font-bold">
+            <Button
+              variant="primary"
+              href={primaryCta.href}
+              onClick={onClose}
+              className="w-full font-bold"
+            >
               {primaryCta.label}
             </Button>
           </div>

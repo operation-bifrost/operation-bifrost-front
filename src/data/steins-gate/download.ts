@@ -21,14 +21,14 @@ export const download = {
     {
       number: "01",
       title: "แตกไฟล์ zip แล้วเปิดโปรแกรม SGPatch-Installer.exe",
-      subtitle: "หากเปิดโปรแกรม SGPatch-Installer.exe แบบยังไม่ได้แตกไฟล์ะทำให้ลงม็อดไม่สำเร็จ",
+      subtitle: "หากเปิดโปรแกรม SGPatch-Installer.exe แบบยังไม่ได้แตกไฟล์จะทำให้ลงม็อดไม่สำเร็จ",
       imageSrc: "/images/steins-gate/download/install-step-01.webp",
       imageAlt: "ขั้นตอนที่ 1: แตกไฟล์ zip",
     },
     {
       number: "02",
       title: "ทำตามขั้นตอนในตัวติดตั้งเพื่อลงม็อด",
-      subtitle: "อย่าลืมติ๊กยอมรับเงื่อนไขและเช็คตำแหน่งโฟลเดอร์เกมให้ถูกต้อง",
+      subtitle: "อย่าลืมติ๊กยอมรับเงื่อนไขและเช็กตำแหน่งโฟลเดอร์เกมให้ถูกต้อง",
       imageSrc: "/images/steins-gate/download/install-step-02.webp",
       imageAlt: "ขั้นตอนที่ 2: ติดตั้ง",
     },
