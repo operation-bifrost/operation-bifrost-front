@@ -1,10 +1,9 @@
 import { Button } from "@/components/steins-gate/ui/button";
 import { steinsGateContent } from "@/data/steins-gate";
-import { LuDownload, LuFileText } from "react-icons/lu";
+import { FaDownload } from "react-icons/fa6";
 
 export function DownloadCard() {
-  const { version, versionDate, patchNotesLabel, patchNotesHref, downloadCta, warning } =
-    steinsGateContent.download;
+  const { version, versionDate, downloadCta, warning } = steinsGateContent.download;
 
   return (
     <div className="download-card border-primary/40 bg-card/80 relative overflow-hidden rounded border backdrop-blur-sm">
@@ -25,7 +24,7 @@ export function DownloadCard() {
           <Button
             variant="primary"
             href={downloadCta.href}
-            leadingIcon={LuDownload}
+            leadingIcon={FaDownload}
             iconClassName="size-6"
             className="h-auto px-10 py-4 text-lg font-bold md:text-xl"
           >
@@ -37,14 +36,14 @@ export function DownloadCard() {
             <span>
               {version} ({versionDate})
             </span>
-            <span className="text-border">|</span>
-            <a
+            {/*<span className="text-border">|</span>*/}
+            {/*<a
               href={patchNotesHref}
               className="text-primary hover:text-primary/80 inline-flex items-center gap-1 transition-colors"
             >
               <LuFileText className="h-3.5 w-3.5" />
               {patchNotesLabel}
-            </a>
+            </a>*/}
           </div>
         </div>
 
