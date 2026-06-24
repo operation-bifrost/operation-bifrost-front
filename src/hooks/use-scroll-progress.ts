@@ -3,19 +3,24 @@ import { useEffect, useRef, useState } from "react";
 interface UseScrollProgressOptions {
   startTopRatio?: number;
   endTopRatio?: number;
+  disabled?: boolean;
 }
 
 export function useScrollProgress<T extends HTMLElement = HTMLDivElement>({
   startTopRatio = 0.92,
   endTopRatio = 0.4,
+  disabled = false,
 }: UseScrollProgressOptions = {}) {
   const ref = useRef<T | null>(null);
   const [progress, setProgress] = useState(0);
-
   useEffect(() => {
+    if (disabled) {
+      setProgress(1);
+      return;
+    }
+
     const node = ref.current;
     if (!node) return;
-
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     if (reducedMotion.matches) {
       setProgress(1);
@@ -58,7 +63,7 @@ export function useScrollProgress<T extends HTMLElement = HTMLDivElement>({
       window.removeEventListener("resize", schedule);
       if (rafId !== null) cancelAnimationFrame(rafId);
     };
-  }, [startTopRatio, endTopRatio]);
+  }, [startTopRatio, endTopRatio, disabled]);
 
   return { ref, progress };
 }

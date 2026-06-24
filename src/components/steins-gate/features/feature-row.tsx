@@ -1,6 +1,9 @@
+import { useState, useEffect } from "react";
 import { LuCheck } from "react-icons/lu";
 import { FeatureTerminal } from "@/components/steins-gate/features/feature-terminal";
 import { useScrollProgress } from "@/hooks/use-scroll-progress";
+import { useReveal } from "@/hooks/use-reveal";
+import { useComposedRefs } from "@/lib/compose-refs";
 import type { FeatureItem } from "@/data/steins-gate";
 import { cn } from "@/lib/utils";
 
@@ -36,24 +39,59 @@ function slice(progress: number, [start, end]: readonly [number, number]) {
 }
 
 export function FeatureRow({ item, index }: FeatureRowProps) {
-  const { ref, progress } = useScrollProgress<HTMLDivElement>({
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 1023px)");
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mediaQuery.addEventListener("change", handler);
+
+    const timeoutId = setTimeout(() => {
+      setIsMobile(mediaQuery.matches);
+    }, 0);
+
+    return () => {
+      mediaQuery.removeEventListener("change", handler);
+      clearTimeout(timeoutId);
+    };
+  }, []);
+
+  const { ref: scrollRef, progress } = useScrollProgress<HTMLDivElement>({
     startTopRatio: 0.95,
     endTopRatio: 0.25,
+    disabled: isMobile,
   });
+
+  const { ref: revealRef, isVisible } = useReveal<HTMLDivElement>({
+    rootMargin: "0px 0px -10% 0px",
+    threshold: 0.05,
+  });
+
+  const composedRef = useComposedRefs(scrollRef, revealRef);
   const cascade = CASCADE[index] ?? CASCADE[0];
 
   const textT = slice(progress, TEXT_PROGRESS_RANGE);
   const terminalT = slice(progress, TERMINAL_PROGRESS_RANGE);
-
   return (
-    <div ref={ref} className={cn("relative", cascade.rowMargin)} style={{ zIndex: cascade.zIndex }}>
+    <div
+      ref={composedRef}
+      className={cn("relative", cascade.rowMargin)}
+      style={{ zIndex: cascade.zIndex }}
+    >
       <div className="lg:relative lg:flex lg:min-h-[440px] lg:items-center">
         <div
-          className="relative z-20 flex flex-col gap-5 lg:w-[42%] lg:will-change-[opacity,transform]"
-          style={{
-            opacity: textT,
-            transform: `translateY(${(1 - textT) * 28}px)`,
-          }}
+          className={cn(
+            "relative z-20 flex flex-col gap-5 lg:w-[42%] lg:will-change-[opacity,transform]",
+            isMobile && "features-reveal",
+            isMobile && isVisible && "is-visible",
+          )}
+          style={
+            isMobile
+              ? undefined
+              : {
+                  opacity: textT,
+                  transform: `translateY(${(1 - textT) * 28}px)`,
+                }
+          }
         >
           <span className="border-primary/45 bg-primary/5 text-primary inline-flex items-center gap-1.5 self-start border px-2.5 py-1 font-mono text-[11px] tracking-[0.22em] uppercase">
             <span aria-hidden="true" className="text-primary/70 font-medium">
@@ -94,11 +132,19 @@ export function FeatureRow({ item, index }: FeatureRowProps) {
           )}
         >
           <div
-            className="lg:will-change-[opacity,transform]"
-            style={{
-              opacity: terminalT,
-              transform: `translateY(${(1 - terminalT) * 56}px)`,
-            }}
+            className={cn(
+              "lg:will-change-[opacity,transform]",
+              isMobile && "features-reveal",
+              isMobile && isVisible && "is-visible",
+            )}
+            style={
+              isMobile
+                ? undefined
+                : {
+                    opacity: terminalT,
+                    transform: `translateY(${(1 - terminalT) * 56}px)`,
+                  }
+            }
           >
             <FeatureTerminal label={item.terminalLabel} comparison={item.comparison} />
           </div>
