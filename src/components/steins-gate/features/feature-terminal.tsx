@@ -40,6 +40,8 @@ export function FeatureTerminal({ label, comparison, className }: FeatureTermina
                 alt={comparison.beforeAlt}
                 className="size-full object-cover"
                 draggable={false}
+                loading="lazy"
+                decoding="async"
               />
             </CompareSliderBefore>
             <CompareSliderAfter>
@@ -48,6 +50,8 @@ export function FeatureTerminal({ label, comparison, className }: FeatureTermina
                 alt={comparison.afterAlt}
                 className="size-full object-cover"
                 draggable={false}
+                loading="lazy"
+                decoding="async"
               />
             </CompareSliderAfter>
 

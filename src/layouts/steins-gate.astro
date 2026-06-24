@@ -17,6 +17,33 @@ const props = Astro.props;
 ---
 
 <BaseLayout {...props} htmlClass="theme-steins-gate dark" lang="th">
-  <slot name="head" slot="head" />
+  <Fragment slot="head">
+    {
+      /* Preload mirrors HeroBanner's <picture> media queries exactly so every
+        viewport preloads the same image it will render (no double download). */
+    }
+    <link
+      rel="preload"
+      as="image"
+      media="(max-width: 767px)"
+      href="/images/steins-gate/hero-bg-small.webp"
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      as="image"
+      media="(min-width: 768px) and (max-width: 1023px)"
+      href="/images/steins-gate/hero-bg-medium.webp"
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      as="image"
+      media="(min-width: 1024px)"
+      href="/images/steins-gate/hero-bg-large.webp"
+      fetchpriority="high"
+    />
+    <slot name="head" />
+  </Fragment>
   <slot />
 </BaseLayout>
