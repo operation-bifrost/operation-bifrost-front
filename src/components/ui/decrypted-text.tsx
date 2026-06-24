@@ -1,9 +1,8 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import { useEffect, useState, useRef, useMemo, useCallback } from "react";
-import { motion } from "motion/react";
-import type { HTMLMotionProps } from "motion/react";
+import type { ComponentProps } from "react";
 
-interface DecryptedTextProps extends HTMLMotionProps<"span"> {
+interface DecryptedTextProps extends ComponentProps<"span"> {
   text: string;
   speed?: number;
   maxIterations?: number;
@@ -371,7 +370,7 @@ export function DecryptedText({
         : {};
 
   return (
-    <motion.span
+    <span
       ref={containerRef}
       className={`inline-block whitespace-pre-wrap ${parentClassName}`}
       {...animateProps}
@@ -390,6 +389,6 @@ export function DecryptedText({
           );
         })}
       </span>
-    </motion.span>
+    </span>
   );
 }
