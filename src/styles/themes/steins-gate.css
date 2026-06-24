@@ -192,12 +192,18 @@
   .title {
     color: var(--color-nixie-base);
     animation: bifrost-glow 3s ease-in-out infinite alternate;
-  }
 
-  .glow-all {
-    color: var(--color-nixie-base);
-    border-color: var(--color-nixie-base);
-    animation: bifrost-glow-all 3s ease-in-out infinite alternate;
+    /* Touch devices (low-end mobile): the animated text-shadow repaints the
+       glyph every frame, forever, on always-visible elements (navbar wordmark,
+       divergence rails). Freeze to a static glow — same look, no per-frame
+       repaint. Pointer devices keep the animated nixie flicker. */
+    @media (hover: none) {
+      animation: none;
+      text-shadow:
+        0 0 20px var(--color-nixie-base),
+        0 0 50px var(--color-nixie-base),
+        0 0 5px rgb(255, 212, 71);
+    }
   }
 
   .typing {
@@ -646,25 +652,6 @@
   }
 }
 
-@keyframes bifrost-glow-all {
-  from {
-    text-shadow:
-      0 0 20px var(--color-nixie-base),
-      0 0 50px var(--color-nixie-base),
-      0 0 5px rgb(255, 212, 71);
-    border-color: var(--color-nixie-base);
-    filter: drop-shadow(0 0 20px var(--color-nixie-base));
-  }
-  to {
-    text-shadow:
-      0 0 30px rgb(255, 219, 101),
-      0 0 60px rgb(255, 219, 101),
-      0 0 15px rgb(255, 203, 30);
-    border-color: rgb(255, 219, 101);
-    filter: drop-shadow(0 0 30px rgb(255, 219, 101));
-  }
-}
-
 @keyframes bifrost-typing {
   from {
     opacity: 0;
@@ -731,5 +718,20 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* ----------------------------------------------------------------------- */
+/* Low-end mobile: kill backdrop-filter blur                               */
+/* ----------------------------------------------------------------------- */
+/* Each backdrop-blur element forces its own GPU blur pass; the page renders
+   ~30 simultaneously on a phone-width viewport, which tanks weak mobile GPUs
+   during scroll. Below the lg breakpoint we drop the blur and lean on the
+   surfaces' existing translucent background colors (the dark theme keeps them
+   legible). Desktop (lg+) keeps the full glassmorphism. Scoped to the theme. */
+@media (max-width: 1023px) {
+  .theme-steins-gate [class*="backdrop-blur"] {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
   }
 }
