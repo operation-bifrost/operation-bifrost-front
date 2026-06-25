@@ -10,7 +10,7 @@ const BUTTON_STYLE_DANGER = 4;
 const COMPONENT_TYPE_ACTION_ROW = 1;
 const COMPONENT_TYPE_BUTTON = 2;
 
-function hexToBytes(hex: string): Uint8Array {
+function hexToBytes(hex: string): Uint8Array<ArrayBuffer> {
   if (hex.length % 2 !== 0 || /[^0-9a-fA-F]/.test(hex)) {
     throw new Error("invalid hex");
   }
