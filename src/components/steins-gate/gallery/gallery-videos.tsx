@@ -43,7 +43,7 @@ export function GalleryVideos({ videos }: GalleryVideosProps) {
                 />
 
                 {/* Gradient overlay */}
-                <div className="from-background/90 via-background/30 absolute inset-0 bg-gradient-to-t to-transparent" />
+                <div className="from-background/90 via-background/30 absolute inset-0 bg-linear-to-t to-transparent" />
 
                 {/* Play button */}
                 <div className="absolute inset-0 flex items-center justify-center">
@@ -59,8 +59,8 @@ export function GalleryVideos({ videos }: GalleryVideosProps) {
                 </div>
 
                 {/* Video info overlay */}
-                <div className="absolute right-0 bottom-0 left-0 p-3 text-start">
-                  <p className="text-foreground line-clamp-1 text-sm leading-snug font-medium">
+                <div className="absolute inset-x-0 bottom-0 p-3 text-start">
+                  <p className="text-foreground line-clamp-1 text-sm/snug font-medium">
                     {video.title}
                   </p>
                   {video.channel && (

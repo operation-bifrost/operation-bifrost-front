@@ -10,7 +10,7 @@ interface SectionHeadingProps {
 export function SectionHeading({ heading, eyebrow, className }: SectionHeadingProps) {
   return (
     <div className={cn("mb-12 flex w-fit flex-col items-start", className)}>
-      <h2 className="text-foreground text-3xl leading-tight font-bold md:text-4xl">
+      <h2 className="text-foreground text-3xl/tight font-bold md:text-4xl">
         <DecryptedText
           text={heading}
           animateOn="inViewHover"

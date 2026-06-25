@@ -32,14 +32,14 @@ export function FaqCard({ item, index }: FaqCardProps) {
       <div className="bg-secondary border-border h-2 border-b" />
 
       {/* Glass body — stone gradient; question reads as the terminal prompt */}
-      <div className="faq-terminal flex flex-1 flex-col gap-6 px-8 py-8 md:gap-7 md:px-10 md:py-9">
-        <h3 className="font-krub text-primary text-base leading-relaxed font-bold">
+      <div className="faq-terminal flex flex-1 flex-col gap-6 p-8 md:gap-7 md:px-10 md:py-9">
+        <h3 className="font-krub text-primary text-base/relaxed font-bold">
           {item.question}
           <span aria-hidden="true" className="text-primary/70 font-mono">
             {" >"}
           </span>
         </h3>
-        <p className="font-krub text-foreground/85 text-base leading-loose">
+        <p className="font-krub text-foreground/85 text-base/loose">
           {renderTextWithLinks(item.answer)}
         </p>
       </div>

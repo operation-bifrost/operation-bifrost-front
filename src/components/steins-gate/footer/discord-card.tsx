@@ -90,7 +90,7 @@ export function DiscordCard() {
             </span>
           </div>
         ) : (
-          <p className="text-muted-foreground text-sm leading-relaxed">{discord.blurb}</p>
+          <p className="text-muted-foreground text-sm/relaxed">{discord.blurb}</p>
         )}
 
         <Button variant="primary" href={invite} external className="font-bold">

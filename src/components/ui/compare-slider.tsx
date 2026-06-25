@@ -325,7 +325,7 @@ function CompareSliderBefore(props: CompareSliderBeforeProps) {
       data-orientation={orientation}
       {...beforeProps}
       ref={ref}
-      className={cn("absolute inset-0 h-full w-full object-cover", className)}
+      className={cn("absolute inset-0 size-full object-cover", className)}
       style={{
         clipPath,
         ...style,
@@ -367,7 +367,7 @@ function CompareSliderAfter(props: CompareSliderAfterProps) {
       data-orientation={orientation}
       {...afterProps}
       ref={ref}
-      className={cn("absolute inset-0 h-full w-full object-cover", className)}
+      className={cn("absolute inset-0 size-full object-cover", className)}
       style={{
         clipPath,
         ...style,

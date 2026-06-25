@@ -18,7 +18,7 @@ export function InstallationSteps() {
               <span className="bg-primary text-primary-foreground rounded px-2.5 py-0.5 font-mono text-sm font-bold">
                 {step.number}
               </span>
-              <p className="text-foreground text-sm leading-snug md:text-base">{step.title}</p>
+              <p className="text-foreground text-sm/snug md:text-base">{step.title}</p>
             </div>
 
             {/* Step subtitle */}
@@ -27,11 +27,11 @@ export function InstallationSteps() {
             )}
 
             {/* Step screenshot */}
-            <div className="bg-background/60 relative aspect-[16/10] w-full">
+            <div className="bg-background/60 relative aspect-16/10 w-full">
               <img
                 src={step.imageSrc}
                 alt={step.imageAlt}
-                className="h-full w-full object-contain p-4"
+                className="size-full object-contain p-4"
                 loading="lazy"
               />
             </div>

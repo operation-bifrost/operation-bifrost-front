@@ -81,7 +81,7 @@ export function DownloadCard() {
 
         {/* Note text — only shown when provided */}
         {downloadState.note && (
-          <p className="font-krub max-w-2xl text-sm leading-relaxed font-bold md:text-base">
+          <p className="font-krub max-w-2xl text-sm/relaxed font-bold md:text-base">
             {downloadState.note.split("\n").map((line, i, arr) => (
               <span key={i}>
                 {line}

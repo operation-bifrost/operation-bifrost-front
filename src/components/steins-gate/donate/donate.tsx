@@ -170,7 +170,7 @@ function CryptoView({ channel }: { channel: DonateCryptoChannel }) {
           </button>
         </div>
 
-        <p className="text-muted-foreground text-sm leading-relaxed">
+        <p className="text-muted-foreground text-sm/relaxed">
           อย่าลืมเช็ค address ให้ชัวร์ก่อนโอนนะ ถ้าโอนผิดเชนหรือผิดเหรียญจะดึงกลับไม่ได้
         </p>
       </div>
@@ -207,7 +207,7 @@ export function Donate() {
       <div className="wide:max-w-8xl relative mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
         <SectionHeading heading={heading} eyebrow={eyebrow} className="mb-8 md:mb-10" />
 
-        <p className="text-muted-foreground mx-auto mb-8 text-sm leading-relaxed md:mb-10 md:text-base">
+        <p className="text-muted-foreground mx-auto mb-8 text-sm/relaxed md:mb-10 md:text-base">
           {description}
         </p>
 
@@ -254,13 +254,13 @@ export function Donate() {
                     <span className="min-w-0 flex-1">
                       <span
                         className={cn(
-                          "mb-0.5 block text-sm leading-tight font-semibold",
+                          "mb-0.5 block text-sm/tight font-semibold",
                           isActive ? "text-primary" : "text-foreground",
                         )}
                       >
                         {channel.name}
                       </span>
-                      <span className="text-muted-foreground block text-xs leading-tight">
+                      <span className="text-muted-foreground block text-xs/tight">
                         {channel.caption}
                       </span>
                     </span>
@@ -289,10 +289,10 @@ export function Donate() {
                     <Icon className="size-5" aria-hidden="true" />
                   </span>
                   <span className="min-w-0 flex-1">
-                    <span className="text-foreground mb-0.5 block text-sm leading-tight font-semibold">
+                    <span className="text-foreground mb-0.5 block text-sm/tight font-semibold">
                       {channel.name}
                     </span>
-                    <span className="text-muted-foreground block text-xs leading-tight">
+                    <span className="text-muted-foreground block text-xs/tight">
                       {channel.caption}
                     </span>
                   </span>

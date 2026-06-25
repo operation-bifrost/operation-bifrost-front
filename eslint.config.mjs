@@ -6,6 +6,7 @@ import astro from "eslint-plugin-astro";
 import svelte from "eslint-plugin-svelte";
 import prettier from "eslint-config-prettier";
 import globals from "globals";
+import betterTailwind from "eslint-plugin-better-tailwindcss";
 
 export default [
   {
@@ -52,5 +53,15 @@ export default [
   ...astro.configs.recommended,
   ...svelte.configs["flat/recommended"],
 
+  {
+    files: ["**/*.{jsx,tsx,astro,svelte}"],
+    plugins: { "better-tailwindcss": betterTailwind },
+    settings: {
+      "better-tailwindcss": { entryPoint: "src/styles/global.css" },
+    },
+    rules: {
+      "better-tailwindcss/enforce-canonical-classes": "warn",
+    },
+  },
   prettier,
 ];

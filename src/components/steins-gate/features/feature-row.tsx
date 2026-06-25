@@ -103,11 +103,11 @@ export function FeatureRow({ item, index }: FeatureRowProps) {
             </span>
           </span>
 
-          <h3 className="text-foreground text-2xl leading-tight font-bold md:text-3xl lg:text-[2rem]">
+          <h3 className="text-foreground text-2xl/tight font-bold md:text-3xl lg:text-[2rem]">
             {item.title}
           </h3>
 
-          <p className="text-foreground/85 text-base leading-relaxed whitespace-pre-line md:text-lg">
+          <p className="text-foreground/85 text-base/relaxed whitespace-pre-line md:text-lg">
             {item.description}
           </p>
 

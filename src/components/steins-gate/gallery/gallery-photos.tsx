@@ -98,7 +98,7 @@ export function GalleryPhotos({ photos }: GalleryPhotosProps) {
                     alt={photo.alt}
                     width={1280}
                     height={720}
-                    className="aspect-[16/9] w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="aspect-video w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     loading="lazy"
                   />
                   <div className="bg-background/0 group-hover:bg-background/20 absolute inset-0 transition-colors duration-300" />
@@ -114,7 +114,7 @@ export function GalleryPhotos({ photos }: GalleryPhotosProps) {
         createPortal(
           <div
             className={cn(
-              "fixed inset-0 z-[60] flex items-center justify-center backdrop-blur-md",
+              "fixed inset-0 z-60 flex items-center justify-center backdrop-blur-md",
               "transition-all duration-300 ease-out",
               visible ? "bg-background/70 opacity-100" : "bg-background/0 opacity-0",
             )}

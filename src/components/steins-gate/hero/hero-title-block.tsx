@@ -7,7 +7,7 @@ export function HeroTitleBlock() {
   return (
     <div className="relative z-10 flex flex-col items-start gap-2 lg:gap-5">
       <h1
-        className="bifrost-fade-up-1 text-foreground max-w-3xl text-3xl leading-tight font-bold whitespace-pre-line md:text-4xl xl:text-5xl"
+        className="bifrost-fade-up-1 text-foreground max-w-3xl text-3xl/tight font-bold whitespace-pre-line md:text-4xl xl:text-5xl"
         style={{ textShadow: "var(--hero-text-shadow)" }}
       >
         {h1}

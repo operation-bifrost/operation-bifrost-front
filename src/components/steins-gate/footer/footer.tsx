@@ -9,14 +9,14 @@ export function Footer() {
   return (
     <footer
       id="site-footer"
-      className="border-border from-card/40 to-background relative mt-8 border-t bg-gradient-to-b"
+      className="border-border from-card/40 to-background relative mt-8 border-t bg-linear-to-b"
     >
       <div className="wide:max-w-8xl mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
         <div className="mx-auto grid max-w-7xl gap-12 py-12 lg:grid-cols-[1fr_auto] lg:items-center lg:gap-16 lg:py-16">
           {/* Identity column */}
           <div className="flex flex-col items-start gap-6">
             <BifrostWordmark size={28} />
-            <p className="text-muted-foreground max-w-md text-sm leading-relaxed">{tagline}</p>
+            <p className="text-muted-foreground max-w-md text-sm/relaxed">{tagline}</p>
 
             <ul className="flex items-center gap-4">
               {socials.map((social) => {
