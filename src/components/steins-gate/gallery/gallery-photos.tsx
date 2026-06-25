@@ -92,8 +92,12 @@ export function GalleryPhotos({ photos }: GalleryPhotosProps) {
                   aria-label={`ดูภาพ: ${photo.alt}`}
                 >
                   <img
-                    src={photo.src}
+                    src={photo.thumbSrc}
+                    srcSet={`${photo.thumbSrc} 640w, ${photo.src} 1280w`}
+                    sizes="(min-width: 1024px) 45vw, 48vw"
                     alt={photo.alt}
+                    width={1280}
+                    height={720}
                     className="aspect-[16/9] w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     loading="lazy"
                   />

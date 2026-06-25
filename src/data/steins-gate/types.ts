@@ -47,7 +47,10 @@ export interface GalleryVideo {
 }
 
 export interface GalleryPhoto {
+  /** Full-resolution image, shown in the lightbox. */
   src: string;
+  /** Smaller variant for the grid thumbnail (served to mobile via srcset). */
+  thumbSrc: string;
   alt: string;
 }
 
