@@ -94,6 +94,32 @@
 }
 
 @layer base {
+  /* ---------------------------------------------------------------------- *
+   * Default site theme = Operation Bifrost hub (the "/" portal).
+   *
+   * These are the base token values that resolve when NO .theme-<project>
+   * class is on <html>. The hub borrows the Steins;Gate family's warm-charcoal
+   * substrate (~30-40% kinship) but keeps its own restrained vermilion accent
+   * and drops the game-specific Nixie glow / CRT language.
+   *
+   * Declared in @layer base so the unlayered .theme-<project> blocks in
+   * src/styles/themes/*.css always override them — steins-gate is unaffected.
+   * ---------------------------------------------------------------------- */
+  :root {
+    --background: oklch(0.216 0.006 56.043); /* warm charcoal — dim, not black */
+    --foreground: oklch(0.95 0.006 70); /* warm off-white */
+    --muted-foreground: oklch(0.708 0.012 60); /* mid warm gray — hierarchy */
+    --border: oklch(0.85 0.02 75 / 0.12); /* faint warm hairline */
+    --primary: oklch(0.681 0.197 33.5); /* vermilion (#ff5a36) — focus / interaction only */
+    --primary-foreground: oklch(0.99 0 0);
+    --ring: oklch(0.681 0.197 33.5);
+    --font-mono:
+      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+      monospace;
+    --radius: 0.5rem;
+    --tracking-normal: 0em;
+  }
+
   @font-face {
     font-family: "LINE Seed Sans TH";
     src: url("/fonts/line-seed-sans-th/LINESeedSansTH_Th.woff2") format("woff2"); /* Thin */
