@@ -13,11 +13,12 @@ const description = "Operation Bifrost — ศูนย์รวมงานแ�
     Hub homepage — the "/" portal. Deliberately its own restrained identity
     (editorial / Swiss catalogue) so each localization project keeps its own.
     It borrows ~30-40% from the Steins;Gate theme: the warm-charcoal substrate
-    (shared default tokens in global.css) and mono numerals + terminal bracket
-    markers on the live row's CTA. No BONX wordmark, no Nixie glow, no footer.
+    (shared default tokens in global.css) and mono catalogue numerals. No BONX
+    wordmark, no Nixie glow, no footer.
     Pure static — the only interaction (group / group-hover) is the live row's
-    keyart, which sits grayscale + dimmed at rest and blooms to color on hover,
-    reading as "crossing the bridge into the world."
+    cover keyart, which sits dimmed behind a charcoal scrim at rest, then
+    brightens, scales up, and clears the scrim on hover, reading as "crossing
+    the bridge into the world."
   */
 }
 <BaseLayout
@@ -53,7 +54,7 @@ const description = "Operation Bifrost — ศูนย์รวมงานแ�
               >
                 {p.cover && (
                   <>
-                    {/* Keyart: grayscale + dimmed at rest, blooms to color on hover — "crossing the bridge into the world." */}
+                    {/* Keyart: dimmed behind a scrim at rest; brightens, scales, and clears the scrim on hover — "crossing the bridge into the world." */}
                     <img
                       src={p.cover}
                       alt={p.coverAlt}
