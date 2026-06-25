@@ -13,7 +13,7 @@
 @layer base {
   @font-face {
     font-family: "bonx";
-    src: url("/fonts/bonx/BONX-Medium.otf") format("opentype");
+    src: url("/fonts/bonx/BONX-Medium.woff2") format("woff2");
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -21,7 +21,7 @@
 
   @font-face {
     font-family: "bonx-frame";
-    src: url("/fonts/bonx/BONX-Frame.otf") format("opentype");
+    src: url("/fonts/bonx/BONX-Frame.woff2") format("woff2");
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -29,7 +29,7 @@
 
   @font-face {
     font-family: "bonx-sihouette";
-    src: url("/fonts/bonx/BONX-Silhouette.otf") format("opentype");
+    src: url("/fonts/bonx/BONX-Silhouette.woff2") format("woff2");
     font-weight: normal;
     font-style: normal;
     font-display: swap;

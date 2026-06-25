@@ -96,7 +96,7 @@
 @layer base {
   @font-face {
     font-family: "LINE Seed Sans TH";
-    src: url("/fonts/line-seed-sans-th/LINESeedSansTH_Th.otf") format("opentype"); /* Thin */
+    src: url("/fonts/line-seed-sans-th/LINESeedSansTH_Th.woff2") format("woff2"); /* Thin */
     font-weight: 100;
     font-style: normal;
     font-display: swap;
@@ -104,7 +104,7 @@
 
   @font-face {
     font-family: "LINE Seed Sans TH";
-    src: url("/fonts/line-seed-sans-th/LINESeedSansTH_Rg.otf") format("opentype"); /* Regular */
+    src: url("/fonts/line-seed-sans-th/LINESeedSansTH_Rg.woff2") format("woff2"); /* Regular */
     font-weight: 400;
     font-style: normal;
     font-display: swap;
@@ -112,7 +112,7 @@
 
   @font-face {
     font-family: "LINE Seed Sans TH";
-    src: url("/fonts/line-seed-sans-th/LINESeedSansTH.otf") format("opentype"); /* Bold  */
+    src: url("/fonts/line-seed-sans-th/LINESeedSansTH.woff2") format("woff2"); /* Bold  */
     font-weight: 700;
     font-style: normal;
     font-display: swap;
@@ -120,7 +120,7 @@
 
   @font-face {
     font-family: "LINE Seed Sans TH";
-    src: url("/fonts/line-seed-sans-th/LINESeedSansTH_XBd.otf") format("opentype"); /* Extra Bold */
+    src: url("/fonts/line-seed-sans-th/LINESeedSansTH_XBd.woff2") format("woff2"); /* Extra Bold */
     font-weight: 800;
     font-style: normal;
     font-display: swap;
@@ -128,7 +128,7 @@
 
   @font-face {
     font-family: "LINE Seed Sans TH";
-    src: url("/fonts/line-seed-sans-th/LINESeedSansTH_He.otf") format("opentype"); /* Heavy */
+    src: url("/fonts/line-seed-sans-th/LINESeedSansTH_He.woff2") format("woff2"); /* Heavy */
     font-weight: 900;
     font-style: normal;
     font-display: swap;
