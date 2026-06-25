@@ -29,7 +29,12 @@ export async function POST({ request }: APIContext): Promise<Response> {
       db: env.DB!,
       ratelimiter: env.COMMENT_RATELIMIT!,
       verifyTurnstileToken: (token, clientIp) =>
-        verifyTurnstile({ fetch, secret: env.TURNSTILE_SECRET_KEY }, { token, ip: clientIp }),
+        // Bind globalThis so fetch isn't called with a detached `this` reference,
+        // which causes "Illegal invocation" in the Workers runtime.
+        verifyTurnstile(
+          { fetch: fetch.bind(globalThis), secret: env.TURNSTILE_SECRET_KEY },
+          { token, ip: clientIp },
+        ),
       postPendingToDiscord: async (comment) => {
         const messageId = await postModMessage(
           { fetch, botToken: env.DISCORD_BOT_TOKEN, channelId: env.DISCORD_CHANNEL_ID },
