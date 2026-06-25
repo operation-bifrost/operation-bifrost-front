@@ -8,9 +8,12 @@ interface DivergenceRailProps {
 }
 
 export function DivergenceRail({ value, className }: DivergenceRailProps) {
+  // once: false → isVisible toggles off when the rail scrolls away, which tears
+  // down the divergence cycle's timer instead of letting it replay forever.
   const { ref, isVisible } = useReveal<HTMLSpanElement>({
     rootMargin: "0px 0px -20% 0px",
     threshold: 0.05,
+    once: false,
   });
   const display = useDivergenceCycle({
     finalValue: value,

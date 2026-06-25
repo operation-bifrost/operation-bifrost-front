@@ -37,6 +37,16 @@ export function useDivergenceCycle({
   useEffect(() => {
     if (!isActive) return;
 
+    // Respect reduced-motion: show the final value, skip the scramble entirely.
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) {
+      setDisplay(finalValue);
+      return;
+    }
+
     const dotIndex = finalValue.indexOf(".");
     const suffixMatch = finalValue.match(/[^\d]+$/);
     const suffix = suffixMatch ? suffixMatch[0] : "";
@@ -71,11 +81,34 @@ export function useDivergenceCycle({
       }, cycleIntervalMs);
     }
 
-    runCycle();
+    function stop() {
+      if (cycleInterval) {
+        clearInterval(cycleInterval);
+        cycleInterval = null;
+      }
+      if (replayTimeout) {
+        clearTimeout(replayTimeout);
+        replayTimeout = null;
+      }
+    }
+
+    // Only run while the tab is foregrounded — no point scrambling (and burning
+    // 20Hz setState re-renders) on a backgrounded tab.
+    function handleVisibility() {
+      if (document.visibilityState === "visible") {
+        if (!cycleInterval && !replayTimeout) runCycle();
+      } else {
+        stop();
+        setDisplay(finalValue);
+      }
+    }
+
+    if (document.visibilityState === "visible") runCycle();
+    document.addEventListener("visibilitychange", handleVisibility);
 
     return () => {
-      if (cycleInterval) clearInterval(cycleInterval);
-      if (replayTimeout) clearTimeout(replayTimeout);
+      stop();
+      document.removeEventListener("visibilitychange", handleVisibility);
     };
   }, [isActive, finalValue, durationMs, cycleIntervalMs, replayIntervalMs]);
 
