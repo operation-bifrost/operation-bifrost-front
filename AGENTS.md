@@ -25,13 +25,17 @@ yarn build            # wrangler types + astro check + astro build
 yarn preview          # wrangler types + astro preview
 yarn wrangler:dev     # run the built worker locally
 yarn wrangler:deploy  # deploy to Cloudflare Workers
-yarn optimize:assets <folder>   # recursively: images→webp (+ -thumb variants), fonts (ttf/otf)→woff2
+yarn assets:webp   <folder>     # convert png/jpg/jpeg → webp (recursive)
+yarn assets:thumbs <folder>     # generate -thumb.webp variants for srcset (recursive)
+yarn assets:woff2  <folder>     # convert ttf/otf fonts → woff2 (recursive)
 ```
 
-`yarn optimize:assets` (`scripts/optimize-assets.mjs`, sharp + wawoff2) is the asset
-pipeline used to keep `public/` lean — it converts rasters to WebP, generates `-thumb`
-variants for gallery-style `srcset`, and compresses fonts to WOFF2. Idempotent
-(skips existing outputs unless `--force`); see `--help` for options.
+The `assets:*` commands are independent asset jobs (under `scripts/`, sharing
+`scripts/lib/asset-job.mjs`; powered by sharp + wawoff2) used to keep `public/` lean.
+Run them individually as needed. Each is idempotent (skips existing outputs unless
+`--force`), keeps originals unless `--delete-originals`, and supports `--dry-run` /
+`--help`. Note `assets:woff2` compresses only — glyph subsetting stays a manual,
+content-aware step.
 
 `astro check` runs on every build and gates the build on type errors — fix type errors at the source, do not bypass.
 
