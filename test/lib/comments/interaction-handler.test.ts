@@ -13,10 +13,10 @@ function deps(over: Partial<Parameters<typeof handleInteraction>[0]> = {}) {
 
 describe("handleInteraction", () => {
   it("rejects bad signatures with 401", async () => {
-    const res = await handleInteraction(deps({ verifySignature: vi.fn(async () => false) }), {
-      rawBody: "{}",
-    });
+    const d = deps({ verifySignature: vi.fn(async () => false) });
+    const res = await handleInteraction(d, { rawBody: "{}" });
     expect(res.status).toBe(401);
+    expect(d.setCommentStatus).not.toHaveBeenCalled();
   });
 
   it("responds to PING with type 1", async () => {
@@ -39,6 +39,25 @@ describe("handleInteraction", () => {
     expect(d.setCommentStatus).toHaveBeenCalledWith({
       id: "c1",
       status: "approved",
+      reviewedBy: "moderator",
+      reviewedAt: 1000,
+    });
+  });
+
+  it("rejects a comment and responds with UPDATE_MESSAGE (type 7)", async () => {
+    const d = deps();
+    const interaction = {
+      type: 3,
+      data: { custom_id: "wall_reject:c2" },
+      member: { user: { username: "moderator" } },
+      message: { content: "> spam" },
+    };
+    const res = await handleInteraction(d, { rawBody: JSON.stringify(interaction) });
+    const json = (await res.json()) as { type: number };
+    expect(json.type).toBe(7);
+    expect(d.setCommentStatus).toHaveBeenCalledWith({
+      id: "c2",
+      status: "rejected",
       reviewedBy: "moderator",
       reviewedAt: 1000,
     });
