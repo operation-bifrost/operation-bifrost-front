@@ -7,7 +7,7 @@ export const donate = {
   eyebrow: "donate_",
   heading: "สนับสนุนโปรเจกต์",
   description:
-    "Operation Bifrost เป็นโปรเจกต์ที่ทำโดยไม่แสวงหากำไร ทุกการสนับสนุนจะช่วยสมทบค่าใช้จ่าย ค่าฟอนต์ ค่าเครื่องมือ และกำลังใจของพวกเรา",
+    "Operation Bifrost เป็นโปรเจกต์ที่ทำโดยไม่แสวงหากำไร ทุกการสนับสนุนจะช่วยสมทบค่าใช้จ่าย ค่าฟอนต์ ค่าเครื่องมือ และเป็นกำลังใจให้กับพวกเรา",
   // Label for the right-hand selector rail.
   channelsLabel: "channels",
   // Support console channels. A "view" channel renders its content (the QR

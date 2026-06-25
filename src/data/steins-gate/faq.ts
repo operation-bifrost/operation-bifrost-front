@@ -15,9 +15,9 @@ export const faq = {
         "ดาวน์โหลดไฟล์ .zip (ขนาดราว 1.24GB) จากส่วนดาวน์โหลดด้านบน แตกไฟล์ แล้วรันตัวติดตั้ง จากนั้นทำตามขั้นตอนบนหน้าจอจนเสร็จ ก็พร้อมเล่นได้ทันที",
     },
     {
-      question: "สามาถลงม็อดใน Linux หรือ macOS ได้ไหม?",
+      question: "สามารถลงม็อดใน Linux หรือ macOS ได้ไหม?",
       answer:
-        "สามารถลง linux ได้ โดยมี tool automate ของทาง Committee of Zero อยู่ สามารถไปอ่านรายละเอียดได้ที่[ลิงก์นี้](https://github.com/CommitteeOfZero/polyversal-coz-linux-patcher) แต่สำหรับ macOS ยังไม่เคยมีใครลองเหมือนกันครับ",
+        "สามารถลง Linux ได้ โดยมี tool automate ของทาง Committee of Zero อยู่ สามารถไปอ่านรายละเอียดได้ที่[ลิงก์นี้](https://github.com/CommitteeOfZero/polyversal-coz-linux-patcher) แต่สำหรับ macOS ยังไม่เคยมีใครลองเหมือนกันครับ",
     },
     {
       question: "ม็อดนี้แปลเนื้อหาส่วนไหนบ้าง?",
