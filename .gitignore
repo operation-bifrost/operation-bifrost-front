@@ -43,3 +43,5 @@ docs/superpowers
 .agents/skills/web-perf/
 .agents/skills/workers-best-practices/
 .agents/skills/wrangler/
+# Superpowers SDD scratch
+.superpowers/
