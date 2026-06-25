@@ -69,6 +69,7 @@ export function CommentForm({ siteKey, onSubmitted }: CommentFormProps) {
         maxLength={limits.maxName}
         onChange={(e) => setName(e.target.value)}
         placeholder={form.namePlaceholder}
+        aria-label={form.namePlaceholder}
         className="border-border bg-background/60 text-foreground placeholder:text-muted-foreground focus-visible:ring-ring border px-3 py-2 outline-none focus-visible:ring-2"
       />
       <div className="flex flex-col gap-1">
@@ -77,6 +78,7 @@ export function CommentForm({ siteKey, onSubmitted }: CommentFormProps) {
           maxLength={limits.maxMessage}
           onChange={(e) => setMessage(e.target.value)}
           placeholder={form.messagePlaceholder}
+          aria-label={form.messagePlaceholder}
           rows={3}
           required
           className="border-border bg-background/60 text-foreground placeholder:text-muted-foreground focus-visible:ring-ring resize-none border px-3 py-2 outline-none focus-visible:ring-2"
