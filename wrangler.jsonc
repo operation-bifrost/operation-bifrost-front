@@ -7,6 +7,24 @@
   "observability": {
     "enabled": true,
   },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "operationbifrost-comments",
+      "database_id": "d1a8ad43-eecf-4dc5-bd88-a9a659fd2c84",
+      "migrations_dir": "migrations",
+    },
+  ],
+  "ratelimits": [
+    {
+      "name": "COMMENT_RATELIMIT",
+      "namespace_id": "1001",
+      "simple": { "limit": 3, "period": 60 },
+    },
+  ],
+  "vars": {
+    "PUBLIC_TURNSTILE_SITE_KEY": "1x00000000000000000000AA",
+  },
   // Isolated dev/staging Worker. With @astrojs/cloudflare (Astro 6) the target
   // environment is resolved at BUILD time via CLOUDFLARE_ENV — NOT by
   // `wrangler deploy --env`. Build with `CLOUDFLARE_ENV=dev` so the adapter bakes
