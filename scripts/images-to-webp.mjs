@@ -7,11 +7,12 @@ import { exists, fileSize, processAll, report, resolveCli } from "./lib/asset-jo
 
 const RASTER_EXT = new Set([".png", ".jpg", ".jpeg"]);
 
-const HELP = `images-to-webp — recursively convert png/jpg/jpeg to webp
+const HELP = `images-to-webp — convert png/jpg/jpeg to webp
 
   yarn assets:webp <folder> [options]
 
 Options:
+  -r, --recursive      recurse into subfolders (default: top level only)
   --quality <n>        webp quality                      (default 80)
   --max-width <px>     downscale images wider than this  (default 1920, no upscale)
   --delete-originals   delete the source raster after a successful convert
@@ -21,17 +22,24 @@ Options:
 
 const { folder, flags } = await resolveCli(
   process.argv.slice(2),
-  { bool: ["--delete-originals", "--force", "--dry-run"], value: ["--quality", "--max-width"] },
+  {
+    bool: ["-r", "--recursive", "--delete-originals", "--force", "--dry-run"],
+    value: ["--quality", "--max-width"],
+  },
   HELP,
 );
 
 const quality = flags.quality ? Number(flags.quality) : 80;
 const maxWidth = flags.maxWidth ? Number(flags.maxWidth) : 1920;
+const recursive = Boolean(flags.recursive || flags.r);
 
-console.log(`Converting images in "${folder}"${flags.dryRun ? " (dry-run)" : ""}\n`);
+console.log(
+  `Converting images in "${folder}"${recursive ? " (recursive)" : ""}${flags.dryRun ? " (dry-run)" : ""}\n`,
+);
 
 const rows = await processAll({
   folder,
+  recursive,
   match: (p) => RASTER_EXT.has(extname(p).toLowerCase()),
   handle: async (path) => {
     const out = path.slice(0, -extname(path).length) + ".webp";

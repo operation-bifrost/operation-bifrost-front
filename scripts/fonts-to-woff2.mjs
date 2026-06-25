@@ -8,11 +8,12 @@ import { exists, fileSize, processAll, report, resolveCli } from "./lib/asset-jo
 
 const FONT_EXT = new Set([".ttf", ".otf"]);
 
-const HELP = `fonts-to-woff2 — recursively convert ttf/otf fonts to woff2
+const HELP = `fonts-to-woff2 — convert ttf/otf fonts to woff2
 
   yarn assets:woff2 <folder> [options]
 
 Options:
+  -r, --recursive      recurse into subfolders (default: top level only)
   --delete-originals   delete the source font after a successful convert
   --force              re-convert even if the .woff2 already exists
   --dry-run            report planned work without writing
@@ -20,14 +21,19 @@ Options:
 
 const { folder, flags } = await resolveCli(
   process.argv.slice(2),
-  { bool: ["--delete-originals", "--force", "--dry-run"], value: [] },
+  { bool: ["-r", "--recursive", "--delete-originals", "--force", "--dry-run"], value: [] },
   HELP,
 );
 
-console.log(`Converting fonts in "${folder}"${flags.dryRun ? " (dry-run)" : ""}\n`);
+const recursive = Boolean(flags.recursive || flags.r);
+
+console.log(
+  `Converting fonts in "${folder}"${recursive ? " (recursive)" : ""}${flags.dryRun ? " (dry-run)" : ""}\n`,
+);
 
 const rows = await processAll({
   folder,
+  recursive,
   match: (p) => FONT_EXT.has(extname(p).toLowerCase()),
   handle: async (path) => {
     const out = path.slice(0, -extname(path).length) + ".woff2";

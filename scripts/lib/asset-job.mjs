@@ -23,11 +23,11 @@ export async function fileSize(p) {
   return (await stat(p)).size;
 }
 
-/** Recursively yield every file path under `dir`, skipping build/vendor folders. */
-export async function* walk(dir) {
+/** Yield file paths in `dir`. With `recursive`, descend into subfolders (skipping build/vendor dirs). */
+export async function* walk(dir, recursive = false) {
   for (const entry of await readdir(dir, { withFileTypes: true })) {
     if (entry.isDirectory()) {
-      if (!SKIP_DIRS.has(entry.name)) yield* walk(join(dir, entry.name));
+      if (recursive && !SKIP_DIRS.has(entry.name)) yield* walk(join(dir, entry.name), recursive);
     } else if (entry.isFile()) {
       yield join(dir, entry.name);
     }
@@ -85,9 +85,9 @@ export async function resolveCli(argv, spec, help) {
  * Walk `folder`, run `handle(path)` on each file matching `match(path)`, isolating
  * per-file errors so one bad file doesn't abort the run. Returns the collected rows.
  */
-export async function processAll({ folder, match, handle }) {
+export async function processAll({ folder, match, handle, recursive = false }) {
   const rows = [];
-  for await (const path of walk(folder)) {
+  for await (const path of walk(folder, recursive)) {
     if (!match(path)) continue;
     try {
       const row = await handle(path);
