@@ -22,6 +22,9 @@
       "simple": { "limit": 3, "period": 60 },
     },
   ],
+  // BEFORE PRODUCTION: replace PUBLIC_TURNSTILE_SITE_KEY with the real Turnstile site key
+  // and set the real TURNSTILE_SECRET_KEY secret via `wrangler secret put TURNSTILE_SECRET_KEY`.
+  // The values committed here are Cloudflare test keys (always-pass).
   "vars": {
     "PUBLIC_TURNSTILE_SITE_KEY": "1x00000000000000000000AA",
   },
@@ -38,6 +41,24 @@
     "dev": {
       "observability": {
         "enabled": true,
+      },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "operationbifrost-comments-dev",
+          "database_id": "8bacea09-edc7-4b49-a012-ee9e144edaf2",
+          "migrations_dir": "migrations",
+        },
+      ],
+      "ratelimits": [
+        {
+          "name": "COMMENT_RATELIMIT",
+          "namespace_id": "1001",
+          "simple": { "limit": 3, "period": 60 },
+        },
+      ],
+      "vars": {
+        "PUBLIC_TURNSTILE_SITE_KEY": "1x00000000000000000000AA",
       },
     },
   },
