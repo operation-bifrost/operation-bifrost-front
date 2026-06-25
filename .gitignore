@@ -45,3 +45,8 @@ docs/superpowers
 .agents/skills/wrangler/
 # Superpowers SDD scratch
 .superpowers/
+
+# Playwright
+/test-results
+/playwright-report
+/.playwright
