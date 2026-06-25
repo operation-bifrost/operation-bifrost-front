@@ -25,7 +25,13 @@ yarn build            # wrangler types + astro check + astro build
 yarn preview          # wrangler types + astro preview
 yarn wrangler:dev     # run the built worker locally
 yarn wrangler:deploy  # deploy to Cloudflare Workers
+yarn optimize:assets <folder>   # recursively: images→webp (+ -thumb variants), fonts (ttf/otf)→woff2
 ```
+
+`yarn optimize:assets` (`scripts/optimize-assets.mjs`, sharp + wawoff2) is the asset
+pipeline used to keep `public/` lean — it converts rasters to WebP, generates `-thumb`
+variants for gallery-style `srcset`, and compresses fonts to WOFF2. Idempotent
+(skips existing outputs unless `--force`); see `--help` for options.
 
 `astro check` runs on every build and gates the build on type errors — fix type errors at the source, do not bypass.
 
