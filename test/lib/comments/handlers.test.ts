@@ -51,10 +51,11 @@ describe("handleCreateComment", () => {
     expect(deps.verifyTurnstileToken).not.toHaveBeenCalled();
   });
 
-  it("returns 429 when rate limited", async () => {
+  it("returns 429 when rate limited and skips Turnstile", async () => {
     const { deps } = baseDeps({ ratelimiter: { limit: vi.fn(async () => ({ success: false })) } });
     const res = await handleCreateComment(deps, { message: "hi", turnstileToken: "tok" });
     expect(res.status).toBe(429);
+    expect(deps.verifyTurnstileToken).not.toHaveBeenCalled();
   });
 
   it("still returns 202 if Discord post fails (row persists)", async () => {
@@ -62,6 +63,21 @@ describe("handleCreateComment", () => {
     const res = await handleCreateComment(deps, { message: "hi", turnstileToken: "tok" });
     expect(res.status).toBe(202);
     expect(fake.rows[0].status).toBe("pending");
+  });
+
+  it("still returns 202 and row persists as pending when Discord post throws", async () => {
+    const { fake, deps } = baseDeps({
+      postPendingToDiscord: vi.fn(async () => {
+        throw new Error("network");
+      }),
+    });
+    const res = await handleCreateComment(deps, {
+      name: "Okabe",
+      message: "Mad scientist",
+      turnstileToken: "tok",
+    });
+    expect(res.status).toBe(202);
+    expect(fake.rows[0]).toMatchObject({ status: "pending", message: "Mad scientist" });
   });
 });
 
@@ -84,6 +100,7 @@ describe("handleListComments", () => {
     await setStatus(db, { id: "c1", status: "approved", reviewedBy: "mod", reviewedAt: 2 });
     const res = await handleListComments({ db, limit: 60 });
     expect(res.status).toBe(200);
+    expect(res.headers.get("Cache-Control")).toBe("public, max-age=30");
     const data = (await res.json()) as { comments: { id: string }[] };
     expect(data.comments.map((c) => c.id)).toEqual(["c1"]);
   });

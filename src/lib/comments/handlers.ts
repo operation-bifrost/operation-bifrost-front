@@ -53,8 +53,12 @@ export async function handleCreateComment(deps: CreateDeps, body: unknown): Prom
   };
   await insertPending(deps.db, comment);
 
-  // 5. Notify Discord (best-effort; failure does not fail the submission).
-  await deps.postPendingToDiscord(comment);
+  // 5. Notify Discord (best-effort; failure must never fail the submission).
+
+  await deps.postPendingToDiscord(comment).catch((err) => {
+    console.error("comment wall: discord notify failed", err);
+    return null;
+  });
 
   return json({ status: "pending" }, 202);
 }
