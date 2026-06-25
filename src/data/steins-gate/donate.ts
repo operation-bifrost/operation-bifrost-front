@@ -28,7 +28,7 @@ export const donate = {
         bank: "กสิกรไทย",
         number: "148-1-35847-3",
       },
-      qrSrc: "/images/qr-promptpay.jpg",
+      qrSrc: "/images/qr-promptpay.webp",
     },
     {
       kind: "crypto",

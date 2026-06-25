@@ -110,7 +110,7 @@ export interface DonateViewChannel extends DonateChannelBase {
   fallbackLabel: string;
   /** Bank account shown as a manual-transfer fallback beside the QR. */
   account: DonateBankAccount;
-  /** Path to the QR image (e.g. "/images/qr-promptpay.jpg"). */
+  /** Path to the QR image (e.g. "/images/qr-promptpay.webp"). */
   qrSrc: string;
 }
 
