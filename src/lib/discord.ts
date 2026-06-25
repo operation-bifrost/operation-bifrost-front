@@ -54,11 +54,17 @@ export function parseModerationCustomId(
   return null;
 }
 
+export interface DiscordMessagePayload {
+  content: string;
+  allowed_mentions: { parse: never[] };
+  components: unknown[];
+}
+
 export function buildModMessagePayload(comment: {
   id: string;
   name: string | null;
   message: string;
-}): object {
+}): DiscordMessagePayload {
   const author = comment.name ?? "(ไม่ระบุชื่อ / anonymous)";
   return {
     content: `**ความในใจใหม่รออนุมัติ**\nจาก: ${author}\n\n> ${comment.message}`,
@@ -89,7 +95,7 @@ export function buildDecisionMessagePayload(args: {
   decision: "approve" | "reject";
   reviewer: string;
   message: string;
-}): object {
+}): DiscordMessagePayload {
   const verb = args.decision === "approve" ? "✅ อนุมัติแล้ว" : "🚫 ปฏิเสธแล้ว";
   return {
     content: `${verb} โดย ${args.reviewer}\n\n${args.message}`,
@@ -100,7 +106,7 @@ export function buildDecisionMessagePayload(args: {
 
 export async function postModMessage(
   deps: { fetch: typeof fetch; botToken: string; channelId: string },
-  payload: object,
+  payload: DiscordMessagePayload,
 ): Promise<string | null> {
   try {
     const res = await deps.fetch(`${DISCORD_API}/channels/${deps.channelId}/messages`, {

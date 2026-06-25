@@ -1,6 +1,7 @@
 // @vitest-environment node
 import { describe, expect, it, vi } from "vitest";
 import {
+  buildDecisionMessagePayload,
   buildModMessagePayload,
   parseModerationCustomId,
   postModMessage,
@@ -80,16 +81,71 @@ describe("verifyDiscordRequest", () => {
 });
 
 describe("postModMessage", () => {
+  const validPayload = buildDecisionMessagePayload({
+    decision: "approve",
+    reviewer: "mod",
+    message: "ok",
+  });
+
   it("posts to the channel and returns the message id", async () => {
     const fetchMock = vi.fn(async () => new Response(JSON.stringify({ id: "msg-9" })));
     const id = await postModMessage(
       { fetch: fetchMock as unknown as typeof fetch, botToken: "t", channelId: "c" },
-      { content: "hi" },
+      validPayload,
     );
     expect(id).toBe("msg-9");
     expect(fetchMock).toHaveBeenCalledWith(
       "https://discord.com/api/v10/channels/c/messages",
-      expect.objectContaining({ method: "POST" }),
+      expect.objectContaining({
+        method: "POST",
+        headers: expect.objectContaining({ Authorization: "Bot t" }),
+      }),
     );
+  });
+
+  it("returns null when the API responds with a non-ok status", async () => {
+    const fetchMock = vi.fn(async () => new Response(null, { status: 400 }));
+    const id = await postModMessage(
+      { fetch: fetchMock as unknown as typeof fetch, botToken: "t", channelId: "c" },
+      validPayload,
+    );
+    expect(id).toBeNull();
+  });
+
+  it("returns null when fetch throws", async () => {
+    const fetchMock = vi.fn(async () => {
+      throw new Error("network error");
+    });
+    const id = await postModMessage(
+      { fetch: fetchMock as unknown as typeof fetch, botToken: "t", channelId: "c" },
+      validPayload,
+    );
+    expect(id).toBeNull();
+  });
+});
+
+describe("buildDecisionMessagePayload", () => {
+  it("approve decision includes reviewer name and empty components", () => {
+    const payload = buildDecisionMessagePayload({
+      decision: "approve",
+      reviewer: "mod",
+      message: "hi",
+    });
+    expect(payload.components).toEqual([]);
+    expect(payload.content).toContain("mod");
+  });
+
+  it("reject decision produces distinct content from approve", () => {
+    const approve = buildDecisionMessagePayload({
+      decision: "approve",
+      reviewer: "mod",
+      message: "hi",
+    });
+    const reject = buildDecisionMessagePayload({
+      decision: "reject",
+      reviewer: "mod",
+      message: "hi",
+    });
+    expect(approve.content).not.toBe(reject.content);
   });
 });
