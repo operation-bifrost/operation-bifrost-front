@@ -1,4 +1,4 @@
-# Operation Bifrost | ปฏิบัติการไบฟรอส
+# Operation Bifrost | ปฏิบัติการไบฟรอสต์
 
 ![Operation Bifrost](https://img.shields.io/badge/Project-Operation%20Bifrost-orange)
 ![License](https://img.shields.io/badge/License-GPL--2.0-blue)

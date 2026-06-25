@@ -8,7 +8,7 @@ export const footer = {
     // Fallback invite used if the widget JSON can't be reached.
     inviteHref: "https://discord.gg/8WHxqbCjGD",
     name: "Operation Bifrost",
-    subtitle: "ปฏิบัติการไบฟรอส",
+    subtitle: "ปฏิบัติการไบฟรอสต์",
     blurb: "เข้าร่วมแล็บออนไลน์ของเรา พูดคุย ถามปัญหา และติดตามความคืบหน้าการแปลแบบเรียลไทม์",
     ctaLabel: "เข้าร่วม Discord",
   },

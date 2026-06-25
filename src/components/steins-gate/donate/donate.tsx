@@ -207,11 +207,11 @@ export function Donate() {
       <div className="wide:max-w-8xl relative mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
         <SectionHeading heading={heading} eyebrow={eyebrow} className="mb-8 md:mb-10" />
 
-        <p className="text-muted-foreground mx-auto mb-8 max-w-5xl text-sm leading-relaxed md:mb-10 md:text-base">
+        <p className="text-muted-foreground mx-auto mb-8 text-sm leading-relaxed md:mb-10 md:text-base">
           {description}
         </p>
 
-        <div className="border-border bg-card/80 shadow-button mx-auto flex max-w-5xl flex-col overflow-hidden border backdrop-blur-sm lg:grid lg:grid-cols-[1fr_auto]">
+        <div className="border-border bg-card/80 shadow-button mx-auto flex flex-col overflow-hidden border backdrop-blur-sm lg:grid lg:grid-cols-[1fr_auto]">
           {/* Left — active in-place channel content */}
           <div className="order-2 lg:order-1">
             {activeChannel?.kind === "crypto" ? (

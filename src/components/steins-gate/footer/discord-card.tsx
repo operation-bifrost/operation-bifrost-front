@@ -48,7 +48,7 @@ export function DiscordCard() {
   const overflow = data ? Math.max(0, data.presence_count - avatars.length) : 0;
 
   return (
-    <div className="border-border bg-card/80 shadow-button relative w-full max-w-sm overflow-hidden rounded border backdrop-blur-sm">
+    <div className="border-border bg-card/80 shadow-button relative w-full overflow-hidden rounded border backdrop-blur-sm">
       <div className="flex flex-col gap-5 p-6">
         <div className="flex items-center gap-3">
           <span

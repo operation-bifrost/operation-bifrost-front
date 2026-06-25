@@ -65,7 +65,7 @@ export function Credits() {
             </div>
 
             <CreditGroup title={specialThanks.title}>
-              <ul className="flex flex-wrap justify-center gap-x-8 gap-y-3 text-center">
+              <ul className="mx-auto grid w-fit grid-cols-2 gap-x-12 gap-y-3 text-left md:mx-0 md:grid-cols-3">
                 {specialThanks.names.map((name) => (
                   <li key={name} className="text-foreground font-medium">
                     {name}

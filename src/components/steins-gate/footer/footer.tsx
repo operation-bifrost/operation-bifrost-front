@@ -12,7 +12,7 @@ export function Footer() {
       className="border-border from-card/40 to-background relative mt-8 border-t bg-gradient-to-b"
     >
       <div className="wide:max-w-8xl mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
-        <div className="mx-auto grid max-w-5xl gap-12 py-12 lg:grid-cols-[1fr_auto] lg:items-center lg:gap-16 lg:py-16">
+        <div className="mx-auto grid max-w-7xl gap-12 py-12 lg:grid-cols-[1fr_auto] lg:items-center lg:gap-16 lg:py-16">
           {/* Identity column */}
           <div className="flex flex-col items-start gap-6">
             <BifrostWordmark size={28} />
@@ -61,7 +61,7 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="border-border mx-auto flex max-w-5xl flex-col gap-3 border-t py-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="border-border mx-auto flex max-w-7xl flex-col gap-3 border-t py-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-muted-foreground text-sm">
             © {new Date().getFullYear()} Operation Bifrost
           </p>
