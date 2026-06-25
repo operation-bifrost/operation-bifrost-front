@@ -1,0 +1,55 @@
+import { describe, expect, it, vi } from "vitest";
+import { handleInteraction } from "@/lib/comments/interaction-handler";
+
+function deps(over: Partial<Parameters<typeof handleInteraction>[0]> = {}) {
+  return {
+    db: {} as unknown as D1Database,
+    verifySignature: vi.fn(async () => true),
+    setCommentStatus: vi.fn(async () => true),
+    now: () => 1000,
+    ...over,
+  };
+}
+
+describe("handleInteraction", () => {
+  it("rejects bad signatures with 401", async () => {
+    const res = await handleInteraction(deps({ verifySignature: vi.fn(async () => false) }), {
+      rawBody: "{}",
+    });
+    expect(res.status).toBe(401);
+  });
+
+  it("responds to PING with type 1", async () => {
+    const res = await handleInteraction(deps(), { rawBody: JSON.stringify({ type: 1 }) });
+    expect(await res.json()).toEqual({ type: 1 });
+  });
+
+  it("approves a comment and responds with UPDATE_MESSAGE (type 7)", async () => {
+    const d = deps();
+    const interaction = {
+      type: 3,
+      data: { custom_id: "wall_approve:c1" },
+      member: { user: { username: "moderator" } },
+      message: { content: "> hi" },
+    };
+    const res = await handleInteraction(d, { rawBody: JSON.stringify(interaction) });
+    const json = (await res.json()) as { type: number; data: { components: unknown[] } };
+    expect(json.type).toBe(7);
+    expect(json.data.components).toEqual([]);
+    expect(d.setCommentStatus).toHaveBeenCalledWith({
+      id: "c1",
+      status: "approved",
+      reviewedBy: "moderator",
+      reviewedAt: 1000,
+    });
+  });
+
+  it("ignores unrelated custom_ids gracefully", async () => {
+    const d = deps();
+    const res = await handleInteraction(d, {
+      rawBody: JSON.stringify({ type: 3, data: { custom_id: "other:1" } }),
+    });
+    expect(res.status).toBe(200);
+    expect(d.setCommentStatus).not.toHaveBeenCalled();
+  });
+});
