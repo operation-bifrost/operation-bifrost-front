@@ -11,7 +11,7 @@ describe("wall content", () => {
   });
 
   it("declares display caps", () => {
-    expect(steinsGateContent.wall.display).toEqual({ fetchLimit: 60, visibleBubbles: 12 });
+    expect(steinsGateContent.wall.display).toEqual({ fetchLimit: 60, visibleBubbles: 8 });
   });
 
   it("uses #-anchor compatible sectionId", () => {

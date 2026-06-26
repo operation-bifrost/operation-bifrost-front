@@ -1,37 +1,57 @@
-import { motion } from "motion/react";
-
+import type { Anchor } from "@/components/steins-gate/wall/bubble-rotation";
 import type { PublicComment } from "@/lib/comments/repository";
 
 interface CommentBubbleProps {
   comment: PublicComment;
-  /** Absolute position as percentages of the field. */
-  position: { topPct: number; leftPct: number };
-  reducedMotion: boolean;
+  /** When set, the quote is absolutely positioned on the floating field. */
+  anchor?: Anchor;
+  /** Fade + lift the quote out (used while it relocates). */
+  hidden?: boolean;
+  /** Run the idle bob (off for the static / reduced-motion layout). */
+  bob?: boolean;
+  /** Stagger the idle bob so quotes don't pulse in unison. */
+  bobDelayMs?: number;
 }
 
-export function CommentBubble({ comment, position, reducedMotion }: CommentBubbleProps) {
+/**
+ * "Quote drift" treatment — a ghosted quotation mark, the message, and a mono
+ * author. No surface, no border, no glow: the wall reads as floating epigraphs,
+ * not UI cards. Color comes entirely from theme tokens. The fade/lift transition
+ * and the bob live in `.wall-quote` / `.wall-quote-bob` (steins-gate.css).
+ */
+export function CommentBubble({
+  comment,
+  anchor,
+  hidden = false,
+  bob = false,
+  bobDelayMs = 0,
+}: CommentBubbleProps) {
   const author = comment.name ?? "ไม่ระบุชื่อ";
+  const floating = anchor !== undefined;
+
   return (
-    <motion.figure
-      className="border-border bg-card/80 absolute max-w-[16rem] border px-4 py-3 shadow-[0_0_12px_-2px_var(--color-nixie-base)] backdrop-blur-sm"
-      style={{ top: `${position.topPct}%`, left: `${position.leftPct}%` }}
-      initial={{ opacity: 0, scale: 0.85 }}
-      animate={reducedMotion ? { opacity: 1, scale: 1 } : { opacity: 1, scale: 1, y: [0, -8, 0] }}
-      exit={{ opacity: 0, scale: 0.85 }}
-      transition={
-        reducedMotion
-          ? { duration: 0.2 }
-          : {
-              opacity: { duration: 0.6 },
-              scale: { duration: 0.6 },
-              y: { duration: 6, repeat: Infinity, ease: "easeInOut" },
-            }
+    <figure
+      data-hidden={hidden}
+      className={
+        floating ? "wall-quote absolute max-w-56 pl-2" : "wall-quote relative max-w-sm pl-2"
       }
+      style={floating ? { top: `${anchor.topPct}%`, left: `${anchor.leftPct}%` } : undefined}
     >
-      <blockquote className="text-foreground text-sm/relaxed wrap-break-word">
-        {comment.message}
-      </blockquote>
-      <figcaption className="text-muted-foreground mt-2 font-mono text-xs">— {author}</figcaption>
-    </motion.figure>
+      <span
+        className={bob ? "wall-quote-bob block" : "block"}
+        style={bob ? { animationDelay: `${bobDelayMs}ms` } : undefined}
+      >
+        <span
+          aria-hidden="true"
+          className="text-primary/15 -ml-1 block h-4 font-serif text-5xl leading-none select-none"
+        >
+          &ldquo;
+        </span>
+        <blockquote className="text-foreground text-sm/relaxed wrap-break-word">
+          {comment.message}
+        </blockquote>
+        <figcaption className="text-muted-foreground mt-2 font-mono text-xs">— {author}</figcaption>
+      </span>
+    </figure>
   );
 }

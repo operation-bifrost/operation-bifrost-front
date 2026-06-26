@@ -30,6 +30,8 @@ export const wall = {
   },
   display: {
     fetchLimit: 60,
-    visibleBubbles: 12,
+    // Quote-drift treatment is airy; 8 keeps the floating field readable with
+    // free anchors to spare for relocation. Mobile shows a smaller static set.
+    visibleBubbles: 8,
   },
 } as const;
