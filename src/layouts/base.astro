@@ -30,6 +30,11 @@ const {
   htmlClass = "",
   author = "Operation Bifrost Team",
 } = Astro.props;
+
+// og:image / twitter:image must be absolute for FB / X / LINE scrapers; resolve
+// the (root-relative) ogImage against the configured site, falling back to the
+// page's canonical URL if `site` is ever unset.
+const ogImageUrl = new URL(ogImage, Astro.site ?? canonical).href;
 ---
 
 <html lang={lang} class={htmlClass}>
@@ -48,13 +53,13 @@ const {
     <meta property="og:url" content={canonical} />
     <meta property="og:title" content={ogTitle} />
     <meta property="og:description" content={ogDescription} />
-    <meta property="og:image" content={ogImage} />
+    <meta property="og:image" content={ogImageUrl} />
 
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content={canonical} />
     <meta property="twitter:title" content={twitterTitle} />
     <meta property="twitter:description" content={twitterDescription} />
-    <meta property="twitter:image" content={ogImage} />
+    <meta property="twitter:image" content={ogImageUrl} />
 
     <link rel="canonical" href={canonical} />
 

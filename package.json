@@ -11,6 +11,7 @@
     "assets:webp": "node scripts/images-to-webp.mjs",
     "assets:thumbs": "node scripts/generate-thumbs.mjs",
     "assets:woff2": "node scripts/fonts-to-woff2.mjs",
+    "assets:og": "node scripts/render-og.mjs",
     "wrangler:dev": "wrangler dev",
     "wrangler:deploy": "wrangler deploy",
     "wrangler:deploy:dev": "CLOUDFLARE_ENV=dev yarn build && wrangler deploy",

@@ -18,6 +18,9 @@ const TURNSTILE_SITE_KEY =
 
 // https://astro.build/config
 export default defineConfig({
+  // Canonical production origin. Lets layouts resolve absolute URLs (e.g. the
+  // og:image / twitter:image, which FB / X / LINE scrapers require absolute).
+  site: "https://operationbifrost.com",
   integrations: [react()],
   adapter: cloudflare(),
   vite: {
