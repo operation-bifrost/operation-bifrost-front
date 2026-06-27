@@ -1,5 +1,5 @@
 import { LuQrCode, LuWallet } from "react-icons/lu";
-import { SiBitcoin, SiEthereum, SiKofi, SiSolana } from "react-icons/si";
+import { SiBitcoin, SiEthereum, SiSolana } from "react-icons/si";
 
 import type { DonateChannel } from "./types";
 
