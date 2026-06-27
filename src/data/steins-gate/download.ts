@@ -11,12 +11,21 @@ export const download = {
   patchNotesHref: "#",
   downloadState: {
     label: "ดาวน์โหลด (.zip ขนาด 1.24GB)",
-    href: "#",
+    // Points at the counting route (not R2 directly): it records the click in D1,
+    // then 302-redirects to `file.url`. See src/pages/api/steins-gate/download.ts.
+    href: "/api/steins-gate/download",
     // ISO-8601 target date for the countdown timer. Change this to set the release date.
     // If not specified, displays the disabled "เร็ว ๆ นี้" button.
     targetDate: "2026-07-06T00:00:00+07:00",
     note: "*** แพตช์ภาษาไทยนี้พัฒนาจากแพตช์ภาษาอังกฤษของ Committee of Zero สามารถใช้ได้กับ STEINS;GATE เวอร์ชัน Steam ที่เป็นเวอร์ชันภาษาอังกฤษเท่านั้น ไม่สามารถทำงานบนเวอร์ชันอื่นได้",
   } as DownloadState,
+  // Canonical location of the patch archive on the R2 public bucket. The counting
+  // route 302-redirects here; R2 serves the bytes directly. Same URL across local,
+  // dev, and production. Bump `name`/`url` (and `version` above) on each release.
+  file: {
+    name: "SGPatch-v1.0.0-Setup.zip",
+    url: "https://dl.operationbifrost.com/SGPatch-v1.0.0-Setup.zip",
+  },
   installSteps: [
     {
       number: "01",

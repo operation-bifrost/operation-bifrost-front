@@ -38,6 +38,7 @@ export function DownloadCard() {
               leadingIcon={FaDownload}
               iconClassName="size-6"
               className="h-auto px-10 py-4 text-lg font-bold md:text-xl"
+              external
             >
               {downloadState.label}
             </Button>
