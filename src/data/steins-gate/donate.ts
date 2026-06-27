@@ -57,12 +57,12 @@ export const donate = {
         },
       ],
     },
-    {
-      kind: "link",
-      name: "Ko-fi",
-      caption: "เลี้ยงดร. เปปเปอร์",
-      icon: SiKofi,
-      href: "https://ko-fi.com/operationbifrost",
-    },
+    // {
+    //   kind: "link",
+    //   name: "Ko-fi",
+    //   caption: "เลี้ยงดร. เปปเปอร์",
+    //   icon: SiKofi,
+    //   href: "https://ko-fi.com/operationbifrost",
+    // },
   ] satisfies ReadonlyArray<DonateChannel>,
 } as const;
