@@ -21,6 +21,8 @@ pnpm-debug.log*
 # environment variables
 .env
 .env.production
+.dev.vars
+.dev.vars.*
 
 # macOS-specific files
 .DS_Store
@@ -41,3 +43,10 @@ docs/superpowers
 .agents/skills/web-perf/
 .agents/skills/workers-best-practices/
 .agents/skills/wrangler/
+# Superpowers SDD scratch
+.superpowers/
+
+# Playwright
+/test-results
+/playwright-report
+/.playwright

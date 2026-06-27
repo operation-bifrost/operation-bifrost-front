@@ -7,6 +7,7 @@ import { footer } from "./footer";
 import { gallery } from "./gallery";
 import { hero } from "./hero";
 import { navbar } from "./navbar";
+import { wall } from "./wall";
 
 export * from "./types";
 
@@ -19,6 +20,7 @@ export const steinsGateContent = {
   faq,
   credits,
   donate,
+  wall,
   footer,
 } as const;
 

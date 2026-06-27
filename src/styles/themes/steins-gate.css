@@ -632,6 +632,54 @@
   .faq-terminal {
     background: linear-gradient(180deg, rgba(41, 37, 36, 0.9) 0%, rgba(68, 64, 59, 0.9) 100%);
   }
+
+  /* --- Comment wall: floating "quote drift" treatment ---
+   * The quotes themselves stay chromeless (plain theme tokens on the markup).
+   * This block owns the field's atmosphere + the quote motion.
+   *
+   * .wall-field — a faint nixie halo pooled near the top-center so the drifting
+   * quotes float through soft light rather than a flat panel. Mirrors the demo
+   * `.stage` glow; alpha kept low (subtle) and tied to --color-nixie-base via
+   * color-mix so a sibling project's theme drives the hue instead of a hardcode. */
+  .wall-field {
+    background: radial-gradient(
+      ellipse at 50% 50%,
+      color-mix(in srgb, var(--color-nixie-base) 5%, transparent) 0%,
+      transparent 70%
+    );
+  }
+
+  /* .wall-quote — motion only: the fade + lift used while a quote relocates
+   * (driven by data-hidden), and the idle bob. Compositor-friendly
+   * (opacity/transform only). FADE timing is mirrored by FADE_MS in
+   * comment-bubbles.tsx — keep them in sync. */
+  .wall-quote {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity 700ms ease,
+      transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+  }
+
+  .wall-quote[data-hidden="true"] {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  .wall-quote-bob {
+    animation: bifrost-wall-bob 7s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .wall-quote {
+      transition-duration: 1ms;
+    }
+    .wall-quote-bob {
+      animation: none;
+    }
+  }
 }
 
 /* ----------------------------------------------------------------------- */
@@ -718,6 +766,16 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes bifrost-wall-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
   }
 }
 

@@ -4,6 +4,7 @@ import { Navbar } from "@/components/steins-gate/navbar/navbar";
 import { Hero } from "@/components/steins-gate/hero/hero";
 import { Features } from "@/components/steins-gate/features/features";
 import { Gallery } from "@/components/steins-gate/gallery/gallery";
+import { Wall } from "@/components/steins-gate/wall/wall";
 import { Download } from "@/components/steins-gate/download/download";
 import { Faq } from "@/components/steins-gate/faq/faq";
 import { Credits } from "@/components/steins-gate/credits/credits";
@@ -50,6 +51,7 @@ const twitterDescription =
     <Faq client:visible={{ rootMargin: "200px" }} />
     <Credits client:visible />
     <Donate client:visible />
+    <Wall client:visible />
   </div>
 
   <Footer client:visible={{ rootMargin: "200px" }} />
