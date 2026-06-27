@@ -1,10 +1,8 @@
 import { LuGlobe } from "react-icons/lu";
-import { SiFacebook, SiGithub, SiInstagram } from "react-icons/si";
+import { SiFacebook, SiGithub, SiInstagram, SiYoutube } from "react-icons/si";
 
 import type { CreditPerson } from "./types";
 
-// TODO: replace the placeholder names and "#" links below with the real
-// team credits before launch. Roles, partners, and volunteer list are drafts.
 export const credits = {
   eyebrow: "credits_",
   heading: "ผู้จัดทำ",
@@ -35,6 +33,13 @@ export const credits = {
       {
         name: "Amaritto",
         role: "แปล / กราฟิก",
+        socials: [
+          {
+            label: "YouTube",
+            href: "https://www.youtube.com/@Amaritto321",
+            icon: SiYoutube,
+          },
+        ],
       },
       {
         name: "Ranviee",
