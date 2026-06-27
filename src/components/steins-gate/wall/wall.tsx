@@ -90,7 +90,13 @@ export function Wall() {
           {description}
         </p>
 
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,22rem)_1fr]">
+        {/* grid-cols-1 (= minmax(0,1fr)) keeps the single mobile column from
+            being blown out by a wide child: an implicit `auto` column floors at
+            its content's min-content, which on a ~340px phone stretched the
+            shared track wider than the container and pushed the w-full wall
+            field's right border off-screen. The lg template already guards this
+            with minmax(0,…); this gives mobile the same floor. */}
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,22rem)_1fr]">
           {/* Source order is form-first (keeps it first in tab / screen-reader
               flow — it's the actionable element). `order` only swaps the visual
               order: on mobile the bubbles lead, on desktop the form returns to
