@@ -222,7 +222,7 @@ export function Donate() {
           </div>
 
           {/* Right — channel selector */}
-          <div className="border-border order-1 flex flex-col border-b lg:order-2 lg:w-64 lg:border-b-0 lg:border-l">
+          <div className="border-border order-1 flex flex-col border-b lg:order-2 lg:w-72 lg:border-b-0 lg:border-l">
             {channels.map((channel) => {
               const Icon = channel.icon;
 
