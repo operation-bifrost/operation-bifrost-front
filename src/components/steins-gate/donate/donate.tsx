@@ -189,11 +189,16 @@ function CryptoView({ channel }: { channel: DonateCryptoChannel }) {
 export function Donate() {
   const { eyebrow, heading, description, channels } = steinsGateContent.donate;
 
+  // Widen to the declared union (which `channels` satisfies) before iterating:
+  // the `as const` literal element type only covers the kinds currently present
+  // in the data, so the `link` branch and the `kind !== "link"` guard below would
+  // otherwise narrow to `never`. Widening keeps the link-channel rendering live
+  // for when Ko-fi/PayPal return.
+  const allChannels = channels as ReadonlyArray<DonateChannel>;
+
   // "In-place" channels (view + crypto) render in the left panel when selected;
-  // link channels navigate out instead. Filter against the declared union (which
-  // `channels` satisfies) so the type guard narrows cleanly — the `as const`
-  // literal element type is too narrow for the guard's asserted type.
-  const inPlaceChannels = (channels as ReadonlyArray<DonateChannel>).filter(
+  // link channels navigate out instead.
+  const inPlaceChannels = allChannels.filter(
     (channel): channel is DonateViewChannel | DonateCryptoChannel => channel.kind !== "link",
   );
   const [activeId, setActiveId] = useState(inPlaceChannels[0]?.id ?? "");
@@ -223,7 +228,7 @@ export function Donate() {
 
           {/* Right — channel selector */}
           <div className="border-border order-1 flex flex-col border-b lg:order-2 lg:w-72 lg:border-b-0 lg:border-l">
-            {channels.map((channel) => {
+            {allChannels.map((channel) => {
               const Icon = channel.icon;
 
               if (channel.kind !== "link") {
