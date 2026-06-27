@@ -31,10 +31,13 @@ const {
   author = "Operation Bifrost Team",
 } = Astro.props;
 
-// og:image / twitter:image must be absolute for FB / X / LINE scrapers; resolve
-// the (root-relative) ogImage against the configured site, falling back to the
-// page's canonical URL if `site` is ever unset.
-const ogImageUrl = new URL(ogImage, Astro.site ?? canonical).href;
+// og:image / twitter:image must be absolute for FB / X / LINE scrapers. Resolve
+// against the current request URL (Astro.url) rather than the static `site`, so
+// the card loads from whatever origin actually serves the page: the prod origin
+// in the prerendered build (where `site` seeds Astro.url), but the localhost /
+// tunnel host during `astro dev` (e.g. sharing a *.trycloudflare.com link to
+// Discord). canonical/site stay the prod origin for SEO.
+const ogImageUrl = new URL(ogImage, Astro.url).href;
 ---
 
 <html lang={lang} class={htmlClass}>
