@@ -22,11 +22,13 @@
       "simple": { "limit": 3, "period": 60 },
     },
   ],
-  // BEFORE PRODUCTION: replace PUBLIC_TURNSTILE_SITE_KEY with the real Turnstile site key
-  // and set the real TURNSTILE_SECRET_KEY secret via `wrangler secret put TURNSTILE_SECRET_KEY`.
-  // The values committed here are Cloudflare test keys (always-pass).
+  // PUBLIC_TURNSTILE_SITE_KEY is the real (public) Turnstile site key — safe to commit;
+  // it is baked into the client bundle at build time. Still required before prod traffic:
+  // set the TURNSTILE_SECRET_KEY secret (NOT committed):
+  //   wrangler secret put TURNSTILE_SECRET_KEY            (prod worker)
+  //   wrangler secret put TURNSTILE_SECRET_KEY --env dev  (dev worker)
   "vars": {
-    "PUBLIC_TURNSTILE_SITE_KEY": "1x00000000000000000000AA",
+    "PUBLIC_TURNSTILE_SITE_KEY": "0x4AAAAAADrBLBP56fAr_OT1",
   },
   // Isolated dev/staging Worker. With @astrojs/cloudflare (Astro 6) the target
   // environment is resolved at BUILD time via CLOUDFLARE_ENV — NOT by
@@ -58,7 +60,7 @@
         },
       ],
       "vars": {
-        "PUBLIC_TURNSTILE_SITE_KEY": "1x00000000000000000000AA",
+        "PUBLIC_TURNSTILE_SITE_KEY": "0x4AAAAAADrBLBP56fAr_OT1",
       },
     },
   },
