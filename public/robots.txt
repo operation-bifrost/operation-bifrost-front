@@ -1,5 +1,6 @@
-# Operation Bifrost — allow everything; point crawlers at the sitemap index
-# that @astrojs/sitemap emits at build time (see astro.config.mjs).
+# Operation Bifrost — allow all crawlers (incl. AI answer engines & training
+# bots); point them at the sitemap index that @astrojs/sitemap emits at build
+# time (see astro.config.mjs).
 User-agent: *
 Allow: /
 

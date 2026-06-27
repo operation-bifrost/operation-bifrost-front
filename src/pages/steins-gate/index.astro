@@ -25,6 +25,10 @@ const twitterDescription =
 
 const pageUrl = "https://operationbifrost.com/steins-gate/";
 
+// Release date for the patch, derived from the countdown target in download.ts
+// (YYYY-MM-DD) so the freshness signal in the schema can't drift from the data.
+const releaseDate = download.downloadState.targetDate?.slice(0, 10);
+
 // FAQ answers are authored with markdown links "[label](url)"; flatten them to
 // plain text so the schema carries clean answer copy (rich results render text,
 // not markdown).
@@ -56,6 +60,7 @@ const steinsGateJsonLd = {
       downloadUrl: download.file.url,
       fileSize: "1.24GB",
       inLanguage: "th",
+      ...(releaseDate ? { datePublished: releaseDate, dateModified: releaseDate } : {}),
       // Free fan patch — no ratings, so this won't earn a star rich result, but the
       // markup still helps engines understand the page's primary entity.
       isAccessibleForFree: true,

@@ -1,0 +1,15 @@
+# Operation Bifrost (ปฏิบัติการไบฟรอสต์)
+
+> Thai fan-localization collective. Public hub for Thai game-translation mods; the first release is a complete Thai patch for STEINS;GATE (Steam English version), free to download.
+
+Operation Bifrost translates visual novels and games into Thai. Each project lives under its own URL segment, so more titles can be added over time. The flagship release is a full Thai localization mod for STEINS;GATE, built on top of the Committee of Zero English patch — it requires that you already own STEINS;GATE on Steam (English version).
+
+## Projects
+
+- [STEINS;GATE — Thai translation mod](https://operationbifrost.com/steins-gate/): Full Thai patch for the Steam (English) build. Translates the main story, the in-game encyclopedia (Tips), character mails, on-screen CG text, and song subtitles. Free and fan-made; works only on the Steam English version (it builds on the Committee of Zero patch). Linux is supported via the CoZ Polyversal patcher; macOS is untested.
+
+## Links
+
+- [Hub homepage](https://operationbifrost.com/)
+- [Discord](https://discord.gg/8WHxqbCjGD)
+- [Facebook](https://www.facebook.com/operationbifrost)
