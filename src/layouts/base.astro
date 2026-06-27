@@ -44,14 +44,26 @@ const {
 // per request. Used below for the noindex guard and the og:image origin.
 const isProductionBuild = import.meta.env.PUBLIC_DEPLOY_ENV === "production";
 
-// og:image / twitter:image must be absolute for FB / X / LINE scrapers. Resolve
-// the (root-relative) ogImage against the build's own origin: Astro.site in prod,
-// the dev origin on non-prod builds — otherwise dev social previews point at
+// Local dev (incl. cloudflared/ngrok tunnels): `astro dev` renders on demand, so
+// Astro.url is the live request — advertise the tunnel's own card so social
+// previews of a *.trycloudflare.com link aren't pinned to the prod image. The dev
+// server speaks http to the tunnel, so force https for any non-localhost host
+// (scrapers want https); keep http for plain localhost.
+const isLocalHost = ["localhost", "127.0.0.1"].includes(Astro.url.hostname);
+const devRequestOrigin = `${isLocalHost ? Astro.url.protocol : "https:"}//${Astro.url.host}`;
+
+// og:image / twitter:image must be absolute for FB / X / LINE scrapers. Pick the
+// origin per context: local dev → the live request origin (above); prod build →
+// Astro.site; non-prod build (develop.*) → the dev origin, else previews point at
 // operationbifrost.com, which serves the LEGACY prod card until develop is merged.
-// (canonical / og:url intentionally stay on the production origin.)
-const imageOrigin = isProductionBuild
-  ? (Astro.site ?? canonical)
-  : "https://develop.operationbifrost.com";
+// import.meta.env.DEV is statically false in any build, so the request-origin
+// branch is dead-code-eliminated from the prerendered deploys — it only ever runs
+// in the live dev server. (canonical / og:url intentionally stay on production.)
+const imageOrigin = import.meta.env.DEV
+  ? devRequestOrigin
+  : isProductionBuild
+    ? (Astro.site ?? canonical)
+    : "https://develop.operationbifrost.com";
 const ogImageUrl = new URL(ogImage, imageOrigin).href;
 ---
 
