@@ -37,19 +37,22 @@ const {
   author = "Operation Bifrost Team",
 } = Astro.props;
 
-// og:image / twitter:image must be absolute for FB / X / LINE scrapers; resolve
-// the (root-relative) ogImage against the configured site, falling back to the
-// page's canonical URL if `site` is ever unset.
-const ogImageUrl = new URL(ogImage, Astro.site ?? canonical).href;
-
 // The dev/staging Worker (operationbifrost-dev → develop.operationbifrost.com) is
 // built with CLOUDFLARE_ENV=dev (see wrangler.jsonc / yarn wrangler:deploy:dev),
 // surfaced here as import.meta.env.PUBLIC_DEPLOY_ENV (baked in astro.config.mjs).
-// Pages are prerendered, so we can't branch per request — instead bake a noindex
-// directive at build time on every non-production build. Production builds leave
-// it off, so prod pages stay fully indexable. Belt-and-suspenders on top of the
-// canonicals (which already point every dev page at the production origin).
+// Pages are prerendered, so anything env-specific is decided at build time, not
+// per request. Used below for the noindex guard and the og:image origin.
 const isProductionBuild = import.meta.env.PUBLIC_DEPLOY_ENV === "production";
+
+// og:image / twitter:image must be absolute for FB / X / LINE scrapers. Resolve
+// the (root-relative) ogImage against the build's own origin: Astro.site in prod,
+// the dev origin on non-prod builds — otherwise dev social previews point at
+// operationbifrost.com, which serves the LEGACY prod card until develop is merged.
+// (canonical / og:url intentionally stay on the production origin.)
+const imageOrigin = isProductionBuild
+  ? (Astro.site ?? canonical)
+  : "https://develop.operationbifrost.com";
+const ogImageUrl = new URL(ogImage, imageOrigin).href;
 ---
 
 <html lang={lang} class={htmlClass}>
