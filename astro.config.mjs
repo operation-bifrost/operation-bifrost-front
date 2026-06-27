@@ -16,11 +16,20 @@ const TURNSTILE_SITE_KEY =
   loadEnv(process.env.NODE_ENV ?? "production", process.cwd(), "PUBLIC_")
     .PUBLIC_TURNSTILE_SITE_KEY ?? "0x4AAAAAADrBLBP56fAr_OT1";
 
+// `site` seeds the absolute URLs Astro bakes into the prerendered build (og:image,
+// twitter:image, sitemap). It must match the origin that actually serves THIS build
+// so social scrapers fetch a reachable card: the dev Worker references its own
+// domain, prod references prod. The dev build is the one made with CLOUDFLARE_ENV=dev
+// (see wrangler.jsonc / `yarn wrangler:deploy:dev`). `astro dev` is unaffected — there
+// base.astro resolves og:image against the live request origin instead.
+const SITE =
+  process.env.CLOUDFLARE_ENV === "dev"
+    ? "https://develop.operationbifrost.com"
+    : "https://operationbifrost.com";
+
 // https://astro.build/config
 export default defineConfig({
-  // Canonical production origin. Lets layouts resolve absolute URLs (e.g. the
-  // og:image / twitter:image, which FB / X / LINE scrapers require absolute).
-  site: "https://operationbifrost.com",
+  site: SITE,
   integrations: [react()],
   adapter: cloudflare(),
   vite: {
