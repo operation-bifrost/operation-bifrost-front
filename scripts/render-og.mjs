@@ -27,7 +27,7 @@ import { fileURLToPath } from "node:url";
 const ROOT = fileURLToPath(new URL("../", import.meta.url));
 const SOURCE = "/scripts/og-template.html";
 const OUT_DIR = join(ROOT, "public");
-// card node id (in the demo) -> output filename
+// card node id (in the template) -> output filename
 const CARDS = {
   "og-sg": "og-steins-gate.png",
   "og-home": "og-image.png",
@@ -70,8 +70,8 @@ const CONTENT_TYPES = {
   ".json": "application/json",
 };
 
-// Minimal static file server rooted at the repo so the demo's relative paths
-// (../../public/fonts, ../../public/images) resolve and fonts/images load
+// Minimal static file server rooted at the repo so the template's relative
+// paths (../public/fonts, ../public/images) resolve and fonts/images load
 // without the file:// CORS quirks that break @font-face in headless Chromium.
 function startServer() {
   const server = createServer(async (req, res) => {
