@@ -12,7 +12,6 @@ export const navbar = {
     { label: "คำถามที่พบบ่อย", href: "#faq" },
     { label: "ผู้จัดทำ", href: "#credits" },
     { label: "สนับสนุน", href: "#donate" },
-    { label: "กำแพงความในใจ", href: "#wall" },
   ] satisfies ReadonlyArray<NavItem>,
   socials: [
     {

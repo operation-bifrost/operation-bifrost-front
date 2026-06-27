@@ -1,6 +1,7 @@
 import type { CommentStatus } from "@/lib/comments/repository";
 import {
   buildDecisionMessagePayload,
+  type DiscordEmbed,
   INTERACTION_RESPONSE_PONG,
   INTERACTION_RESPONSE_UPDATE_MESSAGE,
   INTERACTION_TYPE_MESSAGE_COMPONENT,
@@ -25,7 +26,7 @@ interface Interaction {
   data?: { custom_id?: string };
   member?: { user?: { username?: string } };
   user?: { username?: string };
-  message?: { content?: string };
+  message?: { content?: string; embeds?: DiscordEmbed[] };
 }
 
 function json(body: object, status = 200): Response {
@@ -66,13 +67,13 @@ export async function handleInteraction(
     reviewedAt: deps.now(),
   });
 
-  const originalContent = interaction.message?.content ?? "";
+  const originalEmbed = interaction.message?.embeds?.[0];
   return json({
     type: INTERACTION_RESPONSE_UPDATE_MESSAGE,
     data: buildDecisionMessagePayload({
       decision: parsed.action,
       reviewer,
-      message: originalContent,
+      originalEmbed,
     }),
   });
 }

@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
+  MOBILE_MIN_TOP_GAP_PCT,
   WALL_ANCHORS,
+  WALL_ANCHORS_MOBILE,
   relocateSlot,
   seedSlots,
   type Anchor,
@@ -131,6 +133,67 @@ describe("relocateSlot", () => {
       slots = relocateSlot(slots, id, comments, WALL_ANCHORS, rng);
       expect(distinct(slots.map((s) => s.anchorIndex))).toBe(true);
     }
+  });
+});
+
+// Smallest topPct distance between any two on-screen quotes. Infinity for <2.
+const minPairTopGap = (slots: BubbleSlot[], anchors: readonly Anchor[]): number => {
+  const tops = slots.map((s) => anchors[s.anchorIndex].topPct);
+  let min = Infinity;
+  for (let i = 0; i < tops.length; i++) {
+    for (let j = i + 1; j < tops.length; j++) {
+      min = Math.min(min, Math.abs(tops[i] - tops[j]));
+    }
+  }
+  return min;
+};
+
+describe("spaced placement (mobile, minTopGapPct)", () => {
+  const comments = pool(20);
+  const VISIBLE = 3;
+
+  it("seeds a full, non-overlapping set across many seeds", () => {
+    for (let seed = 1; seed <= 60; seed++) {
+      const slots = seedSlots(
+        comments,
+        VISIBLE,
+        WALL_ANCHORS_MOBILE,
+        mulberry32(seed),
+        MOBILE_MIN_TOP_GAP_PCT,
+      );
+      // never dead-ends below the requested count...
+      expect(slots).toHaveLength(VISIBLE);
+      // ...and every pair clears the gap, so no two quotes overlap.
+      expect(minPairTopGap(slots, WALL_ANCHORS_MOBILE)).toBeGreaterThanOrEqual(
+        MOBILE_MIN_TOP_GAP_PCT,
+      );
+    }
+  });
+
+  it("preserves the gap across 300 sequential relocations", () => {
+    let slots = seedSlots(
+      comments,
+      VISIBLE,
+      WALL_ANCHORS_MOBILE,
+      mulberry32(11),
+      MOBILE_MIN_TOP_GAP_PCT,
+    );
+    const rng = mulberry32(321);
+    for (let n = 0; n < 300; n++) {
+      const id = Math.floor(rng() * slots.length);
+      slots = relocateSlot(slots, id, comments, WALL_ANCHORS_MOBILE, rng, MOBILE_MIN_TOP_GAP_PCT);
+      expect(distinct(slots.map((s) => s.anchorIndex))).toBe(true);
+      expect(minPairTopGap(slots, WALL_ANCHORS_MOBILE)).toBeGreaterThanOrEqual(
+        MOBILE_MIN_TOP_GAP_PCT,
+      );
+    }
+  });
+
+  it("leaves desktop placement unconstrained when no gap is given", () => {
+    // 8 of the 12 desktop anchors include neighbours closer than the mobile gap;
+    // without a gap that's allowed (the 2D lanes keep them apart visually).
+    const slots = seedSlots(pool(20), 8, WALL_ANCHORS, mulberry32(7));
+    expect(slots).toHaveLength(8);
   });
 });
 

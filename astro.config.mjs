@@ -11,6 +11,9 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
     server: {
+      // Dev-server only (no effect on the built Worker). Lets a Cloudflare
+      // quick-tunnel reach the local interactions endpoint for Discord testing.
+      allowedHosts: [".trycloudflare.com"],
       watch: {
         ignored: ["**/design/**", "**/legacy/**"],
       },

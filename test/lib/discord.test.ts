@@ -50,6 +50,18 @@ describe("buildModMessagePayload", () => {
     expect(payload).toContain("wall_approve:x1");
     expect(payload).toContain("wall_reject:x1");
   });
+
+  it("renders the comment as an embed with the author field", () => {
+    const payload = buildModMessagePayload({ id: "x1", name: "Kurisu", message: "El Psy Kongroo" });
+    const embed = payload.embeds?.[0];
+    expect(embed?.description).toBe("El Psy Kongroo");
+    expect(embed?.fields).toContainEqual({ name: "จาก", value: "Kurisu", inline: true });
+  });
+
+  it("falls back to an anonymous author when name is null", () => {
+    const payload = buildModMessagePayload({ id: "x1", name: null, message: "hi" });
+    expect(payload.embeds?.[0]?.fields?.[0]?.value).toContain("anonymous");
+  });
 });
 
 describe("verifyDiscordRequest", () => {
@@ -84,7 +96,6 @@ describe("postModMessage", () => {
   const validPayload = buildDecisionMessagePayload({
     decision: "approve",
     reviewer: "mod",
-    message: "ok",
   });
 
   it("posts to the channel and returns the message id", async () => {
@@ -125,27 +136,58 @@ describe("postModMessage", () => {
 });
 
 describe("buildDecisionMessagePayload", () => {
-  it("approve decision includes reviewer name and empty components", () => {
+  const originalEmbed = {
+    title: "คอมเมนต์ใหม่รออนุมัติ",
+    description: "El Psy Kongroo",
+    color: 0xffc700,
+    fields: [{ name: "จาก", value: "Kurisu", inline: true }],
+  };
+
+  it("approve decision appends the reviewer field and drops components", () => {
     const payload = buildDecisionMessagePayload({
       decision: "approve",
       reviewer: "mod",
-      message: "hi",
+      originalEmbed,
     });
     expect(payload.components).toEqual([]);
-    expect(payload.content).toContain("mod");
+    const embed = payload.embeds?.[0];
+    expect(embed?.title).toBe("✅ อนุมัติแล้ว");
+    expect(embed?.fields).toContainEqual({ name: "ตรวจสอบโดย", value: "mod", inline: true });
   });
 
-  it("reject decision produces distinct content from approve", () => {
+  it("preserves the original comment and author when rendering a decision", () => {
+    const payload = buildDecisionMessagePayload({
+      decision: "approve",
+      reviewer: "mod",
+      originalEmbed,
+    });
+    const embed = payload.embeds?.[0];
+    expect(embed?.description).toBe("El Psy Kongroo");
+    expect(embed?.fields).toContainEqual({ name: "จาก", value: "Kurisu", inline: true });
+  });
+
+  it("reject decision produces a distinct title and color from approve", () => {
     const approve = buildDecisionMessagePayload({
       decision: "approve",
       reviewer: "mod",
-      message: "hi",
+      originalEmbed,
     });
     const reject = buildDecisionMessagePayload({
       decision: "reject",
       reviewer: "mod",
-      message: "hi",
+      originalEmbed,
     });
-    expect(approve.content).not.toBe(reject.content);
+    expect(approve.embeds?.[0]?.title).not.toBe(reject.embeds?.[0]?.title);
+    expect(approve.embeds?.[0]?.color).not.toBe(reject.embeds?.[0]?.color);
+  });
+
+  it("still produces an embed when no original embed is available", () => {
+    const payload = buildDecisionMessagePayload({ decision: "reject", reviewer: "mod" });
+    expect(payload.embeds?.[0]?.title).toBe("🚫 ปฏิเสธแล้ว");
+    expect(payload.embeds?.[0]?.fields).toContainEqual({
+      name: "ตรวจสอบโดย",
+      value: "mod",
+      inline: true,
+    });
   });
 });

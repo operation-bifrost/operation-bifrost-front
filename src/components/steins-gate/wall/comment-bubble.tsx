@@ -43,14 +43,14 @@ export function CommentBubble({
       >
         <span
           aria-hidden="true"
-          className="text-primary/15 -ml-1 block h-4 font-serif text-5xl leading-none select-none"
+          className="text-primary/15 mb-4 -ml-1 block h-4 font-serif text-5xl leading-none select-none"
         >
           &ldquo;
         </span>
-        <blockquote className="text-foreground text-sm/relaxed wrap-break-word">
+        <blockquote className="text-foreground font-krub text-sm/relaxed wrap-break-word">
           {comment.message}
         </blockquote>
-        <figcaption className="text-muted-foreground mt-2 font-mono text-xs">— {author}</figcaption>
+        <figcaption className="text-muted-foreground font-krub mt-2 text-xs">- {author}</figcaption>
       </span>
     </figure>
   );

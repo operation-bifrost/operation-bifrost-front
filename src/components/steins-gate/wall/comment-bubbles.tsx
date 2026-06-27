@@ -3,9 +3,12 @@ import { useEffect, useRef, useState } from "react";
 
 import { CommentBubble } from "@/components/steins-gate/wall/comment-bubble";
 import {
+  MOBILE_MIN_TOP_GAP_PCT,
   WALL_ANCHORS,
+  WALL_ANCHORS_MOBILE,
   relocateSlot,
   seedSlots,
+  type Anchor,
   type BubbleSlot,
 } from "@/components/steins-gate/wall/bubble-rotation";
 import type { PublicComment } from "@/lib/comments/repository";
@@ -23,8 +26,13 @@ const RETRY_MIN_MS = 800;
 const RETRY_MAX_MS = 2_400;
 // Reopen the no-overlap guard shortly after a quote lands.
 const SETTLE_RELEASE_MS = 300;
-// Small screens get a calm static stack instead of the absolute floating field.
+// Reduced-motion small screens get a calm static stack instead of motion.
 const MOBILE_VISIBLE = 4;
+// Phones float fewer quotes than desktop. Kept at 3/6 of WALL_ANCHORS_MOBILE
+// (50%) so three bands stay empty: on the h-128 field the bands are only ~70px
+// apart while a quote is ~75-120px tall, so 4-up forced adjacent quotes to
+// overlap. At 3-up the placement can stay non-adjacent and the wall reads sparse.
+const MOBILE_VISIBLE_FLOATING = 3;
 const DESKTOP_QUERY = "(min-width: 1024px)";
 
 const rand = (min: number, max: number) => min + Math.random() * (max - min);
@@ -38,13 +46,27 @@ export function CommentBubbles({ comments, visibleCount }: CommentBubblesProps) 
   const reducedMotion = useReducedMotion() ?? false;
   const isDesktop = useIsDesktop();
 
-  // On small screens or with reduced motion, fall back to a static stack: no
-  // absolute positioning (avoids overflow) and no relocation churn.
-  if (!isDesktop || reducedMotion) {
+  // Only reduced-motion falls back to a static stack now — no absolute
+  // positioning, no relocation churn. Phones get the floating field too, just
+  // with a mobile-tuned anchor set (single column, taller field).
+  if (reducedMotion) {
     const count = isDesktop ? Math.min(visibleCount, WALL_ANCHORS.length) : MOBILE_VISIBLE;
     return <StaticWall comments={comments} count={count} />;
   }
-  return <FloatingWall comments={comments} visibleCount={visibleCount} />;
+
+  const anchors = isDesktop ? WALL_ANCHORS : WALL_ANCHORS_MOBILE;
+  const count = isDesktop ? visibleCount : MOBILE_VISIBLE_FLOATING;
+  // Desktop scatters freely in 2D; the mobile column enforces a vertical gap so
+  // its closely-stacked bands never let two quotes overlap.
+  const minTopGapPct = isDesktop ? undefined : MOBILE_MIN_TOP_GAP_PCT;
+  return (
+    <FloatingWall
+      comments={comments}
+      visibleCount={count}
+      anchors={anchors}
+      minTopGapPct={minTopGapPct}
+    />
+  );
 }
 
 function useIsDesktop(): boolean {
@@ -73,9 +95,13 @@ function StaticWall({ comments, count }: { comments: PublicComment[]; count: num
 function FloatingWall({
   comments,
   visibleCount,
+  anchors,
+  minTopGapPct,
 }: {
   comments: PublicComment[];
   visibleCount: number;
+  anchors: readonly Anchor[];
+  minTopGapPct?: number;
 }) {
   const [slots, setSlots] = useState<BubbleSlot[]>([]);
   const [hiddenIds, setHiddenIds] = useState<ReadonlySet<number>>(() => new Set());
@@ -89,13 +115,13 @@ function FloatingWall({
   }, [comments]);
 
   useEffect(() => {
-    const seeded = seedSlots(comments, visibleCount);
+    const seeded = seedSlots(comments, visibleCount, anchors, Math.random, minTopGapPct);
     slotsRef.current = seeded;
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setSlots(seeded);
     setHiddenIds(new Set());
 
-    const cap = Math.min(visibleCount, comments.length, WALL_ANCHORS.length);
+    const cap = Math.min(visibleCount, comments.length, anchors.length);
     // With one comment or fewer there is nothing to rotate between.
     if (cap === 0 || comments.length <= 1) return;
 
@@ -122,7 +148,14 @@ function FloatingWall({
       setHiddenIds((prev) => new Set(prev).add(slotId)); // fade + lift away
       after(
         () => {
-          const next = relocateSlot(slotsRef.current, slotId, commentsRef.current);
+          const next = relocateSlot(
+            slotsRef.current,
+            slotId,
+            commentsRef.current,
+            anchors,
+            Math.random,
+            minTopGapPct,
+          );
           slotsRef.current = next;
           setSlots(next); // new anchor + fresh comment, applied while invisible
           setHiddenIds((prev) => {
@@ -147,15 +180,20 @@ function FloatingWall({
       timers.clear();
       fadingRef.current = 0;
     };
-  }, [comments, visibleCount]);
+  }, [comments, visibleCount, anchors, minTopGapPct]);
 
   return (
-    <div className="relative h-112 w-full overflow-hidden" aria-live="off">
+    // Taller on phones (single-column field needs the vertical room); the lg
+    // height + breakpoint line up with the desktop anchor set (min-width 1024px).
+    <div
+      className="wall-field relative h-128 w-full overflow-hidden rounded-lg border lg:h-112"
+      aria-live="off"
+    >
       {slots.map((s) => (
         <CommentBubble
           key={s.id}
           comment={s.comment}
-          anchor={WALL_ANCHORS[s.anchorIndex]}
+          anchor={anchors[s.anchorIndex]}
           hidden={hiddenIds.has(s.id)}
           bob
           bobDelayMs={(s.id % 5) * 1300}

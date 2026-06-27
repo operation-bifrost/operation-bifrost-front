@@ -7,7 +7,7 @@ describe("wall content", () => {
   });
 
   it("declares the agreed limits", () => {
-    expect(steinsGateContent.wall.limits).toEqual({ maxName: 40, maxMessage: 280 });
+    expect(steinsGateContent.wall.limits).toEqual({ maxName: 20, maxMessage: 50 });
   });
 
   it("declares display caps", () => {

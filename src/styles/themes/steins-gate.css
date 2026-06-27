@@ -634,9 +634,23 @@
   }
 
   /* --- Comment wall: floating "quote drift" treatment ---
-   * No surface/border/glow lives here — the chrome is plain theme tokens on the
-   * markup. This block only owns motion: the fade + lift used while a quote
-   * relocates (driven by data-hidden), and the idle bob. Compositor-friendly
+   * The quotes themselves stay chromeless (plain theme tokens on the markup).
+   * This block owns the field's atmosphere + the quote motion.
+   *
+   * .wall-field — a faint nixie halo pooled near the top-center so the drifting
+   * quotes float through soft light rather than a flat panel. Mirrors the demo
+   * `.stage` glow; alpha kept low (subtle) and tied to --color-nixie-base via
+   * color-mix so a sibling project's theme drives the hue instead of a hardcode. */
+  .wall-field {
+    background: radial-gradient(
+      ellipse at 50% 50%,
+      color-mix(in srgb, var(--color-nixie-base) 5%, transparent) 0%,
+      transparent 70%
+    );
+  }
+
+  /* .wall-quote — motion only: the fade + lift used while a quote relocates
+   * (driven by data-hidden), and the idle bob. Compositor-friendly
    * (opacity/transform only). FADE timing is mirrored by FADE_MS in
    * comment-bubbles.tsx — keep them in sync. */
   .wall-quote {

@@ -63,6 +63,16 @@ export function CommentForm({ siteKey, onSubmitted }: CommentFormProps) {
 
   return (
     <form onSubmit={submit} className="flex flex-col gap-4">
+      <textarea
+        value={message}
+        maxLength={limits.maxMessage}
+        onChange={(e) => setMessage(e.target.value)}
+        placeholder={form.messagePlaceholder}
+        aria-label={form.messagePlaceholder}
+        rows={3}
+        required
+        className="border-border bg-background/60 text-foreground placeholder:text-muted-foreground focus-visible:ring-ring resize-none border px-3 py-2 outline-none focus-visible:ring-2"
+      />
       <input
         type="text"
         value={name}
@@ -72,21 +82,6 @@ export function CommentForm({ siteKey, onSubmitted }: CommentFormProps) {
         aria-label={form.namePlaceholder}
         className="border-border bg-background/60 text-foreground placeholder:text-muted-foreground focus-visible:ring-ring border px-3 py-2 outline-none focus-visible:ring-2"
       />
-      <div className="flex flex-col gap-1">
-        <textarea
-          value={message}
-          maxLength={limits.maxMessage}
-          onChange={(e) => setMessage(e.target.value)}
-          placeholder={form.messagePlaceholder}
-          aria-label={form.messagePlaceholder}
-          rows={3}
-          required
-          className="border-border bg-background/60 text-foreground placeholder:text-muted-foreground focus-visible:ring-ring resize-none border px-3 py-2 outline-none focus-visible:ring-2"
-        />
-        <span className="text-muted-foreground self-end font-mono text-xs">
-          {message.length}/{limits.maxMessage}
-        </span>
-      </div>
 
       <TurnstileWidget siteKey={siteKey} onToken={handleToken} />
 
@@ -96,7 +91,7 @@ export function CommentForm({ siteKey, onSubmitted }: CommentFormProps) {
         type="submit"
         disabled={status === "submitting"}
         className={cn(
-          "bg-primary text-primary-foreground hover:bg-accent px-5 py-2.5 font-semibold transition-colors disabled:opacity-60",
+          "bg-primary text-primary-foreground hover:bg-accent cursor-pointer px-5 py-2.5 font-semibold transition-colors disabled:opacity-60",
         )}
       >
         {status === "submitting" ? form.submittingLabel : form.submitLabel}

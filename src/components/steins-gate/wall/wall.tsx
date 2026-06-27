@@ -32,15 +32,21 @@ export function Wall() {
     <section id={sectionId} className="relative py-8 md:py-10 lg:py-12">
       <div className="wide:max-w-8xl relative mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
         <SectionHeading heading={heading} eyebrow={eyebrow} className="mb-8 md:mb-10" />
-        <p className="text-muted-foreground mb-8 max-w-2xl text-sm/relaxed md:mb-10 md:text-base">
+        <p className="text-muted-foreground mb-8 text-sm/relaxed md:mb-10 md:text-base">
           {description}
         </p>
 
         <div className="grid gap-8 lg:grid-cols-[minmax(0,22rem)_1fr]">
-          <div>
+          {/* Source order is form-first (keeps it first in tab / screen-reader
+              flow — it's the actionable element). `order` only swaps the visual
+              order: on mobile the bubbles lead, on desktop the form returns to
+              the narrow left column and the bubbles take the wide right one. */}
+          <div className="bg-border/40 order-2 rounded-lg border p-5 lg:order-1">
             <CommentForm siteKey={SITE_KEY} onSubmitted={() => void load()} />
           </div>
-          <CommentBubbles comments={comments} visibleCount={display.visibleBubbles} />
+          <div className="order-1 lg:order-2">
+            <CommentBubbles comments={comments} visibleCount={display.visibleBubbles} />
+          </div>
         </div>
       </div>
     </section>
