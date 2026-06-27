@@ -8,11 +8,14 @@ interface Props {
   description: string;
   canonical: string;
   ogImage?: string;
+  ogImageAlt?: string;
   ogTitle?: string;
   ogDescription?: string;
   twitterTitle?: string;
   twitterDescription?: string;
   lang?: string;
+  locale?: string;
+  siteName?: string;
   htmlClass?: string;
   author?: string;
 }
@@ -23,10 +26,13 @@ const {
   canonical,
   ogImage = "/og-image.png",
   ogTitle = title,
+  ogImageAlt = ogTitle,
   ogDescription = description,
   twitterTitle = title,
   twitterDescription = description,
   lang = "th",
+  locale = "th_TH",
+  siteName = "Operation Bifrost",
   htmlClass = "",
   author = "Operation Bifrost Team",
 } = Astro.props;
@@ -35,6 +41,15 @@ const {
 // the (root-relative) ogImage against the configured site, falling back to the
 // page's canonical URL if `site` is ever unset.
 const ogImageUrl = new URL(ogImage, Astro.site ?? canonical).href;
+
+// The dev/staging Worker (operationbifrost-dev → develop.operationbifrost.com) is
+// built with CLOUDFLARE_ENV=dev (see wrangler.jsonc / yarn wrangler:deploy:dev),
+// surfaced here as import.meta.env.PUBLIC_DEPLOY_ENV (baked in astro.config.mjs).
+// Pages are prerendered, so we can't branch per request — instead bake a noindex
+// directive at build time on every non-production build. Production builds leave
+// it off, so prod pages stay fully indexable. Belt-and-suspenders on top of the
+// canonicals (which already point every dev page at the production origin).
+const isProductionBuild = import.meta.env.PUBLIC_DEPLOY_ENV === "production";
 ---
 
 <html lang={lang} class={htmlClass}>
@@ -48,20 +63,30 @@ const ogImageUrl = new URL(ogImage, Astro.site ?? canonical).href;
     <meta name="title" content={title} />
     <meta name="description" content={description} />
     <meta name="author" content={author} />
+    {/* Non-production (dev/staging) builds only — keeps develop.* out of the index. */}
+    {!isProductionBuild && <meta name="robots" content="noindex,nofollow" />}
 
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:locale" content={locale} />
     <meta property="og:url" content={canonical} />
     <meta property="og:title" content={ogTitle} />
     <meta property="og:description" content={ogDescription} />
     <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={ogImageAlt} />
 
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content={canonical} />
-    <meta property="twitter:title" content={twitterTitle} />
-    <meta property="twitter:description" content={twitterDescription} />
-    <meta property="twitter:image" content={ogImageUrl} />
+    <!-- Twitter/X cards use `name` (not `property`) per the card spec. -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonical} />
+    <meta name="twitter:title" content={twitterTitle} />
+    <meta name="twitter:description" content={twitterDescription} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
 
     <link rel="canonical" href={canonical} />
+    <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
 
     <!-- Site-wide analytics: tracks all routes that use this layout (or any layout that wraps it). -->
     <script

@@ -37,6 +37,7 @@
     "@astrojs/check": "^0.9.9",
     "@astrojs/cloudflare": "^13.5.4",
     "@astrojs/react": "^5.0.5",
+    "@astrojs/sitemap": "^3.7.3",
     "@astrojs/svelte": "^8.1.1",
     "@fontsource/krub": "^5.2.7",
     "@tailwindcss/vite": "^4.3.0",

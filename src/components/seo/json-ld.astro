@@ -1,0 +1,19 @@
+---
+// Renders a schema.org object (or array of objects) as a JSON-LD <script>.
+// JSON-LD is how search engines read structured data — it powers rich results
+// (FAQ accordions, breadcrumbs, the org knowledge panel) without changing the
+// rendered page. Pass a single object or an array; for several related entities
+// prefer one object with an "@graph" array so they can cross-reference by @id.
+interface Props {
+  schema: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const { schema } = Astro.props;
+
+// Escape "<" so a literal "</script>" inside any string value can't break out of
+// the <script> element. Our data is all build-time/trusted, but this keeps the
+// component safe if user-shaped content is ever passed in.
+const json = JSON.stringify(schema).replace(/</g, "\\u003c");
+---
+
+<script type="application/ld+json" is:inline set:html={json} />
