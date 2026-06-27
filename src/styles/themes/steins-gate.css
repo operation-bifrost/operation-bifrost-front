@@ -652,7 +652,7 @@
   /* .wall-quote — motion only: the fade + lift used while a quote relocates
    * (driven by data-hidden), and the idle bob. Compositor-friendly
    * (opacity/transform only). FADE timing is mirrored by FADE_MS in
-   * comment-bubbles.tsx — keep them in sync. */
+   * use-floating-wall.ts — keep them in sync. */
   .wall-quote {
     opacity: 1;
     transform: translateY(0);

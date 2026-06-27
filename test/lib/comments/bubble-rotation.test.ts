@@ -3,11 +3,12 @@ import {
   MOBILE_MIN_TOP_GAP_PCT,
   WALL_ANCHORS,
   WALL_ANCHORS_MOBILE,
+  promoteSlot,
   relocateSlot,
   seedSlots,
   type Anchor,
   type BubbleSlot,
-} from "@/components/steins-gate/wall/bubble-rotation";
+} from "@/lib/comments/bubble-rotation";
 import type { PublicComment } from "@/lib/comments/repository";
 
 const pool = (n: number): PublicComment[] =>
@@ -194,6 +195,95 @@ describe("spaced placement (mobile, minTopGapPct)", () => {
     // without a gap that's allowed (the 2D lanes keep them apart visually).
     const slots = seedSlots(pool(20), 8, WALL_ANCHORS, mulberry32(7));
     expect(slots).toHaveLength(8);
+  });
+});
+
+describe("promoteSlot", () => {
+  const comments = pool(20);
+  // A fresh comment that isn't part of the seeded pool.
+  const incoming: PublicComment = { id: "new", name: "you", message: "hi", createdAt: 999 };
+
+  it("appends a new slot when the field has room (fade-in path)", () => {
+    const slots = seedSlots(comments, 4, WALL_ANCHORS, mulberry32(1)); // 4 of 8 → room
+    const res = promoteSlot(slots, incoming, 8, WALL_ANCHORS, mulberry32(2));
+    expect(res.added).toBe(true);
+    expect(res.alreadyVisible).toBe(false);
+    expect(res.slots).toHaveLength(slots.length + 1);
+    const placed = res.slots.find((s) => s.id === res.slotId)!;
+    expect(placed.comment.id).toBe("new");
+  });
+
+  it("assigns the appended slot a fresh, unused id", () => {
+    const slots = seedSlots(comments, 4, WALL_ANCHORS, mulberry32(3));
+    const res = promoteSlot(slots, incoming, 8, WALL_ANCHORS, mulberry32(4));
+    expect(slots.some((s) => s.id === res.slotId)).toBe(false);
+  });
+
+  it("keeps anchors distinct when appending (no overlap)", () => {
+    const slots = seedSlots(comments, 4, WALL_ANCHORS, mulberry32(5));
+    const res = promoteSlot(slots, incoming, 8, WALL_ANCHORS, mulberry32(6));
+    expect(distinct(res.slots.map((s) => s.anchorIndex))).toBe(true);
+  });
+
+  it("swaps into an existing slot when the field is full (no growth)", () => {
+    const slots = seedSlots(comments, 8, WALL_ANCHORS, mulberry32(7)); // full
+    const res = promoteSlot(slots, incoming, 8, WALL_ANCHORS, mulberry32(8));
+    expect(res.added).toBe(false);
+    expect(res.alreadyVisible).toBe(false);
+    expect(res.slots).toHaveLength(slots.length);
+    const placed = res.slots.find((s) => s.id === res.slotId)!;
+    expect(placed.comment.id).toBe("new");
+    expect(distinct(res.slots.map((s) => s.anchorIndex))).toBe(true);
+  });
+
+  it("is a no-op when the comment is already on screen", () => {
+    const slots = seedSlots(comments, 8, WALL_ANCHORS, mulberry32(9));
+    const onScreen = slots[2].comment;
+    const res = promoteSlot(slots, onScreen, 8, WALL_ANCHORS, mulberry32(10));
+    expect(res.alreadyVisible).toBe(true);
+    expect(res.slotId).toBe(slots[2].id);
+    expect(res.slots).toBe(slots);
+  });
+
+  it("returns slotId -1 when there is no capacity (visibleCount 0)", () => {
+    const res = promoteSlot([], incoming, 0, WALL_ANCHORS, mulberry32(11));
+    expect(res.slotId).toBe(-1);
+    expect(res.added).toBe(false);
+  });
+
+  it("seeds the first quote onto an empty field", () => {
+    const res = promoteSlot([], incoming, 8, WALL_ANCHORS, mulberry32(12));
+    expect(res.added).toBe(true);
+    expect(res.slots).toHaveLength(1);
+    expect(res.slots[0].comment.id).toBe("new");
+  });
+
+  it("does not mutate the input slots (immutable)", () => {
+    const slots = seedSlots(comments, 8, WALL_ANCHORS, mulberry32(13));
+    const snapshot = structuredClone(slots);
+    promoteSlot(slots, incoming, 8, WALL_ANCHORS, mulberry32(14));
+    expect(slots).toEqual(snapshot);
+  });
+
+  it("preserves the mobile gap when promoting", () => {
+    const slots = seedSlots(
+      comments,
+      3,
+      WALL_ANCHORS_MOBILE,
+      mulberry32(15),
+      MOBILE_MIN_TOP_GAP_PCT,
+    );
+    const res = promoteSlot(
+      slots,
+      incoming,
+      3,
+      WALL_ANCHORS_MOBILE,
+      mulberry32(16),
+      MOBILE_MIN_TOP_GAP_PCT,
+    );
+    expect(minPairTopGap(res.slots, WALL_ANCHORS_MOBILE)).toBeGreaterThanOrEqual(
+      MOBILE_MIN_TOP_GAP_PCT,
+    );
   });
 });
 

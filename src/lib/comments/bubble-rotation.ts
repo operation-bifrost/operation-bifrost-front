@@ -197,3 +197,83 @@ export function relocateSlot(
 
   return slots.map((s) => (s.id === slotId ? { ...s, anchorIndex, comment } : s));
 }
+
+export interface PromoteResult {
+  /** New slots array (immutable). */
+  slots: BubbleSlot[];
+  /** The slot now carrying the promoted comment; -1 when nothing could be done. */
+  slotId: number;
+  /** A brand-new slot was appended (fade it in). */
+  added: boolean;
+  /** The comment was already on screen (no transition needed). */
+  alreadyVisible: boolean;
+}
+
+/**
+ * Force a *specific* comment onto the field — used to show a visitor their own
+ * just-submitted comment immediately, without re-seeding the whole wall.
+ *
+ *   - already on screen → no-op (alreadyVisible).
+ *   - room for one more  → append a fresh slot at a free, spaced anchor (added →
+ *     caller fades it in).
+ *   - field full         → reuse a random slot at a free anchor (caller fades it
+ *     out, swaps, fades back in).
+ *
+ * `rng` is injectable for deterministic tests. Mirrors `relocateSlot`'s no-overlap
+ * and gap guarantees so the promoted quote never collides with the others.
+ */
+export function promoteSlot(
+  slots: BubbleSlot[],
+  comment: PublicComment,
+  visibleCount: number,
+  anchors: readonly Anchor[] = WALL_ANCHORS,
+  rng: Rng = Math.random,
+  minTopGapPct?: number,
+): PromoteResult {
+  if (visibleCount <= 0) {
+    return { slots, slotId: -1, added: false, alreadyVisible: false };
+  }
+
+  const existing = slots.find((s) => s.comment.id === comment.id);
+  if (existing) {
+    return { slots, slotId: existing.id, added: false, alreadyVisible: true };
+  }
+
+  const occupied = new Set(slots.map((s) => s.anchorIndex));
+  const allAnchors = slots.map((s) => s.anchorIndex);
+  const capacity = Math.min(visibleCount, anchors.length);
+
+  // Room for one more quote → append a slot at a free, spaced anchor.
+  if (slots.length < capacity) {
+    const free = anchors
+      .map((_, i) => i)
+      .filter((i) => !occupied.has(i) && farEnough(anchors, i, allAnchors, minTopGapPct));
+    if (free.length) {
+      const anchorIndex = sample(free, rng);
+      const slotId = slots.reduce((max, s) => Math.max(max, s.id), -1) + 1;
+      return {
+        slots: [...slots, { id: slotId, anchorIndex, comment }],
+        slotId,
+        added: true,
+        alreadyVisible: false,
+      };
+    }
+  }
+
+  // Field is full (or no spaced anchor free) → reuse a random slot.
+  const victim = sample(slots, rng);
+  const others = slots.filter((s) => s.id !== victim.id).map((s) => s.anchorIndex);
+  const free = anchors
+    .map((_, i) => i)
+    .filter(
+      (i) =>
+        i !== victim.anchorIndex && !occupied.has(i) && farEnough(anchors, i, others, minTopGapPct),
+    );
+  const anchorIndex = free.length ? sample(free, rng) : victim.anchorIndex;
+  return {
+    slots: slots.map((s) => (s.id === victim.id ? { ...s, anchorIndex, comment } : s)),
+    slotId: victim.id,
+    added: false,
+    alreadyVisible: false,
+  };
+}

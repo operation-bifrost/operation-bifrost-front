@@ -60,7 +60,10 @@ export async function handleCreateComment(deps: CreateDeps, body: unknown): Prom
     return null;
   });
 
-  return json({ status: "pending" }, 202);
+  // Echo only the server-assigned id: the client already has the name/message it
+  // typed, so it can render the comment optimistically and later dedupe it against
+  // the approved list by this id.
+  return json({ status: "pending", id: comment.id }, 202);
 }
 
 export async function handleListComments(deps: ListDeps): Promise<Response> {

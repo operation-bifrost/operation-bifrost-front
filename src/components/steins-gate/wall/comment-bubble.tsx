@@ -1,4 +1,4 @@
-import type { Anchor } from "@/components/steins-gate/wall/bubble-rotation";
+import type { Anchor } from "@/lib/comments/bubble-rotation";
 import type { PublicComment } from "@/lib/comments/repository";
 
 interface CommentBubbleProps {

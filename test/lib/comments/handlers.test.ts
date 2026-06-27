@@ -34,6 +34,7 @@ describe("handleCreateComment", () => {
       status: "pending",
       message: "El Psy Kongroo",
     });
+    expect(await res.json()).toEqual({ status: "pending", id: "id-1" });
     expect(deps.postPendingToDiscord).toHaveBeenCalledOnce();
   });
 

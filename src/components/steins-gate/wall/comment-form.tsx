@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 
 import { TurnstileWidget } from "@/components/steins-gate/wall/turnstile-widget";
 import { steinsGateContent } from "@/data/steins-gate";
+import type { PublicComment } from "@/lib/comments/repository";
 import { cn } from "@/lib/utils";
 
 type Status = "idle" | "submitting" | "success" | "error";
@@ -10,7 +11,8 @@ const { form, success, errors, limits } = steinsGateContent.wall;
 
 interface CommentFormProps {
   siteKey: string;
-  onSubmitted: () => void;
+  /** Called with the stored comment (server id + timestamp) once accepted (202). */
+  onSubmitted: (comment: PublicComment) => void;
 }
 
 export function CommentForm({ siteKey, onSubmitted }: CommentFormProps) {
@@ -37,10 +39,21 @@ export function CommentForm({ siteKey, onSubmitted }: CommentFormProps) {
         body: JSON.stringify({ name, message, turnstileToken: token }),
       });
       if (res.status === 202) {
+        const data = (await res.json().catch(() => ({}))) as { id?: string };
+        // Build the optimistic comment from what the visitor typed plus the
+        // server-assigned id (the only field we don't already have). Trim to
+        // mirror the server's sanitize; empty name → anonymous (null).
+        const trimmedName = name.trim();
+        const optimistic: PublicComment = {
+          id: data.id ?? crypto.randomUUID(),
+          name: trimmedName.length > 0 ? trimmedName : null,
+          message: message.trim(),
+          createdAt: Date.now(),
+        };
         setStatus("success");
         setName("");
         setMessage("");
-        onSubmitted();
+        onSubmitted(optimistic);
         return;
       }
       const data = (await res.json().catch(() => ({}))) as { error?: string };
