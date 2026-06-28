@@ -1,0 +1,730 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Feature Heading Treatments — Operation Bifrost</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&family=Major+Mono+Display&family=Noto+Sans+Thai:wght@400;500;700&family=IBM+Plex+Sans+Thai:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --nixie: rgb(251, 192, 0);
+        --nixie-soft: rgba(255, 199, 0, 0.55);
+        --nixie-glow: rgba(255, 199, 0, 0.35);
+        --nixie-red: rgba(255, 0, 0, 0.4);
+        --nixie-sil: rgba(220, 42, 27, 0.4);
+
+        --stone-50: #fafaf9;
+        --stone-200: #e7e5e4;
+        --stone-300: #d6d3d1;
+        --stone-400: #a8a29e;
+        --stone-500: #78716c;
+        --stone-700: #44403c;
+        --stone-800: #292524;
+        --stone-900: #1c1917;
+        --bg-deep: #15110f;
+
+        --font-sans: "IBM Plex Sans Thai", "DM Sans", system-ui, sans-serif;
+        --font-mono: "JetBrains Mono", ui-monospace, monospace;
+        --font-display: "Major Mono Display", monospace;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        min-height: 100vh;
+        font-family: var(--font-sans);
+        color: var(--stone-200);
+        background:
+          radial-gradient(
+            ellipse at 50% 0%,
+            rgba(251, 192, 0, 0.05) 0%,
+            transparent 55%
+          ),
+          radial-gradient(
+            ellipse at 80% 90%,
+            rgba(251, 192, 0, 0.04) 0%,
+            transparent 50%
+          ),
+          var(--bg-deep);
+        background-attachment: fixed;
+        position: relative;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image: repeating-linear-gradient(
+          to bottom,
+          transparent 0px,
+          transparent 2px,
+          rgba(0, 0, 0, 0.18) 2px,
+          rgba(0, 0, 0, 0.18) 3px
+        );
+        mix-blend-mode: overlay;
+        opacity: 0.35;
+        z-index: 1;
+      }
+
+      main {
+        position: relative;
+        z-index: 2;
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 64px 32px 120px;
+      }
+
+      .page-header {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        margin-bottom: 72px;
+      }
+
+      .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--stone-500);
+      }
+
+      .breadcrumb .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--nixie);
+        box-shadow:
+          0 0 8px var(--nixie),
+          0 0 14px rgba(255, 199, 0, 0.5);
+      }
+
+      h1 {
+        font-family: var(--font-display);
+        font-size: clamp(2.25rem, 1rem + 3vw, 3.5rem);
+        line-height: 1;
+        margin: 0;
+        color: var(--stone-50);
+        text-transform: lowercase;
+        letter-spacing: -0.01em;
+      }
+
+      h1 .accent {
+        color: var(--nixie);
+        text-shadow:
+          0 0 8px var(--nixie),
+          0 0 24px rgba(255, 199, 0, 0.45);
+      }
+
+      .intro {
+        max-width: 64ch;
+        font-size: 15px;
+        line-height: 1.7;
+        color: var(--stone-300);
+      }
+
+      .intro b {
+        color: var(--stone-50);
+        font-weight: 500;
+      }
+
+      /* Option card */
+      .option {
+        position: relative;
+        padding: 40px 32px 48px;
+        margin-bottom: 56px;
+        border: 1px solid var(--stone-700);
+        background:
+          linear-gradient(
+            180deg,
+            rgba(41, 37, 36, 0.5) 0%,
+            rgba(28, 25, 23, 0.5) 100%
+          );
+        backdrop-filter: blur(4px);
+      }
+
+      .option-tag {
+        position: absolute;
+        top: -10px;
+        left: 24px;
+        padding: 2px 12px;
+        background: var(--bg-deep);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        color: var(--nixie);
+        border: 1px solid var(--stone-700);
+      }
+
+      .option-title {
+        margin: 0 0 8px;
+        font-family: var(--font-sans);
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--stone-50);
+      }
+
+      .option-desc {
+        margin: 0 0 32px;
+        font-size: 13px;
+        line-height: 1.6;
+        color: var(--stone-400);
+        max-width: 72ch;
+      }
+
+      .samples {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 28px;
+      }
+
+      .sample {
+        padding: 24px 20px;
+        border-left: 1px solid var(--stone-700);
+        min-height: 120px;
+      }
+
+      .sample-heading {
+        margin: 0;
+        color: var(--stone-50);
+        font-family: var(--font-sans);
+        font-size: 22px;
+        font-weight: 700;
+        line-height: 1.25;
+      }
+
+      /* ------------------------------------------------------------------
+         Option A — Bracketed terminal tag (topic word, no number)
+         ------------------------------------------------------------------ */
+      .opt-a .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 12px;
+        padding: 4px 10px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--nixie);
+        border: 1px solid rgba(255, 199, 0, 0.45);
+        background: rgba(255, 199, 0, 0.06);
+      }
+
+      .opt-a .eyebrow::before {
+        content: "[";
+        color: rgba(255, 199, 0, 0.7);
+        font-weight: 500;
+      }
+
+      .opt-a .eyebrow::after {
+        content: "]";
+        color: rgba(255, 199, 0, 0.7);
+        font-weight: 500;
+      }
+
+      /* ------------------------------------------------------------------
+         Option B — World Line Greek prefix
+         ------------------------------------------------------------------ */
+      .opt-b .eyebrow-row {
+        display: flex;
+        align-items: baseline;
+        gap: 16px;
+        margin-bottom: 14px;
+      }
+
+      .opt-b .greek {
+        font-family: var(--font-mono);
+        font-weight: 700;
+        font-size: 44px;
+        line-height: 1;
+        color: var(--nixie);
+        text-shadow:
+          0 0 12px var(--nixie),
+          0 0 32px rgba(255, 199, 0, 0.5);
+        letter-spacing: -0.04em;
+      }
+
+      .opt-b .topic {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--stone-400);
+      }
+
+      .opt-b .topic .div {
+        color: var(--stone-700);
+        padding: 0 8px;
+      }
+
+      /* ------------------------------------------------------------------
+         Option C — Drop cap initial (Thai)
+         ------------------------------------------------------------------ */
+      .opt-c .sample {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 18px;
+        align-items: start;
+      }
+
+      .opt-c .dropcap {
+        width: 56px;
+        height: 56px;
+        display: grid;
+        place-items: center;
+        font-family: var(--font-sans);
+        font-size: 36px;
+        font-weight: 700;
+        color: var(--nixie);
+        border: 1px solid var(--nixie);
+        background: rgba(255, 199, 0, 0.08);
+        text-shadow:
+          0 0 8px rgba(255, 199, 0, 0.5),
+          0 0 18px rgba(255, 199, 0, 0.35);
+        line-height: 1;
+      }
+
+      .opt-c .dropcap-body .topic {
+        display: block;
+        margin-bottom: 6px;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--stone-400);
+      }
+
+      .opt-c .dropcap-body .sample-heading {
+        font-size: 19px;
+      }
+
+      /* ------------------------------------------------------------------
+         Option D — Glyph icon + topic word
+         ------------------------------------------------------------------ */
+      .opt-d .eyebrow-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 14px;
+        color: var(--nixie);
+      }
+
+      .opt-d .icon {
+        width: 22px;
+        height: 22px;
+        display: grid;
+        place-items: center;
+        color: var(--nixie);
+        filter: drop-shadow(0 0 4px rgba(255, 199, 0, 0.6));
+      }
+
+      .opt-d .icon svg {
+        width: 100%;
+        height: 100%;
+      }
+
+      .opt-d .topic {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: var(--nixie);
+      }
+
+      .opt-d .topic .sub {
+        color: var(--stone-500);
+        margin-left: 8px;
+      }
+
+      /* ------------------------------------------------------------------
+         Option E — Divergence-style coordinate stamp
+         ------------------------------------------------------------------ */
+      .opt-e .eyebrow-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 14px;
+      }
+
+      .opt-e .coord {
+        position: relative;
+        padding: 6px 12px;
+        font-family: var(--font-mono);
+        font-weight: 500;
+        font-size: 13px;
+        color: var(--nixie);
+        letter-spacing: 0.05em;
+        background: rgba(0, 0, 0, 0.4);
+      }
+
+      .opt-e .coord::before,
+      .opt-e .coord::after {
+        content: "";
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        border: 1px solid var(--nixie);
+      }
+
+      .opt-e .coord::before {
+        top: -1px;
+        left: -1px;
+        border-right: none;
+        border-bottom: none;
+      }
+
+      .opt-e .coord::after {
+        bottom: -1px;
+        right: -1px;
+        border-left: none;
+        border-top: none;
+      }
+
+      .opt-e .label {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--stone-500);
+      }
+
+      /* ------------------------------------------------------------------
+         Reference: current (will be removed)
+         ------------------------------------------------------------------ */
+      .current .eyebrow-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+
+      .current .rule {
+        width: 40px;
+        height: 1px;
+        background: var(--nixie);
+      }
+
+      .current .label {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 0.3em;
+        color: var(--nixie);
+      }
+
+      .current {
+        background: linear-gradient(
+          180deg,
+          rgba(80, 30, 30, 0.25) 0%,
+          rgba(28, 25, 23, 0.5) 100%
+        );
+        border: 1px dashed var(--stone-700);
+        opacity: 0.7;
+      }
+
+      .footnote {
+        margin-top: 80px;
+        padding: 20px 24px;
+        border-left: 2px solid var(--nixie);
+        font-size: 13px;
+        line-height: 1.7;
+        color: var(--stone-400);
+        background: rgba(255, 199, 0, 0.04);
+      }
+
+      .footnote b {
+        color: var(--stone-50);
+      }
+
+      .footnote code {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--nixie);
+        background: rgba(0, 0, 0, 0.4);
+        padding: 2px 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header class="page-header">
+        <span class="breadcrumb">
+          <span class="dot"></span>
+          design / steins-gate / features / heading
+        </span>
+        <h1>feature <span class="accent">heading</span> treatments</h1>
+        <p class="intro">
+          The current <code style="font-family: var(--font-mono); color: var(--nixie); background: rgba(0,0,0,0.4); padding: 2px 6px">feature_01</code>
+          /
+          <code style="font-family: var(--font-mono); color: var(--nixie); background: rgba(0,0,0,0.4); padding: 2px 6px">feature_02</code>
+          mono index is generic — it numbers rows without telling the reader
+          <b>what kind of thing each row is about</b>. These five proposals
+          each give the three feature rows a distinct visual identity rooted in
+          a different metaphor (terminal tag, world-line letter, drop cap,
+          subject glyph, lab coordinate). Every option still pairs cleanly with
+          the existing terminal-card aesthetic; none of them are numbered.
+        </p>
+      </header>
+
+      <!-- =================== Reference: current =================== -->
+      <section class="option current">
+        <span class="option-tag" style="color: var(--stone-400); border-color: var(--stone-700)">Current — to remove</span>
+        <h2 class="option-title">— feature_01</h2>
+        <p class="option-desc">
+          Today's eyebrow. Three rows look identical except for an incrementing
+          number; nothing about the label hints at the subject. Shown here so
+          the proposals below can be compared directly.
+        </p>
+        <div class="samples">
+          <div class="sample">
+            <div class="eyebrow-row">
+              <span class="rule"></span>
+              <span class="label">feature_01</span>
+            </div>
+            <h3 class="sample-heading">สัมผัสเนื้อเรื่องต้นฉบับ</h3>
+          </div>
+          <div class="sample">
+            <div class="eyebrow-row">
+              <span class="rule"></span>
+              <span class="label">feature_02</span>
+            </div>
+            <h3 class="sample-heading">แปลไทย 100%</h3>
+          </div>
+          <div class="sample">
+            <div class="eyebrow-row">
+              <span class="rule"></span>
+              <span class="label">feature_03</span>
+            </div>
+            <h3 class="sample-heading">เปลี่ยนอนาคตด้วยมือคุณเอง</h3>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================== Option A — Bracketed terminal tag =================== -->
+      <section class="option opt-a">
+        <span class="option-tag">Option A</span>
+        <h2 class="option-title">Bracketed topic tag</h2>
+        <p class="option-desc">
+          Replaces the index with a short subject word in a bracketed terminal
+          chip. Stays in the existing mono/amber language but each chip names
+          the actual topic, so a reader who glances at one row immediately
+          knows what it covers. Reuses the same bracket motif as the
+          <code style="font-family: var(--font-mono); color: var(--nixie); background: rgba(0,0,0,0.4); padding: 2px 6px">[nav-link]</code>
+          hover state in the navbar.
+        </p>
+        <div class="samples">
+          <div class="sample">
+            <span class="eyebrow">STORY</span>
+            <h3 class="sample-heading">สัมผัสเนื้อเรื่องต้นฉบับ</h3>
+          </div>
+          <div class="sample">
+            <span class="eyebrow">LOCALIZATION</span>
+            <h3 class="sample-heading">แปลไทย 100%</h3>
+          </div>
+          <div class="sample">
+            <span class="eyebrow">ROUTES</span>
+            <h3 class="sample-heading">เปลี่ยนอนาคตด้วยมือคุณเอง</h3>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================== Option B — World Line Greek =================== -->
+      <section class="option opt-b">
+        <span class="option-tag">Option B</span>
+        <h2 class="option-title">World-line Greek mark</h2>
+        <p class="option-desc">
+          A big glowing Greek letter (α / β / γ) stands as the row's
+          identifier, sitting next to a small mono topic label. Borrows
+          directly from Steins;Gate canon (world-line letters α, β, γ, Ω) —
+          fans will recognize it immediately, and the Nixie glow ties it to
+          the divergence-meter rail on the right edge of the section.
+        </p>
+        <div class="samples">
+          <div class="sample">
+            <div class="eyebrow-row">
+              <span class="greek">α</span>
+              <span class="topic">STORY <span class="div">/</span> เนื้อเรื่อง</span>
+            </div>
+            <h3 class="sample-heading">สัมผัสเนื้อเรื่องต้นฉบับ</h3>
+          </div>
+          <div class="sample">
+            <div class="eyebrow-row">
+              <span class="greek">β</span>
+              <span class="topic">LOCALIZATION <span class="div">/</span> ภาษาไทย</span>
+            </div>
+            <h3 class="sample-heading">แปลไทย 100%</h3>
+          </div>
+          <div class="sample">
+            <div class="eyebrow-row">
+              <span class="greek">γ</span>
+              <span class="topic">ROUTES <span class="div">/</span> เส้นทาง</span>
+            </div>
+            <h3 class="sample-heading">เปลี่ยนอนาคตด้วยมือคุณเอง</h3>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================== Option C — Drop cap =================== -->
+      <section class="option opt-c">
+        <span class="option-tag">Option C</span>
+        <h2 class="option-title">Editorial drop cap</h2>
+        <p class="option-desc">
+          A boxed glowing Latin initial taken from the subject word
+          (S / L / R) leads each heading, magazine-style. Skips ordinality
+          entirely and leans into the editorial pillar of the brand. Pairs
+          well with a small topic label underneath in mono for a published
+          field-note feel.
+        </p>
+        <div class="samples">
+          <div class="sample">
+            <span class="dropcap">S</span>
+            <div class="dropcap-body">
+              <span class="topic">Story</span>
+              <h3 class="sample-heading">สัมผัสเนื้อเรื่องต้นฉบับ</h3>
+            </div>
+          </div>
+          <div class="sample">
+            <span class="dropcap">L</span>
+            <div class="dropcap-body">
+              <span class="topic">Localization</span>
+              <h3 class="sample-heading">แปลไทย 100%</h3>
+            </div>
+          </div>
+          <div class="sample">
+            <span class="dropcap">R</span>
+            <div class="dropcap-body">
+              <span class="topic">Routes</span>
+              <h3 class="sample-heading">เปลี่ยนอนาคตด้วยมือคุณเอง</h3>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================== Option D — Glyph icon =================== -->
+      <section class="option opt-d">
+        <span class="option-tag">Option D</span>
+        <h2 class="option-title">Subject glyph + topic</h2>
+        <p class="option-desc">
+          A small one-color SVG icon per topic (book / globe / fork) carries
+          the visual identity, with the subject word right next to it. Most
+          scannable of the five — a user with no Thai literacy can still tell
+          the rows apart at a glance.
+        </p>
+        <div class="samples">
+          <div class="sample">
+            <div class="eyebrow-row">
+              <span class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                </svg>
+              </span>
+              <span class="topic">STORY<span class="sub">เนื้อเรื่อง</span></span>
+            </div>
+            <h3 class="sample-heading">สัมผัสเนื้อเรื่องต้นฉบับ</h3>
+          </div>
+          <div class="sample">
+            <div class="eyebrow-row">
+              <span class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M3 12h18" />
+                  <path d="M12 3a14 14 0 0 1 0 18" />
+                  <path d="M12 3a14 14 0 0 0 0 18" />
+                </svg>
+              </span>
+              <span class="topic">TH PATCH<span class="sub">ภาษาไทย</span></span>
+            </div>
+            <h3 class="sample-heading">แปลไทย 100%</h3>
+          </div>
+          <div class="sample">
+            <div class="eyebrow-row">
+              <span class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="6" cy="4" r="2" />
+                  <circle cx="18" cy="20" r="2" />
+                  <circle cx="6" cy="20" r="2" />
+                  <path d="M6 6v6a4 4 0 0 0 4 4h8" />
+                  <path d="M6 18v-4" />
+                </svg>
+              </span>
+              <span class="topic">ROUTES<span class="sub">6 endings</span></span>
+            </div>
+            <h3 class="sample-heading">เปลี่ยนอนาคตด้วยมือคุณเอง</h3>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================== Option E — Divergence coordinate =================== -->
+      <section class="option opt-e">
+        <span class="option-tag">Option E</span>
+        <h2 class="option-title">Divergence coordinate stamp</h2>
+        <p class="option-desc">
+          A corner-bracketed stamp showing each feature's "world-line
+          coordinate" — fake-precise divergence values that escalate from
+          0.337 toward 1.048596 (the canonical Steins;Gate value). Treats each
+          feature as a "checkpoint" on the way to the Steins;Gate ending.
+          Strongest if the rest of the page leans hard into the lab-readout
+          motif.
+        </p>
+        <div class="samples">
+          <div class="sample">
+            <div class="eyebrow-row">
+              <span class="coord">0.337192%</span>
+              <span class="label">STORY</span>
+            </div>
+            <h3 class="sample-heading">สัมผัสเนื้อเรื่องต้นฉบับ</h3>
+          </div>
+          <div class="sample">
+            <div class="eyebrow-row">
+              <span class="coord">0.571046%</span>
+              <span class="label">LOCALIZATION</span>
+            </div>
+            <h3 class="sample-heading">แปลไทย 100%</h3>
+          </div>
+          <div class="sample">
+            <div class="eyebrow-row">
+              <span class="coord">1.048596%</span>
+              <span class="label">ROUTES</span>
+            </div>
+            <h3 class="sample-heading">เปลี่ยนอนาคตด้วยมือคุณเอง</h3>
+          </div>
+        </div>
+      </section>
+
+      <p class="footnote">
+        <b>Recommendation:</b> <b>Option A (bracketed topic tag)</b> is the
+        safest swap — it keeps the existing mono/amber eyebrow chrome and only
+        changes the word inside, so no other section styling needs to move.
+        <b>Option B (world-line Greek)</b> is the strongest brand play and
+        connects directly to the divergence meter; it's the most distinctive
+        but introduces a new typographic element. Options C / D / E are
+        further-out alternatives if a bigger redesign is on the table.
+      </p>
+    </main>
+  </body>
+</html>

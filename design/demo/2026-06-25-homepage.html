@@ -1,0 +1,393 @@
+<!doctype html>
+<!--
+  ============================================================================
+  Operation Bifrost — hub homepage (design demo)
+  ============================================================================
+
+  PURPOSE
+  A standalone landing page for the site root (currently "/" only redirects to
+  /steins-gate/). It is a portal: nothing but a route into the localization
+  projects. Today that's one project (Steins;Gate); a "coming soon" slot hints
+  that more are on the way.
+
+  DIRECTION — editorial / Swiss catalogue, dim & monochrome
+  Deliberately NOT bound to the Steins;Gate theme (no Nixie yellow, no CRT /
+  terminal language). The hub gets its own restrained identity so sibling
+  projects can each keep their own.
+    - Concept anchor: "Bifrost" is the Norse rainbow bridge between worlds, so
+      each mod reads as a "world" in a catalogue you cross over to.
+    - The page treats the catalogue as the primary visual; the masthead is a
+      quiet wordmark above it.
+
+  PALETTE — intentionally near-colorless
+    --bg   #222027  dim charcoal (dimmed, NOT black — "only dim")
+    --ink  #ece9f1  + muted grays for hierarchy
+    --accent #ff5a36 vermilion, reserved for focus / interaction ONLY.
+    Earlier drafts used a rainbow wordmark + spectrum hairline; both were
+    removed per feedback ("too much colors") — the page is now monochrome.
+
+  TYPE — LINE Seed Sans (one family, EN + TH)
+    LINE Seed Sans TH carries authentic LINE Seed Latin glyphs, so the same
+    family sets both English and Thai at one uniform style. The bilingual
+    wordmark ("Operation Bifrost · ปฏิบัติการไบฟรอสต์") sits on a single line,
+    same size/weight/color.
+    NOTE: fonts load from the repo's self-hosted copy at public/fonts via a
+    relative path (../../public/fonts/line-seed-sans-th), so the demo and the
+    shipped site share one font folder.
+
+  LAYOUT
+    - Masthead: unified bilingual wordmark + one-line Thai subtitle. No run
+      head, no footer, no social links.
+    - Catalogue (the focal point): numbered entries. The live entry
+      (Steins;Gate → /steins-gate/) inverts to a solid block on hover — the
+      editorial signature interaction. A ghosted "02 / Untitled / เร็ว ๆ นี้"
+      row is the placeholder for future projects.
+    - Responsive (single column < 720px) and prefers-reduced-motion safe.
+
+  PORTING TO ASTRO (when chosen)
+    - LINE Seed is already self-hosted via the repo pipeline (yarn assets:woff2
+      → public/fonts); this demo points straight at it. If the dedicated Latin
+      cut is wanted, pull "LINE Seed Sans" from LINE's repo (github.com/line/seed).
+    - Build src/pages/index.astro + a hub layout, and replace the
+      "/" → "/steins-gate/" redirect in astro.config.mjs.
+  ============================================================================
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Operation Bifrost — ปฏิบัติการไบฟรอสต์</title>
+    <meta
+      name="description"
+      content="Operation Bifrost — ศูนย์รวมงานแปลไทยของพวกเรา เริ่มจาก Steins;Gate"
+    />
+    <style>
+      /* LINE Seed Sans TH — the repo's self-hosted copy under public/fonts,
+         referenced by relative path so the demo and the shipped site share
+         one font folder (no duplicate design/demo/fonts to maintain).
+         Carries both Latin and Thai glyphs, so one family covers EN + TH. */
+      @font-face {
+        font-family: "LINE Seed Sans";
+        src: url("../../public/fonts/line-seed-sans-th/LINESeedSansTH_Rg.woff2") format("woff2");
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "LINE Seed Sans";
+        src: url("../../public/fonts/line-seed-sans-th/LINESeedSansTH.woff2") format("woff2");
+        font-weight: 700;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "LINE Seed Sans";
+        src: url("../../public/fonts/line-seed-sans-th/LINESeedSansTH_XBd.woff2") format("woff2");
+        font-weight: 800;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "LINE Seed Sans";
+        src: url("../../public/fonts/line-seed-sans-th/LINESeedSansTH_He.woff2") format("woff2");
+        font-weight: 900;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      :root {
+        /* Dim, not black */
+        --bg: #222027;
+        --ink: #ece9f1;
+        --ink-2: #a9a5b6;
+        --ink-3: #797586;
+        --rule: rgba(255, 255, 255, 0.14);
+        --accent: #ff5a36; /* reserved for focus / interaction only */
+
+        --font: "LINE Seed Sans", system-ui, -apple-system, sans-serif;
+        --maxw: 1160px;
+        --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: var(--font);
+        color: var(--ink);
+        background: var(--bg);
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+        /* barely-there texture, like the paper grain — inverted for dark */
+        background-image: radial-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+        background-size: 4px 4px;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+      }
+
+      .wrap {
+        position: relative;
+        max-width: var(--maxw);
+        margin: 0 auto;
+        padding: 0 clamp(1.25rem, 5vw, 3.5rem);
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      /* ---------- Masthead ---------- */
+      .masthead {
+        padding: clamp(3.5rem, 10vw, 6.5rem) 0 clamp(2.4rem, 5vw, 3.4rem);
+      }
+      .title {
+        margin: 0;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        column-gap: 0.45em;
+        font-weight: 800;
+        font-size: clamp(1.9rem, 4.8vw, 3.1rem);
+        line-height: 1.14;
+        letter-spacing: -0.01em;
+        color: var(--ink);
+      }
+      .title .en,
+      .title .th {
+        white-space: nowrap;
+      }
+      .title .sep {
+        color: var(--ink-3);
+      }
+      .masthead .lede {
+        margin: 1.1rem 0 0;
+        max-width: 48ch;
+        font-size: clamp(1rem, 2vw, 1.18rem);
+        color: var(--ink-2);
+      }
+
+      /* ---------- Catalogue (the main visual) ---------- */
+      main {
+        flex: 1;
+        padding-bottom: clamp(2.5rem, 7vw, 5rem);
+      }
+
+      .entry {
+        position: relative;
+        display: grid;
+        grid-template-columns: 5rem 1fr auto;
+        gap: clamp(1rem, 3vw, 2.5rem);
+        align-items: center;
+        text-align: left;
+        border-bottom: 1px solid var(--rule);
+        transition: background 0.4s var(--ease), color 0.4s var(--ease),
+          padding 0.4s var(--ease), border-color 0.4s;
+      }
+
+      /* Feature entry — Steins;Gate */
+      .entry.feature {
+        padding: clamp(2rem, 4.5vw, 3.4rem) clamp(0.8rem, 2vw, 1.6rem)
+          clamp(2rem, 4.5vw, 3.4rem) 0.5rem;
+      }
+      .num {
+        font-weight: 800;
+        font-size: clamp(1.4rem, 3vw, 2rem);
+        color: var(--ink-3);
+        font-variant-numeric: tabular-nums;
+        transition: color 0.4s;
+      }
+      .series {
+        font-size: 0.74rem;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--ink-3);
+        transition: color 0.4s;
+      }
+      .entry .body h2 {
+        margin: 0.5rem 0 0;
+        font-weight: 900;
+        font-size: clamp(2.4rem, 8vw, 4.6rem);
+        line-height: 0.95;
+        letter-spacing: -0.04em;
+        text-transform: uppercase;
+      }
+      .th-sub {
+        margin: 0.6rem 0 0;
+        max-width: 44ch;
+        color: var(--ink-2);
+        font-size: clamp(0.95rem, 2vw, 1.08rem);
+        transition: color 0.4s;
+      }
+      .aside {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.8rem;
+        text-align: right;
+      }
+      .go {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        font-weight: 700;
+        font-size: 1rem;
+      }
+      .go .arrow {
+        transition: transform 0.4s var(--ease);
+      }
+
+      /* The editorial move: live row inverts to a solid block on hover */
+      .entry.feature:hover {
+        background: var(--ink);
+        color: var(--bg);
+        padding-left: 1.4rem;
+        border-color: var(--ink);
+      }
+      .entry.feature:hover .num {
+        color: var(--bg);
+      }
+      .entry.feature:hover .series,
+      .entry.feature:hover .th-sub {
+        color: #565261;
+      }
+      .entry.feature:hover .go .arrow {
+        transform: translateX(7px);
+      }
+
+      /* Placeholder entry — coming soon */
+      .entry.soon {
+        padding: clamp(1.6rem, 3.2vw, 2.4rem) 0.5rem;
+        border-bottom: 1px dashed var(--rule);
+        opacity: 0.7;
+        cursor: default;
+      }
+      .entry.soon .body h3 {
+        margin: 0.45rem 0 0;
+        font-weight: 900;
+        font-size: clamp(1.7rem, 5vw, 2.8rem);
+        letter-spacing: -0.03em;
+        text-transform: uppercase;
+        color: transparent;
+        -webkit-text-stroke: 1px var(--ink-3);
+      }
+      .entry.soon .th-sub {
+        color: var(--ink-3);
+      }
+      .entry.soon .pill {
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        color: var(--ink-3);
+        padding: 0.4rem 0.8rem;
+        border: 1px solid var(--rule);
+        border-radius: 999px;
+      }
+      .entry.soon .dots {
+        display: flex;
+        gap: 0.35rem;
+        margin-top: 0.7rem;
+        justify-content: flex-end;
+      }
+      .entry.soon .dots span {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--ink-3);
+        opacity: 0.5;
+      }
+
+      @media (max-width: 720px) {
+        .entry {
+          grid-template-columns: 1fr;
+          gap: 0.45rem;
+        }
+        .num {
+          font-size: 1.1rem;
+        }
+        .aside {
+          flex-direction: row;
+          flex-wrap: wrap;
+          align-items: center;
+          text-align: left;
+          gap: 0.7rem 1.1rem;
+          margin-top: 1rem;
+        }
+        .entry.soon .dots {
+          justify-content: flex-start;
+          margin-top: 0;
+        }
+        .entry.feature:hover {
+          padding-left: 0.5rem;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="masthead">
+        <h1 class="title">
+          <span class="en">Operation Bifrost</span><span class="sep" aria-hidden="true">·</span><span
+            class="th"
+            >ปฏิบัติการไบฟรอสต์</span
+          >
+        </h1>
+        <p class="lede">
+          ศูนย์รวมงานแปลไทยของพวกเรา — เริ่มจากชไตน์สเกต แล้วจะมีตามมาอีกเรื่อย ๆ
+        </p>
+      </header>
+
+      <main>
+        <div class="catalogue">
+          <a class="entry feature" href="/steins-gate/" aria-label="เปิดโปรเจกต์ Steins;Gate">
+            <span class="num">01</span>
+            <div class="body">
+              <span class="series">Science Adventure · MAGES / Nitroplus</span>
+              <h2>Steins;Gate</h2>
+              <p class="th-sub">ชไตน์สเกต — แปลไทยฉบับสมบูรณ์ของวิช่วลโนเวลในตำนาน</p>
+            </div>
+            <div class="aside">
+              <span class="go">เปิดโปรเจกต์ <span class="arrow" aria-hidden="true">→</span></span>
+            </div>
+          </a>
+
+          <div class="entry soon" aria-label="โปรเจกต์ถัดไป เร็ว ๆ นี้">
+            <span class="num">02</span>
+            <div class="body">
+              <span class="series">To be announced</span>
+              <h3>Untitled</h3>
+              <p class="th-sub">โลกใบถัดไปกำลังถูกวาดขึ้น คอยติดตามกันได้เลย</p>
+            </div>
+            <div class="aside">
+              <span class="pill">เร็ว ๆ นี้</span>
+              <span class="dots" aria-hidden="true"><span></span><span></span><span></span></span>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

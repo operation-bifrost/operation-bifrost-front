@@ -1,0 +1,795 @@
+/* Steins;Gate / Operation Bifrost theme
+ * Scoped to .theme-steins-gate so other projects can layer their own themes
+ * on top of the shared base in global.css.
+ *
+ * Structure:
+ *   1. @layer base       — font-face declarations
+ *   2. tokens (light)    — .theme-steins-gate { --* }
+ *   3. tokens (dark)     — .theme-steins-gate.dark { --* }
+ *   4. components        — one nested block with all .theme-scoped classes
+ *   5. keyframes         — free-floating, referenced by the components block
+ */
+
+@layer base {
+  @font-face {
+    font-family: "bonx";
+    src: url("/fonts/bonx/BONX-Medium.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "bonx-frame";
+    src: url("/fonts/bonx/BONX-Frame.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "bonx-sihouette";
+    src: url("/fonts/bonx/BONX-Silhouette.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+}
+
+/* ----------------------------------------------------------------------- */
+/* Tokens — light                                                          */
+/* ----------------------------------------------------------------------- */
+.theme-steins-gate {
+  --background: oklch(0.97 0.001 106.424);
+  --foreground: oklch(0.216 0.006 56.043);
+  --card: oklch(0.985 0.001 106.423);
+  --card-foreground: oklch(0.216 0.006 56.043);
+  --popover: oklch(0.985 0.001 106.423);
+  --popover-foreground: oklch(0.216 0.006 56.043);
+  --primary: oklch(0.852 0.199 91.936);
+  --primary-foreground: oklch(0.286 0.066 53.813);
+  --secondary: oklch(0.923 0.003 48.717);
+  --secondary-foreground: oklch(0.374 0.01 67.558);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.905 0.182 98.111);
+  --accent-foreground: oklch(0.286 0.066 53.813);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.852 0.199 91.936);
+  --chart-1: oklch(0.81 0.1 252);
+  --chart-2: oklch(0.62 0.19 260);
+  --chart-3: oklch(0.55 0.22 263);
+  --chart-4: oklch(0.49 0.22 264);
+  --chart-5: oklch(0.42 0.18 266);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+  --font-sans: "DM Sans", sans-serif;
+  --font-serif: "Libre Baskerville", serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+    monospace;
+  --radius: 0.2rem;
+  --shadow-x: 4px;
+  --shadow-y: 5px;
+  --shadow-blur: 0px;
+  --shadow-spread: 0px;
+  --shadow-opacity: 0.49;
+  --shadow-color: oklch(0.869 0.005 56.366);
+  --shadow-2xs: 4px 5px 0px 0px hsl(24.0058 6.6869% 82.9784% / 0.24);
+  --shadow-xs: 4px 5px 0px 0px hsl(24.0058 6.6869% 82.9784% / 0.24);
+  --shadow-sm:
+    4px 5px 0px 0px hsl(24.0058 6.6869% 82.9784% / 0.49),
+    4px 1px 2px -1px hsl(24.0058 6.6869% 82.9784% / 0.49);
+  --shadow:
+    4px 5px 0px 0px hsl(24.0058 6.6869% 82.9784% / 0.49),
+    4px 1px 2px -1px hsl(24.0058 6.6869% 82.9784% / 0.49);
+  --shadow-md:
+    4px 5px 0px 0px hsl(24.0058 6.6869% 82.9784% / 0.49),
+    4px 2px 4px -1px hsl(24.0058 6.6869% 82.9784% / 0.49);
+  --shadow-lg:
+    4px 5px 0px 0px hsl(24.0058 6.6869% 82.9784% / 0.49),
+    4px 4px 6px -1px hsl(24.0058 6.6869% 82.9784% / 0.49);
+  --shadow-xl:
+    4px 5px 0px 0px hsl(24.0058 6.6869% 82.9784% / 0.49),
+    4px 8px 10px -1px hsl(24.0058 6.6869% 82.9784% / 0.49);
+  --shadow-2xl: 4px 5px 0px 0px hsl(24.0058 6.6869% 82.9784% / 1.23);
+  --tracking-normal: 0.025em;
+  --spacing: 0.22rem;
+
+  --color-nixie-base: rgb(251, 192, 0);
+  --color-brand-facebook: #0866ff;
+  --color-brand-discord: #5865f2;
+  --color-brand-youtube: #ff0033;
+  --font-bonx: "bonx", monospace;
+  --font-bonx-frame: "bonx-frame", monospace;
+  --font-bonx-sihouette: "bonx-sihouette", monospace;
+  --hero-text-shadow: 0 0 17.5px #2f2f2f;
+  --navbar-gradient: linear-gradient(180deg, rgba(41, 37, 36, 0.9) 0%, rgba(68, 64, 59, 0.9) 100%);
+  --hero-stagger-step: 80ms;
+  --shadow-button: 4px 5px 0 rgba(87, 83, 78, 0.5);
+  --shadow-button-glow: 4px 5px 0 rgba(87, 83, 78, 0.5), 0 0 17.5px 4px rgba(255, 199, 0, 0.35);
+}
+
+/* ----------------------------------------------------------------------- */
+/* Tokens — dark                                                           */
+/* ----------------------------------------------------------------------- */
+.theme-steins-gate.dark {
+  --background: oklch(0.216 0.006 56.043);
+  --foreground: oklch(0.985 0.001 106.423);
+  --card: oklch(0.268 0.007 34.298);
+  --card-foreground: oklch(0.985 0.001 106.423);
+  --popover: oklch(0.268 0.007 34.298);
+  --popover-foreground: oklch(0.985 0.001 106.423);
+  --primary: oklch(0.852 0.199 91.936);
+  --primary-foreground: oklch(0.286 0.066 53.813);
+  --secondary: oklch(0.268 0.007 34.298);
+  --secondary-foreground: oklch(0.869 0.005 56.366);
+  --muted: oklch(0.268 0.007 34.298);
+  --muted-foreground: oklch(0.709 0.01 56.259);
+  --accent: oklch(0.795 0.184 86.047);
+  --accent-foreground: oklch(0.985 0.001 106.423);
+  --destructive: oklch(0.637 0.237 25.331);
+  --destructive-foreground: oklch(0.971 0.013 17.38);
+  --border: oklch(0.374 0.01 67.558);
+  --input: oklch(0.444 0.011 73.639);
+  --ring: oklch(0.795 0.184 86.047);
+  --chart-1: oklch(0.81 0.1 252);
+  --chart-2: oklch(0.62 0.19 260);
+  --chart-3: oklch(0.55 0.22 263);
+  --chart-4: oklch(0.49 0.22 264);
+  --chart-5: oklch(0.42 0.18 266);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(0.275 0 0);
+  --sidebar-ring: oklch(0.439 0 0);
+  --shadow-color: oklch(0.444 0.011 73.639);
+  --shadow-2xs: 4px 5px 0px 0px hsl(33.3488 6.2756% 32.2417% / 0.24);
+  --shadow-xs: 4px 5px 0px 0px hsl(33.3488 6.2756% 32.2417% / 0.24);
+  --shadow-sm:
+    4px 5px 0px 0px hsl(33.3488 6.2756% 32.2417% / 0.49),
+    4px 1px 2px -1px hsl(33.3488 6.2756% 32.2417% / 0.49);
+  --shadow:
+    4px 5px 0px 0px hsl(33.3488 6.2756% 32.2417% / 0.49),
+    4px 1px 2px -1px hsl(33.3488 6.2756% 32.2417% / 0.49);
+  --shadow-md:
+    4px 5px 0px 0px hsl(33.3488 6.2756% 32.2417% / 0.49),
+    4px 2px 4px -1px hsl(33.3488 6.2756% 32.2417% / 0.49);
+  --shadow-lg:
+    4px 5px 0px 0px hsl(33.3488 6.2756% 32.2417% / 0.49),
+    4px 4px 6px -1px hsl(33.3488 6.2756% 32.2417% / 0.49);
+  --shadow-xl:
+    4px 5px 0px 0px hsl(33.3488 6.2756% 32.2417% / 0.49),
+    4px 8px 10px -1px hsl(33.3488 6.2756% 32.2417% / 0.49);
+  --shadow-2xl: 4px 5px 0px 0px hsl(33.3488 6.2756% 32.2417% / 1.23);
+}
+
+/* ----------------------------------------------------------------------- */
+/* Components — every theme-scoped class, grouped by feature               */
+/* ----------------------------------------------------------------------- */
+.theme-steins-gate {
+  /* --- Decorative text atoms (BONX layered title) --- */
+  .frame {
+    color: rgba(255, 0, 0, 0.4);
+  }
+
+  .sihouette {
+    color: rgba(220, 42, 27, 0.4);
+  }
+
+  .title {
+    color: var(--color-nixie-base);
+    animation: bifrost-glow 3s ease-in-out infinite alternate;
+
+    /* Touch devices (low-end mobile): the animated text-shadow repaints the
+       glyph every frame, forever, on always-visible elements (navbar wordmark,
+       divergence rails). Freeze to a static glow — same look, no per-frame
+       repaint. Pointer devices keep the animated nixie flicker. */
+    @media (hover: none) {
+      animation: none;
+      text-shadow:
+        0 0 20px var(--color-nixie-base),
+        0 0 50px var(--color-nixie-base),
+        0 0 5px rgb(255, 212, 71);
+    }
+  }
+
+  .typing {
+    animation: bifrost-typing 400ms ease-in-out infinite alternate;
+  }
+
+  /* --- Hero stagger reveal --- */
+  .bifrost-fade-up-0,
+  .bifrost-fade-up-1,
+  .bifrost-fade-up-2,
+  .bifrost-fade-up-3 {
+    animation: bifrost-fade-up 600ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .bifrost-fade-up-0 {
+    animation-delay: 0ms;
+  }
+
+  .bifrost-fade-up-1 {
+    animation-delay: calc(var(--hero-stagger-step) * 1);
+  }
+
+  .bifrost-fade-up-2 {
+    animation-delay: calc(var(--hero-stagger-step) * 2);
+  }
+
+  .bifrost-fade-up-3 {
+    animation-delay: calc(var(--hero-stagger-step) * 3);
+  }
+
+  /* --- Navbar link — terminal-style bracket markers on hover / active.
+   * Labels stay in the Thai sans body font; brackets use mono so they read
+   * as system UI markers rather than decoration. --- */
+  .nav-link {
+    position: relative;
+    transition:
+      color 220ms ease,
+      text-shadow 320ms ease;
+  }
+
+  .nav-link::before,
+  .nav-link::after {
+    position: absolute;
+    top: 50%;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    color: var(--color-nixie-base);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity 220ms ease,
+      transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .nav-link::before {
+    content: "[";
+    left: 0.2rem;
+    transform: translate(0.25rem, -50%);
+  }
+
+  .nav-link::after {
+    content: "]";
+    right: 0.2rem;
+    transform: translate(-0.25rem, -50%);
+  }
+
+  .nav-link:hover,
+  .nav-link:focus-visible {
+    color: var(--color-nixie-base);
+  }
+
+  .nav-link:hover::before,
+  .nav-link:focus-visible::before,
+  .nav-link:hover::after,
+  .nav-link:focus-visible::after {
+    opacity: 1;
+    transform: translate(0, -50%);
+  }
+
+  .nav-link.is-active {
+    color: var(--color-nixie-base);
+    text-shadow: 0 0 6px rgba(255, 199, 0, 0.35);
+  }
+
+  .nav-link.is-active::before,
+  .nav-link.is-active::after {
+    opacity: 1;
+    transform: translate(0, -50%);
+    text-shadow: 0 0 6px rgba(255, 199, 0, 0.45);
+    animation: bifrost-bracket-blink 2.4s steps(1, end) infinite;
+  }
+
+  /* --- Social-icon link — brand-color ignite on hover.
+   * react-icons/si sets fill="currentColor", so we drive color on the <a>
+   * and the SVG follows. Drop-shadow gives a faint glow in the same hue. --- */
+  .social-link {
+    transition: color 220ms ease;
+  }
+
+  .social-link svg {
+    transition:
+      filter 320ms ease,
+      transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .social-link:hover svg,
+  .social-link:focus-visible svg {
+    transform: translateY(-1px);
+  }
+
+  .social-link[data-brand="facebook"]:hover,
+  .social-link[data-brand="facebook"]:focus-visible {
+    color: var(--color-brand-facebook);
+  }
+
+  .social-link[data-brand="facebook"]:hover svg,
+  .social-link[data-brand="facebook"]:focus-visible svg {
+    filter: drop-shadow(0 0 4px rgba(8, 102, 255, 0.55))
+      drop-shadow(0 0 10px rgba(8, 102, 255, 0.3));
+  }
+
+  .social-link[data-brand="discord"]:hover,
+  .social-link[data-brand="discord"]:focus-visible {
+    color: var(--color-brand-discord);
+  }
+
+  .social-link[data-brand="discord"]:hover svg,
+  .social-link[data-brand="discord"]:focus-visible svg {
+    filter: drop-shadow(0 0 4px rgba(88, 101, 242, 0.6))
+      drop-shadow(0 0 10px rgba(88, 101, 242, 0.3));
+  }
+
+  .social-link[data-brand="youtube"]:hover,
+  .social-link[data-brand="youtube"]:focus-visible {
+    color: var(--color-brand-youtube);
+  }
+
+  .social-link[data-brand="youtube"]:hover svg,
+  .social-link[data-brand="youtube"]:focus-visible svg {
+    filter: drop-shadow(0 0 4px rgba(255, 0, 51, 0.55)) drop-shadow(0 0 10px rgba(255, 0, 51, 0.3));
+  }
+
+  /* --- Mobile menu burger — hamburger morphs to amber X when expanded --- */
+  .mobile-menu-burger {
+    position: relative;
+  }
+
+  .mobile-menu-burger .bar {
+    position: absolute;
+    left: 0.5rem;
+    right: 0.5rem;
+    height: 2px;
+    background: currentColor;
+    border-radius: 1px;
+    transition:
+      transform 320ms cubic-bezier(0.16, 1, 0.3, 1),
+      top 280ms cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 200ms ease;
+  }
+
+  .mobile-menu-burger .bar:nth-child(1) {
+    top: 0.75rem;
+  }
+
+  .mobile-menu-burger .bar:nth-child(2) {
+    top: 1.1875rem;
+  }
+
+  .mobile-menu-burger .bar:nth-child(3) {
+    top: 1.625rem;
+  }
+
+  .mobile-menu-burger[aria-expanded="true"] {
+    color: var(--color-nixie-base);
+    text-shadow: 0 0 8px var(--color-nixie-base);
+  }
+
+  .mobile-menu-burger[aria-expanded="true"] .bar:nth-child(1) {
+    top: 1.1875rem;
+    transform: rotate(45deg);
+  }
+
+  .mobile-menu-burger[aria-expanded="true"] .bar:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0.2);
+  }
+
+  .mobile-menu-burger[aria-expanded="true"] .bar:nth-child(3) {
+    top: 1.1875rem;
+    transform: rotate(-45deg);
+  }
+
+  /* --- Full-screen "lab terminal" mobile menu overlay --- */
+  .mobile-menu-overlay {
+    background:
+      radial-gradient(ellipse at 50% 28%, rgba(251, 192, 0, 0.14) 0%, transparent 60%),
+      linear-gradient(180deg, rgb(20, 17, 15) 0%, rgb(15, 12, 10) 100%);
+    animation: bifrost-takeover-in 360ms ease both;
+  }
+
+  .mobile-menu-overlay.is-closing {
+    animation: bifrost-takeover-out 220ms ease both;
+  }
+
+  .mobile-menu-overlay.is-closing .mobile-menu-rise-1,
+  .mobile-menu-overlay.is-closing .mobile-menu-rise-2,
+  .mobile-menu-overlay.is-closing .mobile-menu-rise-3,
+  .mobile-menu-overlay.is-closing .mobile-menu-rise-4,
+  .mobile-menu-overlay.is-closing .mobile-menu-rise-5,
+  .mobile-menu-overlay.is-closing .mobile-menu-rise-6,
+  .mobile-menu-overlay.is-closing .mobile-menu-rise-7 {
+    animation: none;
+  }
+
+  .mobile-menu-overlay::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 2px,
+      rgba(0, 0, 0, 0.22) 2px,
+      rgba(0, 0, 0, 0.22) 3px
+    );
+    mix-blend-mode: overlay;
+    opacity: 0.55;
+  }
+
+  /* Stagger steps for overlay children. Same vocabulary as .bifrost-fade-up-*
+     but enters from below with a longer travel so it reads as a "page-shaped"
+     reveal rather than a small UI fade. Each step is --hero-stagger-step. */
+  .mobile-menu-rise-1,
+  .mobile-menu-rise-2,
+  .mobile-menu-rise-3,
+  .mobile-menu-rise-4,
+  .mobile-menu-rise-5,
+  .mobile-menu-rise-6,
+  .mobile-menu-rise-7 {
+    animation: bifrost-link-up 480ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .mobile-menu-rise-1 {
+    animation-delay: calc(var(--hero-stagger-step) * 1);
+  }
+  .mobile-menu-rise-2 {
+    animation-delay: calc(var(--hero-stagger-step) * 2);
+  }
+  .mobile-menu-rise-3 {
+    animation-delay: calc(var(--hero-stagger-step) * 3);
+  }
+  .mobile-menu-rise-4 {
+    animation-delay: calc(var(--hero-stagger-step) * 4);
+  }
+  .mobile-menu-rise-5 {
+    animation-delay: calc(var(--hero-stagger-step) * 5);
+  }
+  .mobile-menu-rise-6 {
+    animation-delay: calc(var(--hero-stagger-step) * 6);
+  }
+  .mobile-menu-rise-7 {
+    animation-delay: calc(var(--hero-stagger-step) * 7);
+  }
+
+  /* Big numbered nav row inside the takeover. Mono index + body label with
+     bracket markers around the label. Active row reuses bifrost-glow. */
+  .mobile-menu-link {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2.25rem 1fr;
+    column-gap: 0.875rem;
+    align-items: baseline;
+    padding: 0.5rem 0;
+    color: var(--foreground);
+    text-decoration: none;
+    transition: color 220ms ease;
+  }
+
+  .mobile-menu-link .idx {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+    transition: color 220ms ease;
+  }
+
+  .mobile-menu-link .label {
+    position: relative;
+    font-weight: bold;
+    font-size: 1.75rem;
+    line-height: 1.1;
+    transition: color 220ms ease;
+  }
+
+  .mobile-menu-link .label::before,
+  .mobile-menu-link .label::after {
+    font-family: var(--font-mono);
+    color: var(--color-nixie-base);
+    opacity: 0;
+    transition:
+      opacity 220ms ease,
+      margin 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .mobile-menu-link .label::before {
+    content: "[";
+    margin-right: 0.5rem;
+  }
+
+  .mobile-menu-link .label::after {
+    content: "]";
+    margin-left: 0.5rem;
+  }
+
+  .mobile-menu-link:hover .label,
+  .mobile-menu-link:focus-visible .label {
+    color: var(--color-nixie-base);
+  }
+
+  .mobile-menu-link:hover .label::before,
+  .mobile-menu-link:hover .label::after,
+  .mobile-menu-link:focus-visible .label::before,
+  .mobile-menu-link:focus-visible .label::after {
+    opacity: 1;
+  }
+
+  .mobile-menu-link.is-active .idx {
+    color: var(--color-nixie-base);
+  }
+
+  .mobile-menu-link.is-active .label {
+    color: var(--color-nixie-base);
+    animation: bifrost-glow 3s ease-in-out infinite alternate;
+  }
+
+  .mobile-menu-link.is-active .label::before,
+  .mobile-menu-link.is-active .label::after {
+    opacity: 1;
+    animation: bifrost-bracket-blink 2.4s steps(1, end) infinite;
+  }
+
+  /* --- Features section: background gears, scroll reveal, terminal placeholder --- */
+  .features-gear {
+    color: var(--secondary);
+    animation: bifrost-gear-spin 90s linear infinite;
+    transform-origin: 50% 50%;
+    will-change: transform;
+  }
+
+  .features-gear[data-direction="reverse"] {
+    animation-direction: reverse;
+  }
+
+  .features-reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+      opacity 720ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 720ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .features-reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .terminal-placeholder {
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        rgba(255, 199, 0, 0.04) 0,
+        rgba(255, 199, 0, 0.04) 1px,
+        transparent 1px,
+        transparent 4px
+      ),
+      radial-gradient(ellipse at 50% 35%, rgba(255, 199, 0, 0.08) 0%, transparent 60%),
+      linear-gradient(180deg, rgb(28, 25, 23) 0%, rgb(15, 12, 10) 100%);
+  }
+
+  .terminal-placeholder::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 3px,
+      rgba(0, 0, 0, 0.18) 3px,
+      rgba(0, 0, 0, 0.18) 4px
+    );
+    mix-blend-mode: overlay;
+    opacity: 0.4;
+  }
+
+  /* --- Download section: terminal card, scanline overlay --- */
+  .download-terminal {
+    background: linear-gradient(180deg, rgba(41, 37, 36, 0.95) 0%, rgba(28, 25, 23, 0.98) 100%);
+    position: relative;
+  }
+
+  .download-terminal::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 3px,
+      rgba(0, 0, 0, 0.12) 3px,
+      rgba(0, 0, 0, 0.12) 4px
+    );
+    mix-blend-mode: overlay;
+    opacity: 0.3;
+    border-radius: inherit;
+  }
+
+  /* --- FAQ section: "Minimal Glass" terminal card body.
+   * Stone-800 → stone-700 vertical gradient at 90% opacity, matching the
+   * Terminal/Minimal Glass component in the design (same palette as the
+   * navbar). The translucency lets the card's backdrop-blur soften the gear
+   * decor bleeding behind it. --- */
+  .faq-terminal {
+    background: linear-gradient(180deg, rgba(41, 37, 36, 0.9) 0%, rgba(68, 64, 59, 0.9) 100%);
+  }
+
+  /* --- Comment wall: floating "quote drift" treatment ---
+   * The quotes themselves stay chromeless (plain theme tokens on the markup).
+   * This block owns the field's atmosphere + the quote motion.
+   *
+   * .wall-field — a faint nixie halo pooled near the top-center so the drifting
+   * quotes float through soft light rather than a flat panel. Mirrors the demo
+   * `.stage` glow; alpha kept low (subtle) and tied to --color-nixie-base via
+   * color-mix so a sibling project's theme drives the hue instead of a hardcode. */
+  .wall-field {
+    background: radial-gradient(
+      ellipse at 50% 50%,
+      color-mix(in srgb, var(--color-nixie-base) 5%, transparent) 0%,
+      transparent 70%
+    );
+  }
+
+  /* .wall-quote — motion only: the fade + lift used while a quote relocates
+   * (driven by data-hidden), and the idle bob. Compositor-friendly
+   * (opacity/transform only). FADE timing is mirrored by FADE_MS in
+   * use-floating-wall.ts — keep them in sync. */
+  .wall-quote {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity 700ms ease,
+      transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+  }
+
+  .wall-quote[data-hidden="true"] {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  .wall-quote-bob {
+    animation: bifrost-wall-bob 7s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .wall-quote {
+      transition-duration: 1ms;
+    }
+    .wall-quote-bob {
+      animation: none;
+    }
+  }
+}
+
+/* ----------------------------------------------------------------------- */
+/* Keyframes — global, referenced by the components block above            */
+/* ----------------------------------------------------------------------- */
+@keyframes bifrost-glow {
+  from {
+    text-shadow:
+      0 0 20px var(--color-nixie-base),
+      0 0 50px var(--color-nixie-base),
+      0 0 5px rgb(255, 212, 71);
+  }
+  to {
+    text-shadow:
+      0 0 30px rgb(255, 219, 101),
+      0 0 60px rgb(255, 219, 101),
+      0 0 15px rgb(255, 203, 30);
+  }
+}
+
+@keyframes bifrost-typing {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes bifrost-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bifrost-bracket-blink {
+  0%,
+  70% {
+    opacity: 1;
+  }
+  80%,
+  100% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes bifrost-takeover-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes bifrost-takeover-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes bifrost-link-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bifrost-gear-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes bifrost-wall-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* ----------------------------------------------------------------------- */
+/* Low-end mobile: kill backdrop-filter blur                               */
+/* ----------------------------------------------------------------------- */
+/* Each backdrop-blur element forces its own GPU blur pass; the page renders
+   ~30 simultaneously on a phone-width viewport, which tanks weak mobile GPUs
+   during scroll. Below the lg breakpoint we drop the blur and lean on the
+   surfaces' existing translucent background colors (the dark theme keeps them
+   legible). Desktop (lg+) keeps the full glassmorphism. Scoped to the theme. */
+@media (max-width: 1023px) {
+  .theme-steins-gate [class*="backdrop-blur"] {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+}

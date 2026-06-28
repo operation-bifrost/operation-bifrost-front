@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wall Comment Motion (Option C) — Operation Bifrost</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&family=Major+Mono+Display&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Libre+Baskerville:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --nixie: rgb(251, 192, 0);
+        --stone-50: #fafaf9;
+        --stone-100: #f5f5f4;
+        --stone-200: #e7e5e4;
+        --stone-300: #d6d3d1;
+        --stone-400: #a8a29e;
+        --stone-500: #78716c;
+        --stone-700: #44403c;
+        --stone-800: #292524;
+        --stone-900: #1c1917;
+        --bg-deep: #15110f;
+
+        --font-sans: "IBM Plex Sans Thai", "DM Sans", system-ui, sans-serif;
+        --font-mono: "JetBrains Mono", ui-monospace, monospace;
+        --font-display: "Major Mono Display", monospace;
+        --font-serif: "Libre Baskerville", Georgia, serif;
+      }
+
+      *,
+      *::before,
+      *::after { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+
+      body {
+        min-height: 100vh;
+        font-family: var(--font-sans);
+        color: var(--stone-200);
+        background:
+          radial-gradient(ellipse at 50% 0%, rgba(251, 192, 0, 0.05) 0%, transparent 55%),
+          radial-gradient(ellipse at 80% 90%, rgba(251, 192, 0, 0.04) 0%, transparent 50%),
+          var(--bg-deep);
+        background-attachment: fixed;
+        position: relative;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image: repeating-linear-gradient(
+          to bottom, transparent 0px, transparent 2px,
+          rgba(0, 0, 0, 0.18) 2px, rgba(0, 0, 0, 0.18) 3px);
+        mix-blend-mode: overlay;
+        opacity: 0.35;
+        z-index: 1;
+      }
+
+      main {
+        position: relative;
+        z-index: 2;
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 64px 32px 120px;
+      }
+
+      .breadcrumb {
+        display: flex; align-items: center; gap: 12px;
+        font-family: var(--font-mono); font-size: 11px;
+        letter-spacing: 0.22em; text-transform: uppercase;
+        color: var(--stone-500); margin-bottom: 20px;
+      }
+      .breadcrumb .dot {
+        width: 6px; height: 6px; border-radius: 50%;
+        background: var(--nixie);
+        box-shadow: 0 0 8px var(--nixie), 0 0 14px rgba(255, 199, 0, 0.5);
+        animation: pulse 2.4s ease-in-out infinite;
+      }
+      @keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+
+      h1 {
+        font-family: var(--font-display);
+        font-size: clamp(2.25rem, 1rem + 3vw, 3.5rem);
+        line-height: 1; margin: 0 0 20px;
+        color: var(--stone-50); text-transform: lowercase; letter-spacing: -0.01em;
+      }
+      h1 .accent { color: var(--nixie); text-shadow: 0 0 8px var(--nixie), 0 0 24px rgba(255, 199, 0, 0.45); }
+
+      .intro { max-width: 76ch; font-size: 15px; line-height: 1.7; color: var(--stone-300); margin: 0 0 14px; }
+      .intro b { color: var(--stone-50); font-weight: 600; }
+      code.inline {
+        font-family: var(--font-mono); font-size: 0.85em; color: var(--nixie);
+        background: rgba(0, 0, 0, 0.4); padding: 2px 6px; border: 1px solid rgba(255, 199, 0, 0.2);
+      }
+
+      .ask {
+        margin: 22px 0 56px;
+        padding: 18px 22px;
+        border-left: 2px solid var(--nixie);
+        background: rgba(255, 199, 0, 0.04);
+        font-size: 13.5px; line-height: 1.7; color: var(--stone-300);
+        max-width: 80ch;
+      }
+      .ask b { color: var(--stone-50); }
+      .ask .chk { color: var(--nixie); font-weight: 700; }
+
+      /* -------------------------------------------------- option card */
+      .option {
+        position: relative;
+        padding: 44px 32px 48px;
+        margin-bottom: 56px;
+        border: 1px solid var(--stone-700);
+        background: linear-gradient(180deg, rgba(41, 37, 36, 0.5) 0%, rgba(28, 25, 23, 0.5) 100%);
+        backdrop-filter: blur(4px);
+      }
+      .option-tag {
+        position: absolute; top: -10px; left: 24px;
+        padding: 2px 12px; background: var(--bg-deep);
+        font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+        letter-spacing: 0.25em; text-transform: uppercase;
+        color: var(--nixie); border: 1px solid var(--stone-700);
+      }
+      .option-tag.rec {
+        color: var(--bg-deep); background: var(--nixie);
+        border-color: var(--nixie); box-shadow: 0 0 14px rgba(255, 199, 0, 0.4);
+      }
+      .option-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 14px; margin-bottom: 6px; }
+      .option-title { margin: 0; font-size: 20px; font-weight: 700; color: var(--stone-50); }
+      .option-best {
+        font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em;
+        text-transform: uppercase; color: var(--stone-500);
+      }
+      .option-desc { margin: 0 0 28px; font-size: 13px; line-height: 1.65; color: var(--stone-400); max-width: 82ch; }
+
+      /* -------------------------------------------------- stage / field */
+      .stage {
+        position: relative;
+        border: 1px solid rgba(120, 113, 108, 0.3);
+        background:
+          radial-gradient(ellipse at 50% 30%, rgba(251, 192, 0, 0.035) 0%, transparent 60%),
+          linear-gradient(180deg, rgba(28, 25, 23, 0.6) 0%, rgba(15, 12, 10, 0.6) 100%);
+      }
+      .stage::before, .stage::after {
+        content: ""; position: absolute; width: 12px; height: 12px;
+        border: 1px solid var(--nixie); z-index: 5;
+      }
+      .stage::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+      .stage::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+      .stage-label {
+        position: absolute; top: -9px; left: 24px; padding: 0 10px;
+        background: var(--bg-deep); font-family: var(--font-mono);
+        font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+        color: var(--stone-500); z-index: 6;
+      }
+
+      /* ---- Option C quote chrome (locked) — no surface, no border, no glow ---- */
+      .cmt {
+        max-width: 17rem;
+        padding-left: 8px;
+      }
+      .cmt .q {
+        font-family: var(--font-serif); font-style: italic;
+        font-size: 52px; line-height: 0; color: rgba(255, 199, 0, 0.16);
+        display: block; height: 18px; margin-left: -12px;
+        pointer-events: none; user-select: none;
+      }
+      .cmt .msg {
+        margin: 0; font-size: 15px; line-height: 1.6; color: var(--stone-100);
+        word-break: break-word;
+      }
+      .cmt .who {
+        margin-top: 9px; font-family: var(--font-mono); font-size: 11px;
+        letter-spacing: 0.04em; color: var(--stone-500);
+      }
+
+      /* ===================================================================
+         MOTION 1 — Rising stream (lanes). Quotes enter low, drift upward,
+         fade out near the top. Per-lane time offsets keep them far apart so
+         text never overlaps; recycled text re-enters at the BOTTOM (a fresh
+         spot), never at the place it left.
+         =================================================================== */
+      .c1-field {
+        position: relative; height: 460px; overflow: hidden;
+        display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px;
+        padding: 0 26px;
+      }
+      .lane { position: relative; height: 100%; min-height: 460px; }
+      .lane .cmt {
+        position: absolute; left: 0; right: 0; bottom: 0; width: 100%;
+        will-change: transform, opacity;
+        animation-name: rise;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+      }
+      /* Slightly different speeds per lane so columns don't march in lockstep */
+      .lane:nth-child(1) .cmt { animation-duration: 21s; }
+      .lane:nth-child(2) .cmt { animation-duration: 24s; }
+      .lane:nth-child(3) .cmt { animation-duration: 19s; }
+      /* Two items per lane, offset by half a cycle → ~half-travel apart */
+      .lane .cmt.b { animation-delay: var(--half); }
+
+      @keyframes rise {
+        0%   { transform: translateY(470px); opacity: 0; }
+        12%  { opacity: 1; }
+        85%  { opacity: 1; }
+        100% { transform: translateY(-560px); opacity: 0; }
+      }
+
+      /* ===================================================================
+         MOTION 2 — Drift + relocate. Quotes sit at well-spaced anchors with a
+         gentle bob; on a timer one fades out and fades back in at a DIFFERENT
+         free anchor with the next pooled comment. Closest to the current
+         architecture, minus the same-spot pop.
+         =================================================================== */
+      .c2-field { position: relative; height: 440px; overflow: hidden; }
+      .c2-field .slot {
+        position: absolute; width: 16rem; max-width: 60%;
+        opacity: 0; transform: translateY(10px);
+        transition: opacity 700ms ease, transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+        will-change: opacity, transform;
+      }
+      .c2-field .slot.show { opacity: 1; transform: translateY(0); }
+      .c2-field .slot .bob {
+        display: block;
+        animation: bob 7s ease-in-out infinite;
+        will-change: transform;
+      }
+      @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+      /* ---- responsive: stack fields on narrow screens ---- */
+      @media (max-width: 720px) {
+        .c1-field { grid-template-columns: 1fr; height: auto; gap: 0; }
+        .lane .cmt { position: static; animation: none; opacity: 1; margin-bottom: 26px; }
+        .c2-field { height: auto; }
+        .c2-field .slot { position: static; width: 100%; max-width: 100%; opacity: 1; margin-bottom: 26px; }
+        .c2-field .slot .bob { animation: none; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .c1-field { grid-template-columns: repeat(3, 1fr); height: auto; }
+        .lane .cmt { position: static; animation: none !important; opacity: 1 !important; transform: none !important; margin-bottom: 26px; }
+        .c2-field { height: auto; display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+        .c2-field .slot { position: static !important; opacity: 1 !important; width: 100%; max-width: 100%; }
+        .c2-field .slot .bob { animation: none !important; }
+        *, *::before, *::after { transition-duration: 0.01ms !important; }
+      }
+
+      /* -------------------------------------------------- footnote / footer */
+      .footnote {
+        margin-top: 72px; padding: 22px 26px; border-left: 2px solid var(--nixie);
+        font-size: 13px; line-height: 1.75; color: var(--stone-300); background: rgba(255, 199, 0, 0.04);
+      }
+      .footnote b { color: var(--stone-50); }
+      .footnote strong { color: var(--nixie); font-weight: 600; }
+      .meta-footer {
+        margin-top: 48px; padding-top: 24px; border-top: 1px dashed rgba(168, 162, 158, 0.2);
+        display: flex; justify-content: space-between; align-items: center;
+        font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em;
+        text-transform: uppercase; color: var(--stone-500);
+      }
+      .meta-footer .blinker {
+        width: 8px; height: 14px; background: var(--nixie); box-shadow: 0 0 8px var(--nixie);
+        animation: caret 1s steps(1, end) infinite; display: inline-block; margin-left: 10px; vertical-align: middle;
+      }
+      @keyframes caret { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <div class="breadcrumb">
+        <span class="dot" aria-hidden="true"></span>
+        <span>FGL / Bifrost / Steins;Gate / Wall — Comment Motion (Option C)</span>
+      </div>
+      <h1>wall comment <span class="accent">motion</span></h1>
+      <p class="intro">
+        Chrome is locked to <b>Option C (quote drift)</b> — ghosted quote mark, mono author, no surface, no
+        glow. This pass is about <b>lifecycle</b>. Today the wall computes a fixed grid position per slot and
+        <code class="inline">rotateBubble</code> swaps a new comment <b>into the same slot</b>, so a quote
+        fades out and the next fades in at the exact same coordinates. Both previews below run live with a
+        16-comment pool.
+      </p>
+      <p class="ask">
+        <b>Requirements addressed</b><br />
+        <span class="chk">✓</span> A comment never reappears at the spot it just left — recycled text always
+        enters at a fresh position.<br />
+        <span class="chk">✓</span> No two quotes overlap — lane time-offsets (M1) and pre-spaced free anchors
+        (M2) guarantee separation.<br />
+        <span class="chk">✓</span> Motion stays on <code class="inline">transform</code> /
+        <code class="inline">opacity</code> only (compositor-friendly); reduced-motion falls back to a static
+        spaced layout.
+      </p>
+
+      <!-- ============================================================ M1 -->
+      <section class="option">
+        <span class="option-tag rec">Motion 1 — Recommended</span>
+        <div class="option-head">
+          <h2 class="option-title">Rising stream</h2>
+          <span class="option-best">matches "ลอยขึ้นบนกำแพง" · continuous · self-spacing</span>
+        </div>
+        <p class="option-desc">
+          Quotes literally float up the wall. Three lanes each carry two quotes drifting upward at slightly
+          different speeds; a quote enters low, rises, and fades near the top, then recycles to the bottom
+          with the next pooled comment. Because the two quotes in a lane are offset by half a cycle, they stay
+          roughly half-a-travel apart and never collide. The most natural reading of the copy and the calmest
+          to watch — nothing ever pops in place.
+        </p>
+        <div class="stage">
+          <span class="stage-label">— Live · drifting upward</span>
+          <div class="c1-field" id="c1">
+            <div class="lane">
+              <figure class="cmt a"><span class="q" aria-hidden="true">&ldquo;</span><blockquote class="msg"></blockquote><figcaption class="who"></figcaption></figure>
+              <figure class="cmt b"><span class="q" aria-hidden="true">&ldquo;</span><blockquote class="msg"></blockquote><figcaption class="who"></figcaption></figure>
+            </div>
+            <div class="lane">
+              <figure class="cmt a"><span class="q" aria-hidden="true">&ldquo;</span><blockquote class="msg"></blockquote><figcaption class="who"></figcaption></figure>
+              <figure class="cmt b"><span class="q" aria-hidden="true">&ldquo;</span><blockquote class="msg"></blockquote><figcaption class="who"></figcaption></figure>
+            </div>
+            <div class="lane">
+              <figure class="cmt a"><span class="q" aria-hidden="true">&ldquo;</span><blockquote class="msg"></blockquote><figcaption class="who"></figcaption></figure>
+              <figure class="cmt b"><span class="q" aria-hidden="true">&ldquo;</span><blockquote class="msg"></blockquote><figcaption class="who"></figcaption></figure>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ M2 -->
+      <section class="option">
+        <span class="option-tag">Motion 2</span>
+        <div class="option-head">
+          <h2 class="option-title">Drift + relocate</h2>
+          <span class="option-best">closest to current code · gentle constellation</span>
+        </div>
+        <p class="option-desc">
+          Keeps the scattered "constellation" feel: five quotes rest at well-spaced anchors doing a small
+          bob. Every quote rests for a <b>wide random time</b> (5–13s) then moves on its own — <b>no queue,
+          no fixed cadence</b>, so relocations are sporadic with no detectable order. The only rule is that
+          two quotes won't start fading at the same instant; if that would happen the later one waits a
+          <b>random</b> extra beat and retries. A leaving quote settles in at a different free anchor with a
+          <b>fresh random comment</b>, collision-free.
+        </p>
+        <div class="stage">
+          <span class="stage-label">— Live · sporadic · no fixed order</span>
+          <div class="c2-field" id="c2"></div>
+        </div>
+      </section>
+
+      <p class="footnote">
+        <b>Recommendation:</b> <strong>Motion 1 (rising stream)</strong> — it's the literal reading of
+        <code class="inline">ข้อความจะลอยขึ้นบนกำแพง</code>, never pops in place, and self-spaces without any
+        collision bookkeeping (the lane offsets do the work). In React it becomes lanes of CSS-animated
+        quotes whose text advances to the next pooled comment on
+        <code class="inline">animationiteration</code> (swap happens at opacity 0, so it's invisible).
+        <strong>Motion 2</strong> is the safer pick if you want to keep the current scattered layout and
+        minimise the diff. Tell me which to lock and I'll rewrite
+        <code class="inline">comment-bubbles.tsx</code> + <code class="inline">bubble-rotation.ts</code>
+        accordingly (chrome from Option C lands in <code class="inline">comment-bubble.tsx</code>).
+      </p>
+
+      <footer class="meta-footer">
+        <span>REV 2026.06.26 · WALL COMMENT MOTION · DRAFT</span>
+        <span>STAND BY <span class="blinker" aria-hidden="true"></span></span>
+      </footer>
+    </main>
+
+    <script>
+      // Shared 16-comment pool (mirrors the real PublicComment shape: name | null).
+      const POOL = [
+        { msg: "El Psy Kongroo. รอม็อดนี้มานานมาก ขอบคุณทีมงานจริง ๆ", who: "Okabe Rintarou" },
+        { msg: "แปลออกมาดีมากเลยค่ะ อ่านลื่นสุด ๆ", who: "คุริสึ" },
+        { msg: "เล่นจบแล้วน้ำตาไหล TUTURU~", who: null },
+        { msg: "ตัวเลือกแปลเก็บรายละเอียดครบมาก ประทับใจ", who: "เมย์ควีน" },
+        { msg: "เป็นกำลังใจให้ทีมแปลนะครับ สู้ ๆ", who: "ดารุ" },
+        { msg: "รอเล่นภาคต่ออยู่นะ จะมีแปลอีกไหม", who: null },
+        { msg: "ตัวละครพูดน่ารักมากในเวอร์ชันไทย", who: "มายูริ" },
+        { msg: "โหลดง่าย ติดตั้งง่าย ใช้ได้เลย ขอบคุณครับ", who: "ซูซูฮะ" },
+        { msg: "อยากให้มีกำแพงแบบนี้ในทุกโปรเจกต์เลย", who: null },
+        { msg: "นยันนยัน~ สนุกมากค่า เล่นรวดเดียวจบ", who: "ฟารีส" },
+        { msg: "งานแปลประณีตมาก เห็นความตั้งใจของทีม", who: "ลูก้า" },
+        { msg: "เพิ่งรู้จักโปรเจกต์นี้ ดีใจที่มีคนทำ", who: null },
+        { msg: "นี่คือทางเลือกของ Steins Gate!", who: "Hououin Kyouma" },
+        { msg: "ร้านขายทีวีหลังนั้นรอพวกนายอยู่นะ", who: "มร.บราวน์" },
+        { msg: "ขอบคุณที่ทลายกำแพงภาษาให้พวกเราชาวไทย", who: null },
+        { msg: "อ่านง่ายมากค่ะ คุณพ่อหนูก็ชอบเหมือนกัน", who: "นาเอะ" },
+      ];
+      const ANON = "ไม่ระบุชื่อ";
+
+      // Round-robin cursor shared so each recycle pulls a fresh comment.
+      let cursor = 0;
+      const nextComment = () => POOL[cursor++ % POOL.length];
+
+      const paint = (figure, c) => {
+        figure.querySelector(".msg").textContent = c.msg;
+        figure.querySelector(".who").textContent = "— " + (c.who ?? ANON);
+      };
+
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      /* -------------------------------------------------- Motion 1: lanes */
+      (function initRisingStream() {
+        const field = document.getElementById("c1");
+        if (!field) return;
+        const lanes = field.querySelectorAll(".lane");
+        lanes.forEach((lane) => {
+          const dur = parseFloat(getComputedStyle(lane.querySelector(".cmt")).animationDuration) || 21;
+          // Offset the second quote by half a cycle so the two stay ~half-travel apart.
+          lane.style.setProperty("--half", "-" + (dur / 2).toFixed(2) + "s");
+          lane.querySelectorAll(".cmt").forEach((fig) => {
+            paint(fig, nextComment());
+            // On each loop the element is at opacity 0 (top→bottom jump); swap text there.
+            fig.addEventListener("animationiteration", () => paint(fig, nextComment()));
+          });
+        });
+      })();
+
+      /* -------------------------------------------------- Motion 2: relocate */
+      (function initDriftRelocate() {
+        const field = document.getElementById("c2");
+        if (!field) return;
+
+        // Pre-spaced anchors (top%, left%). 8 anchors, 5 shown → 3 always free.
+        const ANCHORS = [
+          { t: 4, l: 3 },  { t: 9, l: 35 }, { t: 6, l: 64 },
+          { t: 40, l: 12 }, { t: 46, l: 44 }, { t: 38, l: 66 },
+          { t: 74, l: 6 },  { t: 78, l: 50 },
+        ];
+        const VISIBLE = 5;
+        const occupied = new Set();
+
+        const makeSlot = () => {
+          const slot = document.createElement("div");
+          slot.className = "slot";
+          slot.innerHTML =
+            '<figure class="cmt"><span class="q" aria-hidden="true">“</span>' +
+            '<blockquote class="msg"></blockquote><figcaption class="who"></figcaption></figure>';
+          const bob = document.createElement("span");
+          bob.className = "bob";
+          // wrap figure in .bob so bob transform never fights the opacity transition
+          bob.appendChild(slot.firstChild);
+          slot.appendChild(bob);
+          field.appendChild(slot);
+          return slot;
+        };
+
+        const placeAt = (slot, idx) => {
+          slot.dataset.anchor = idx;
+          occupied.add(idx);
+          slot.style.top = ANCHORS[idx].t + "%";
+          slot.style.left = ANCHORS[idx].l + "%";
+        };
+        const freeAnchors = () =>
+          ANCHORS.map((_, i) => i).filter((i) => !occupied.has(i));
+        const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+        // Show a RANDOM pooled comment that isn't already on the wall, so neither
+        // the positions nor the text ever appear in a fixed order.
+        const visibleMsgs = new Set();
+        const assign = (slot) => {
+          if (slot._msg) visibleMsgs.delete(slot._msg);
+          const choices = POOL.filter((c) => !visibleMsgs.has(c.msg));
+          const c = pick(choices.length ? choices : POOL);
+          slot._msg = c.msg;
+          visibleMsgs.add(c.msg);
+          paint(slot.querySelector("figure"), c);
+        };
+
+        const slots = [];
+        for (let i = 0; i < VISIBLE; i++) {
+          const slot = makeSlot();
+          assign(slot);
+          placeAt(slot, pick(freeAnchors())); // random free anchor (never indexes past the array)
+          // stagger the bob so they don't pulse in unison
+          slot.querySelector(".bob").style.animationDelay = "-" + (i * 1.3).toFixed(1) + "s";
+          requestAnimationFrame(() => slot.classList.add("show"));
+          slots.push(slot);
+        }
+
+        if (reduced) return; // static spaced layout; no relocation churn
+
+        // No queue, no fixed cadence. Every quote rests for a WIDE random time and
+        // then moves on its own, so relocations are sporadic with no detectable
+        // order. The only rule: a quote won't start fading while another is already
+        // fading (so they never pile up) — and if that happens it waits a *random*
+        // extra beat and tries again, never a steady drumbeat.
+        const FADE_MS = 700;
+        const rand = (min, max) => min + Math.random() * (max - min);
+        let fading = 0;
+
+        const scheduleDwell = (slot) => {
+          slot._timer = setTimeout(() => tryMove(slot), rand(5000, 13000));
+        };
+
+        const tryMove = (slot) => {
+          if (fading > 0) {
+            // someone is mid-move — wait a random beat and retry (no queue, no order)
+            slot._timer = setTimeout(() => tryMove(slot), rand(600, 2000));
+            return;
+          }
+          fading++;
+          slot.classList.remove("show"); // fade + lift away
+          setTimeout(() => {
+            const oldAnchor = Number(slot.dataset.anchor);
+            occupied.delete(oldAnchor); // released only now — no one took it mid-fade
+            const free = freeAnchors().filter((i) => i !== oldAnchor);
+            placeAt(slot, pick(free)); // claim a new anchor atomically
+            assign(slot); // a fresh random comment, not the next in sequence
+            requestAnimationFrame(() => slot.classList.add("show")); // settle in elsewhere
+            scheduleDwell(slot); // this slot picks its next moment independently
+            setTimeout(() => { fading--; }, 300); // reopen shortly after the fade-out finishes
+          }, FADE_MS + rand(40, 220));
+        };
+
+        // Kick each slot off on its own random offset so they start fully out of phase.
+        slots.forEach((slot, i) => setTimeout(() => scheduleDwell(slot), rand(300, 1600) + i * 200));
+      })();
+    </script>
+  </body>
+</html>

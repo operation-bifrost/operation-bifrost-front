@@ -1,0 +1,25 @@
+import { SectionHeading } from "@/components/steins-gate/ui/section-heading";
+import { steinsGateContent } from "@/data/steins-gate";
+import { DownloadCard } from "@/components/steins-gate/download/download-card";
+import { DownloadDecor } from "@/components/steins-gate/download/download-decor";
+import { InstallationSteps } from "@/components/steins-gate/download/installation-steps";
+import { Support } from "@/components/steins-gate/download/support";
+
+export function Download() {
+  const { eyebrow, heading } = steinsGateContent.download;
+
+  return (
+    <section id="download" className="relative py-8 md:py-10 lg:py-12">
+      <DownloadDecor />
+
+      <div className="wide:max-w-8xl relative mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
+        {/* Section heading — full width, left-aligned */}
+        <SectionHeading heading={heading} eyebrow={eyebrow} className="mb-10 md:mb-14" />
+
+        <DownloadCard />
+        <InstallationSteps />
+        <Support />
+      </div>
+    </section>
+  );
+}

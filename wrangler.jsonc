@@ -1,15 +1,67 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "operationbifrost",
-  "main": "./dist/_worker.js/index.js",
-  // Update to today's date
-  "compatibility_date": "2025-04-16",
+  "main": "@astrojs/cloudflare/entrypoints/server",
+  "compatibility_date": "2026-05-21",
   "compatibility_flags": ["nodejs_compat"],
-  "assets": {
-    "binding": "ASSETS",
-    "directory": "./dist"
-  },
   "observability": {
-    "enabled": true
-  }
+    "enabled": true,
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "operationbifrost-comments",
+      "database_id": "d1a8ad43-eecf-4dc5-bd88-a9a659fd2c84",
+      "migrations_dir": "migrations",
+    },
+  ],
+  "ratelimits": [
+    {
+      "name": "COMMENT_RATELIMIT",
+      "namespace_id": "1001",
+      "simple": { "limit": 3, "period": 60 },
+    },
+  ],
+  // PUBLIC_TURNSTILE_SITE_KEY is the real (public) Turnstile site key — safe to commit;
+  // it is baked into the client bundle at build time. Still required before prod traffic:
+  // set the TURNSTILE_SECRET_KEY secret (NOT committed):
+  //   wrangler secret put TURNSTILE_SECRET_KEY            (prod worker)
+  //   wrangler secret put TURNSTILE_SECRET_KEY --env dev  (dev worker)
+  "vars": {
+    "PUBLIC_TURNSTILE_SITE_KEY": "0x4AAAAAADrBLBP56fAr_OT1",
+  },
+  // Isolated dev/staging Worker. With @astrojs/cloudflare (Astro 6) the target
+  // environment is resolved at BUILD time via CLOUDFLARE_ENV — NOT by
+  // `wrangler deploy --env`. Build with `CLOUDFLARE_ENV=dev` so the adapter bakes
+  // the "operationbifrost-dev" name into dist/server/wrangler.json, then deploy:
+  //   CLOUDFLARE_ENV=dev yarn build && wrangler deploy   (== yarn wrangler:deploy:dev)
+  // WARNING: `wrangler deploy --env dev` does NOT work here — --env is ignored and
+  // it deploys the current build to PRODUCTION (operationbifrost).
+  // Bindings/secrets are not inherited; set dev secrets with
+  //   wrangler secret put <NAME> --name operationbifrost-dev
+  "env": {
+    "dev": {
+      "observability": {
+        "enabled": true,
+      },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "operationbifrost-comments-dev",
+          "database_id": "8bacea09-edc7-4b49-a012-ee9e144edaf2",
+          "migrations_dir": "migrations",
+        },
+      ],
+      "ratelimits": [
+        {
+          "name": "COMMENT_RATELIMIT",
+          "namespace_id": "1001",
+          "simple": { "limit": 3, "period": 60 },
+        },
+      ],
+      "vars": {
+        "PUBLIC_TURNSTILE_SITE_KEY": "0x4AAAAAADrBLBP56fAr_OT1",
+      },
+    },
+  },
 }

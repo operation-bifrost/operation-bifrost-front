@@ -1,0 +1,22 @@
+# Build / generated
+dist/
+.astro/
+.wrangler/
+.vercel/
+.yarn/
+node_modules/
+worker-configuration.d.ts
+
+# Lockfiles
+yarn.lock
+package-lock.json
+pnpm-lock.yaml
+
+# Legacy kept for reference, excluded from tsconfig too
+legacy/
+
+# Design sources (.pen files + supporting assets)
+design/
+
+# Logs
+*.log

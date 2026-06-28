@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wall Comment Treatments — Operation Bifrost</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&family=Major+Mono+Display&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --nixie: rgb(251, 192, 0);
+        --nixie-soft: rgba(255, 199, 0, 0.55);
+        --nixie-glow: rgba(255, 199, 0, 0.35);
+
+        --stone-50: #fafaf9;
+        --stone-100: #f5f5f4;
+        --stone-200: #e7e5e4;
+        --stone-300: #d6d3d1;
+        --stone-400: #a8a29e;
+        --stone-500: #78716c;
+        --stone-600: #57534e;
+        --stone-700: #44403c;
+        --stone-800: #292524;
+        --stone-900: #1c1917;
+        --bg-deep: #15110f;
+
+        /* Card surface = project's dark `--card` (oklch 0.268…) ≈ #2b2724 */
+        --card: #2b2724;
+
+        --font-sans: "IBM Plex Sans Thai", "DM Sans", system-ui, sans-serif;
+        --font-mono: "JetBrains Mono", ui-monospace, monospace;
+        --font-display: "Major Mono Display", monospace;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        min-height: 100vh;
+        font-family: var(--font-sans);
+        color: var(--stone-200);
+        background:
+          radial-gradient(ellipse at 50% 0%, rgba(251, 192, 0, 0.05) 0%, transparent 55%),
+          radial-gradient(ellipse at 80% 90%, rgba(251, 192, 0, 0.04) 0%, transparent 50%),
+          var(--bg-deep);
+        background-attachment: fixed;
+        position: relative;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      /* CRT scanline overlay — matches the house demo chrome */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image: repeating-linear-gradient(
+          to bottom,
+          transparent 0px,
+          transparent 2px,
+          rgba(0, 0, 0, 0.18) 2px,
+          rgba(0, 0, 0, 0.18) 3px
+        );
+        mix-blend-mode: overlay;
+        opacity: 0.35;
+        z-index: 1;
+      }
+
+      main {
+        position: relative;
+        z-index: 2;
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 64px 32px 120px;
+      }
+
+      /* -------------------------------------------------- page header */
+      .page-header {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        margin-bottom: 56px;
+      }
+
+      .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--stone-500);
+      }
+
+      .breadcrumb .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--nixie);
+        box-shadow: 0 0 8px var(--nixie), 0 0 14px rgba(255, 199, 0, 0.5);
+        animation: pulse 2.4s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 0.6; }
+        50% { opacity: 1; }
+      }
+
+      h1 {
+        font-family: var(--font-display);
+        font-size: clamp(2.25rem, 1rem + 3vw, 3.5rem);
+        line-height: 1;
+        margin: 0;
+        color: var(--stone-50);
+        text-transform: lowercase;
+        letter-spacing: -0.01em;
+      }
+
+      h1 .accent {
+        color: var(--nixie);
+        text-shadow: 0 0 8px var(--nixie), 0 0 24px rgba(255, 199, 0, 0.45);
+      }
+
+      .intro {
+        max-width: 74ch;
+        font-size: 15px;
+        line-height: 1.7;
+        color: var(--stone-300);
+      }
+
+      .intro b { color: var(--stone-50); font-weight: 600; }
+
+      code.inline {
+        font-family: var(--font-mono);
+        font-size: 0.85em;
+        color: var(--nixie);
+        background: rgba(0, 0, 0, 0.4);
+        padding: 2px 6px;
+        border: 1px solid rgba(255, 199, 0, 0.2);
+      }
+
+      /* -------------------------------------------------- "what we're replacing" */
+      .before {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 28px;
+        padding: 24px 28px;
+        margin-bottom: 8px;
+        border: 1px dashed rgba(168, 162, 158, 0.25);
+        background: rgba(0, 0, 0, 0.18);
+      }
+      .before .lbl {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--stone-500);
+        line-height: 1.8;
+      }
+      .before .lbl b { color: var(--destructive, #e7716a); font-weight: 600; }
+      /* The exact current bubble: hard border box + bright nixie glow */
+      .old-bubble {
+        max-width: 16rem;
+        border: 1px solid var(--stone-700);
+        background: rgba(43, 39, 36, 0.8);
+        padding: 12px 16px;
+        box-shadow: 0 0 12px -2px var(--nixie);
+        backdrop-filter: blur(4px);
+      }
+      .old-bubble blockquote { margin: 0; font-size: 14px; line-height: 1.6; color: var(--stone-100); }
+      .old-bubble figcaption { margin-top: 8px; font-family: var(--font-mono); font-size: 11px; color: var(--stone-400); }
+
+      /* -------------------------------------------------- option card */
+      .option {
+        position: relative;
+        padding: 44px 32px 48px;
+        margin-bottom: 56px;
+        border: 1px solid var(--stone-700);
+        background: linear-gradient(180deg, rgba(41, 37, 36, 0.5) 0%, rgba(28, 25, 23, 0.5) 100%);
+        backdrop-filter: blur(4px);
+      }
+
+      .option-tag {
+        position: absolute;
+        top: -10px;
+        left: 24px;
+        padding: 2px 12px;
+        background: var(--bg-deep);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        color: var(--nixie);
+        border: 1px solid var(--stone-700);
+      }
+
+      .option-tag.rec {
+        color: var(--bg-deep);
+        background: var(--nixie);
+        border-color: var(--nixie);
+        box-shadow: 0 0 14px rgba(255, 199, 0, 0.4);
+      }
+
+      .option-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 8px 14px;
+        margin-bottom: 6px;
+      }
+
+      .option-title {
+        margin: 0;
+        font-family: var(--font-sans);
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--stone-50);
+      }
+
+      .option-best {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--stone-500);
+      }
+
+      .option-desc {
+        margin: 0 0 28px;
+        font-size: 13px;
+        line-height: 1.65;
+        color: var(--stone-400);
+        max-width: 82ch;
+      }
+
+      /* -------------------------------------------------- stage (the wall field) */
+      .stage {
+        position: relative;
+        border: 1px solid rgba(120, 113, 108, 0.3);
+        background:
+          radial-gradient(ellipse at 50% 30%, rgba(251, 192, 0, 0.035) 0%, transparent 60%),
+          linear-gradient(180deg, rgba(28, 25, 23, 0.6) 0%, rgba(15, 12, 10, 0.6) 100%);
+      }
+      .stage::before,
+      .stage::after {
+        content: "";
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        border: 1px solid var(--nixie);
+        z-index: 3;
+      }
+      .stage::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+      .stage::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+
+      .stage-label {
+        position: absolute;
+        top: -9px;
+        left: 24px;
+        padding: 0 10px;
+        background: var(--bg-deep);
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--stone-500);
+        z-index: 4;
+      }
+
+      /* The floating field — absolutely-positioned comment atoms, gentle drift */
+      .field {
+        position: relative;
+        height: 420px;
+        overflow: hidden;
+      }
+      .field .atom {
+        position: absolute;
+        animation: floaty 7s ease-in-out infinite;
+        will-change: transform;
+      }
+
+      @keyframes floaty {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-9px); }
+      }
+
+      @media (max-width: 720px) {
+        .field { height: auto; padding: 20px 8px; }
+        .field .atom { position: static; max-width: 100% !important; margin: 0 0 22px; animation: none; }
+      }
+
+      /* ==================================================================
+         OPTION A — Transmission lines (hairline left-rule, no box, no glow)
+         ================================================================== */
+      .cmt-a {
+        max-width: 17rem;
+        padding: 2px 0 2px 16px;
+        border-left: 2px solid rgba(255, 199, 0, 0.28);
+      }
+      .cmt-a .meta {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--stone-500);
+        margin-bottom: 6px;
+      }
+      .cmt-a .meta .gt { color: rgba(255, 199, 0, 0.6); margin-right: 6px; }
+      .cmt-a .msg {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.6;
+        color: var(--stone-200);
+        word-break: break-word;
+      }
+      .cmt-a .who {
+        margin-top: 8px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--stone-500);
+      }
+
+      /* ==================================================================
+         OPTION B — Feathered slips (soft surface, edges masked away, ambient
+         shadow instead of glow)
+         ================================================================== */
+      .cmt-b {
+        max-width: 16rem;
+        padding: 20px 22px;
+        background: linear-gradient(180deg, rgba(54, 49, 45, 0.62) 0%, rgba(38, 34, 31, 0.5) 100%);
+        box-shadow: 0 10px 26px -14px rgba(0, 0, 0, 0.7);
+        -webkit-backdrop-filter: blur(3px);
+        backdrop-filter: blur(3px);
+        /* Feather the rectangle away so there is no hard box edge — the slip
+           dissolves into the wall rather than sitting on it. */
+        -webkit-mask-image: radial-gradient(125% 130% at 50% 42%, #000 58%, transparent 100%);
+        mask-image: radial-gradient(125% 130% at 50% 42%, #000 58%, transparent 100%);
+      }
+      .cmt-b .msg {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.62;
+        color: var(--stone-100);
+        word-break: break-word;
+      }
+      .cmt-b .who {
+        margin-top: 10px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--stone-400);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .cmt-b .who::before {
+        content: "";
+        width: 14px;
+        height: 1px;
+        background: rgba(255, 199, 0, 0.4);
+      }
+
+      /* ==================================================================
+         OPTION C — Quote drift (pure typography, ghosted quote mark, zero chrome)
+         ================================================================== */
+      .cmt-c {
+        position: relative;
+        max-width: 18rem;
+        padding-left: 6px;
+      }
+      .cmt-c .q {
+        position: absolute;
+        top: -26px;
+        left: -10px;
+        font-family: var(--font-serif, Georgia), serif;
+        font-size: 56px;
+        line-height: 1;
+        color: rgba(255, 199, 0, 0.14);
+        pointer-events: none;
+        user-select: none;
+      }
+      .cmt-c .msg {
+        position: relative;
+        margin: 0;
+        font-size: 15px;
+        line-height: 1.6;
+        color: var(--stone-100);
+        word-break: break-word;
+      }
+      .cmt-c .who {
+        margin-top: 10px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.04em;
+        color: var(--stone-500);
+      }
+
+      /* -------------------------------------------------- footnote / footer */
+      .footnote {
+        margin-top: 72px;
+        padding: 22px 26px;
+        border-left: 2px solid var(--nixie);
+        font-size: 13px;
+        line-height: 1.75;
+        color: var(--stone-300);
+        background: rgba(255, 199, 0, 0.04);
+      }
+      .footnote b { color: var(--stone-50); }
+      .footnote strong { color: var(--nixie); font-weight: 600; }
+
+      .meta-footer {
+        margin-top: 48px;
+        padding-top: 24px;
+        border-top: 1px dashed rgba(168, 162, 158, 0.2);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--stone-500);
+      }
+      .meta-footer .blinker {
+        width: 8px; height: 14px; background: var(--nixie); box-shadow: 0 0 8px var(--nixie);
+        animation: caret 1s steps(1, end) infinite; display: inline-block; margin-left: 10px; vertical-align: middle;
+      }
+      @keyframes caret { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { animation: none !important; transition-duration: 0.01ms !important; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <header class="page-header">
+        <div class="breadcrumb">
+          <span class="dot" aria-hidden="true"></span>
+          <span>FGL / Bifrost / Steins;Gate / Wall — Comment Treatments</span>
+        </div>
+        <h1>wall comment <span class="accent">treatments</span></h1>
+        <p class="intro">
+          The comment wall (<code class="inline">กำแพงความในใจ</code>) scatters approved messages across a
+          field and drifts them gently upward. The current bubble is a <b>hard-bordered rectangle with a
+          bright Nixie glow</b> — too loud, and it reads as a UI box rather than a message floating on a wall.
+          These three treatments all drop the box and the glow and lean <b>subtle</b>: borderless or
+          edge-feathered surfaces, ambient depth instead of emission, and quieter accents. Each preview is
+          live — the atoms drift on the same compositor-friendly <code class="inline">translateY</code> bob
+          the real wall uses.
+        </p>
+        <div class="before">
+          <span class="lbl">
+            // current<br />
+            <b>✕ hard box</b><br />
+            <b>✕ bright glow</b>
+          </span>
+          <figure class="old-bubble">
+            <blockquote>El Psy Kongroo. รอม็อดนี้มานานมาก ขอบคุณทีมงานจริง ๆ</blockquote>
+            <figcaption>— Okabe Rintarou</figcaption>
+          </figure>
+        </div>
+      </header>
+
+      <!-- ============================================================ A -->
+      <section class="option">
+        <span class="option-tag rec">Option A — Recommended</span>
+        <div class="option-head">
+          <h2 class="option-title">Transmission lines</h2>
+          <span class="option-best">most subtle · most on-theme · cheapest to build</span>
+        </div>
+        <p class="option-desc">
+          No surface at all — each message is anchored only by a thin amber hairline on its left edge, like an
+          intercepted lab transmission. A muted mono header (<code class="inline">&gt; @rintarou</code>) tags
+          the author; the body sits in the Thai sans. Zero box, zero glow, and it reads as "messages on the
+          wall" rather than "cards in a grid." Scales cleanly to any length and is the lightest to render.
+        </p>
+        <div class="stage">
+          <span class="stage-label">— Live preview · drifting</span>
+          <div class="field">
+            <div class="atom cmt-a" style="top: 14px; left: 2%; animation-delay: -0.4s;">
+              <div class="meta"><span class="gt">&gt;</span> @rintarou</div>
+              <p class="msg">El Psy Kongroo. รอม็อดนี้มานานมาก ขอบคุณทีมงานจริง ๆ</p>
+              <div class="who">— Okabe Rintarou</div>
+            </div>
+            <div class="atom cmt-a" style="top: 36px; left: 38%; animation-delay: -2.1s;">
+              <div class="meta"><span class="gt">&gt;</span> @kurisu</div>
+              <p class="msg">แปลออกมาดีมากเลยค่ะ อ่านลื่นสุด ๆ</p>
+              <div class="who">— คุริสึ</div>
+            </div>
+            <div class="atom cmt-a" style="top: 70px; left: 70%; animation-delay: -3.3s;">
+              <div class="meta"><span class="gt">&gt;</span> anon</div>
+              <p class="msg">เล่นจบแล้วน้ำตาไหล TUTURU~</p>
+              <div class="who">— ไม่ระบุชื่อ</div>
+            </div>
+            <div class="atom cmt-a" style="top: 178px; left: 8%; animation-delay: -5.0s;">
+              <div class="meta"><span class="gt">&gt;</span> @daru</div>
+              <p class="msg">เป็นกำลังใจให้ทีมแปลนะครับ สู้ ๆ</p>
+              <div class="who">— ดารุ</div>
+            </div>
+            <div class="atom cmt-a" style="top: 210px; left: 44%; animation-delay: -1.2s;">
+              <div class="meta"><span class="gt">&gt;</span> @mayuri</div>
+              <p class="msg">ตัวละครพูดน่ารักมากในเวอร์ชันไทย</p>
+              <div class="who">— มายูริ</div>
+            </div>
+            <div class="atom cmt-a" style="top: 286px; left: 72%; animation-delay: -4.2s;">
+              <div class="meta"><span class="gt">&gt;</span> anon</div>
+              <p class="msg">ขอบคุณที่ทลายกำแพงภาษาให้พวกเราชาวไทย</p>
+              <div class="who">— ไม่ระบุชื่อ</div>
+            </div>
+            <div class="atom cmt-a" style="top: 320px; left: 14%; animation-delay: -6.1s;">
+              <div class="meta"><span class="gt">&gt;</span> @suzuha</div>
+              <p class="msg">โหลดง่าย ติดตั้งง่าย ใช้ได้เลย ขอบคุณครับ</p>
+              <div class="who">— ซูซูฮะ</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ B -->
+      <section class="option">
+        <span class="option-tag">Option B</span>
+        <div class="option-head">
+          <h2 class="option-title">Feathered slips</h2>
+          <span class="option-best">keeps a surface · softest / most atmospheric</span>
+        </div>
+        <p class="option-desc">
+          For when the messages still want a little body behind them. Each slip has a faint translucent fill,
+          but its rectangle is <b>masked away at the edges</b> with a radial fade — so it dissolves into the
+          wall instead of sitting in a hard frame. Depth comes from a soft downward ambient shadow, not
+          emission. A short amber tick (not a glow) marks the author line. Cozy and tactile while still quiet.
+        </p>
+        <div class="stage">
+          <span class="stage-label">— Live preview · drifting</span>
+          <div class="field">
+            <div class="atom cmt-b" style="top: 10px; left: 3%; animation-delay: -0.8s;">
+              <p class="msg">งานแปลประณีตมาก เห็นความตั้งใจของทีม</p>
+              <div class="who">ลูก้า</div>
+            </div>
+            <div class="atom cmt-b" style="top: 30px; left: 40%; animation-delay: -2.6s;">
+              <p class="msg">นยันนยัน~ สนุกมากค่า เล่นรวดเดียวจบ</p>
+              <div class="who">ฟารีส</div>
+            </div>
+            <div class="atom cmt-b" style="top: 62px; left: 72%; animation-delay: -4.0s;">
+              <p class="msg">อยากให้มีกำแพงแบบนี้ในทุกโปรเจกต์เลย</p>
+              <div class="who">ไม่ระบุชื่อ</div>
+            </div>
+            <div class="atom cmt-b" style="top: 196px; left: 6%; animation-delay: -5.4s;">
+              <p class="msg">เพิ่งรู้จักโปรเจกต์นี้ ดีใจที่มีคนทำ</p>
+              <div class="who">ไม่ระบุชื่อ</div>
+            </div>
+            <div class="atom cmt-b" style="top: 224px; left: 42%; animation-delay: -1.6s;">
+              <p class="msg">นี่คือทางเลือกของ Steins Gate!</p>
+              <div class="who">Hououin Kyouma</div>
+            </div>
+            <div class="atom cmt-b" style="top: 300px; left: 70%; animation-delay: -3.6s;">
+              <p class="msg">อ่านง่ายมากค่ะ คุณพ่อหนูก็ชอบเหมือนกัน</p>
+              <div class="who">นาเอะ</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ C -->
+      <section class="option">
+        <span class="option-tag">Option C</span>
+        <div class="option-head">
+          <h2 class="option-title">Quote drift</h2>
+          <span class="option-best">most editorial · zero chrome</span>
+        </div>
+        <p class="option-desc">
+          The purest take: no surface, no border, no rule — just the words, each opened by a large ghosted
+          quotation mark in barely-there amber. It treats the wall as a page of floating epigraphs. Most
+          elegant and the least "UI," though long messages lean on whitespace alone to separate, so it wants
+          a bit more spacing between drifting atoms than A or B.
+        </p>
+        <div class="stage">
+          <span class="stage-label">— Live preview · drifting</span>
+          <div class="field">
+            <div class="atom cmt-c" style="top: 26px; left: 3%; animation-delay: -0.6s;">
+              <span class="q" aria-hidden="true">&ldquo;</span>
+              <p class="msg">ตัวเลือกแปลเก็บรายละเอียดครบมาก ประทับใจ</p>
+              <div class="who">— เมย์ควีน</div>
+            </div>
+            <div class="atom cmt-c" style="top: 48px; left: 42%; animation-delay: -2.4s;">
+              <span class="q" aria-hidden="true">&ldquo;</span>
+              <p class="msg">รอเล่นภาคต่ออยู่นะ จะมีแปลอีกไหม</p>
+              <div class="who">— ไม่ระบุชื่อ</div>
+            </div>
+            <div class="atom cmt-c" style="top: 92px; left: 73%; animation-delay: -3.8s;">
+              <span class="q" aria-hidden="true">&ldquo;</span>
+              <p class="msg">El Psy Kongroo</p>
+              <div class="who">— Okabe Rintarou</div>
+            </div>
+            <div class="atom cmt-c" style="top: 232px; left: 7%; animation-delay: -5.6s;">
+              <span class="q" aria-hidden="true">&ldquo;</span>
+              <p class="msg">ร้านขายทีวีหลังนั้นรอพวกนายอยู่นะ</p>
+              <div class="who">— มร.บราวน์</div>
+            </div>
+            <div class="atom cmt-c" style="top: 256px; left: 44%; animation-delay: -1.0s;">
+              <span class="q" aria-hidden="true">&ldquo;</span>
+              <p class="msg">แปลออกมาดีมากเลยค่ะ อ่านลื่นสุด ๆ</p>
+              <div class="who">— คุริสึ</div>
+            </div>
+            <div class="atom cmt-c" style="top: 320px; left: 72%; animation-delay: -4.6s;">
+              <span class="q" aria-hidden="true">&ldquo;</span>
+              <p class="msg">เล่นจบแล้วน้ำตาไหล TUTURU~</p>
+              <div class="who">— ไม่ระบุชื่อ</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <p class="footnote">
+        <b>Recommendation:</b> <strong>Option A (transmission lines)</strong> — it satisfies every ask in one
+        move (no box, no glow, maximally subtle), reads most naturally as the <b>Future Gadget Lab</b>
+        intercepting messages, and is the smallest diff: drop the border + <code class="inline">box-shadow</code>
+        on <code class="inline">comment-bubble.tsx</code>, add a <code class="inline">border-left</code> and a
+        mono header. <strong>Option B</strong> is the pick if you want to keep a faint surface for legibility
+        over busy background decor; <strong>Option C</strong> if you want the wall to feel like an editorial
+        page of quotes. All three keep the existing drift/rotation logic untouched — only the atom's chrome
+        changes. Tell me which to lock and I'll align
+        <code class="inline">src/components/steins-gate/wall/comment-bubble.tsx</code>.
+      </p>
+
+      <footer class="meta-footer">
+        <span>REV 2026.06.26 · WALL COMMENT TREATMENTS · DRAFT</span>
+        <span>STAND BY <span class="blinker" aria-hidden="true"></span></span>
+      </footer>
+    </main>
+  </body>
+</html>

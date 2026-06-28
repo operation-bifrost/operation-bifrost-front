@@ -1,4 +1,4 @@
-# Operation Bifrost | ปฏิบัติการไบฟรอส
+# Operation Bifrost | ปฏิบัติการไบฟรอสต์
 
 ![Operation Bifrost](https://img.shields.io/badge/Project-Operation%20Bifrost-orange)
 ![License](https://img.shields.io/badge/License-GPL--2.0-blue)
@@ -42,18 +42,13 @@ npm run dev
 
 ### Environment Variables
 
-Create a `.env` file in the root directory with the following variables:
-
-```
-CROWDIN_API_TOKEN=your_crowdin_api_token
-```
+This site does not require any environment variables to run.
 
 ## Technology Stack
 
 - [Astro](https://astro.build/) - Web framework
 - [Svelte](https://svelte.dev/) - UI components
 - [Tailwind CSS](https://tailwindcss.com/) - Styling
-- [Crowdin API](https://crowdin.com/) - Translation progress tracking
 - [Vercel](https://vercel.com/) - Deployment
 
 ## Open Source Philosophy

@@ -1,0 +1,121 @@
+---
+import SteinsGateLayout from "@/layouts/steins-gate.astro";
+import JsonLd from "@/components/seo/json-ld.astro";
+import { SITE } from "@/data/site";
+import { faq } from "@/data/steins-gate/faq";
+import { download } from "@/data/steins-gate/download";
+import { Navbar } from "@/components/steins-gate/navbar/navbar";
+import { Hero } from "@/components/steins-gate/hero/hero";
+import { Features } from "@/components/steins-gate/features/features";
+import { Gallery } from "@/components/steins-gate/gallery/gallery";
+import { Wall } from "@/components/steins-gate/wall/wall";
+import { Download } from "@/components/steins-gate/download/download";
+import { Faq } from "@/components/steins-gate/faq/faq";
+import { Credits } from "@/components/steins-gate/credits/credits";
+import { Donate } from "@/components/steins-gate/donate/donate";
+import { Footer } from "@/components/steins-gate/footer/footer";
+
+const title = "ม็อด STEINS;GATE ฉบับแปลไทยเต็มรูปแบบ | Operation Bifrost";
+const description =
+  "ม็อด STEINS;GATE ฉบับแปลไทยเต็มรูปแบบ ใช้กับ Visual Novel เวอร์ชัน Steam (ภาษาอังกฤษ) แปลครบทั้งเนื้อเรื่อง สารานุกรม เมลตัวละคร และซับเพลงประกอบ แจกฟรี ดาวน์โหลดและติดตั้งได้เลย";
+const ogDescription =
+  "ม็อด STEINS;GATE ฉบับแปลไทยเต็มรูปแบบ ใช้กับ Visual Novel เวอร์ชัน Steam (ภาษาอังกฤษ) แปลครบทั้งเนื้อเรื่อง สารานุกรม เมลตัวละคร และซับเพลงประกอบ แจกฟรี ดาวน์โหลดและติดตั้งได้เลย";
+const twitterDescription =
+  "ม็อด STEINS;GATE ฉบับแปลไทยเต็มรูปแบบ ใช้กับ Visual Novel เวอร์ชัน Steam (ภาษาอังกฤษ) แปลครบทั้งเนื้อเรื่อง สารานุกรม เมลตัวละคร และซับเพลงประกอบ แจกฟรี ดาวน์โหลดและติดตั้งได้เลย";
+
+const pageUrl = "https://operationbifrost.com/steins-gate/";
+
+// Release date for the patch, derived from the countdown target in download.ts
+// (YYYY-MM-DD) so the freshness signal in the schema can't drift from the data.
+const releaseDate = download.downloadState.targetDate?.slice(0, 10);
+
+// FAQ answers are authored with markdown links "[label](url)"; flatten them to
+// plain text so the schema carries clean answer copy (rich results render text,
+// not markdown).
+const toPlainText = (s: string): string =>
+  s.replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, "$1 $2");
+
+// Page structured data: breadcrumb trail, the localized patch as a downloadable
+// SoftwareApplication, and the FAQ (sourced from the same faq.ts the page renders,
+// so the two never drift). author/publisher reference the hub Organization by @id.
+const steinsGateJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "หน้าแรก", item: `${SITE.url}/` },
+        { "@type": "ListItem", position: 2, name: "STEINS;GATE", item: pageUrl },
+      ],
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": `${pageUrl}#mod`,
+      name: "ม็อด STEINS;GATE ฉบับแปลไทย",
+      description,
+      url: pageUrl,
+      applicationCategory: "GameApplication",
+      operatingSystem: "Windows, Linux",
+      softwareVersion: download.version.replace(/^v/, ""),
+      downloadUrl: download.file.url,
+      fileSize: "1.24GB",
+      inLanguage: "th",
+      ...(releaseDate ? { datePublished: releaseDate, dateModified: releaseDate } : {}),
+      // Free fan patch — no ratings, so this won't earn a star rich result, but the
+      // markup still helps engines understand the page's primary entity.
+      isAccessibleForFree: true,
+      offers: { "@type": "Offer", price: 0, priceCurrency: "THB" },
+      author: { "@id": `${SITE.url}/#organization` },
+      publisher: { "@id": `${SITE.url}/#organization` },
+    },
+    {
+      "@type": "FAQPage",
+      "@id": `${pageUrl}#faq`,
+      mainEntity: faq.items.map((item) => ({
+        "@type": "Question",
+        name: item.question,
+        acceptedAnswer: { "@type": "Answer", text: toPlainText(item.answer) },
+      })),
+    },
+  ],
+};
+---
+
+<SteinsGateLayout
+  title={title}
+  description={description}
+  canonical="https://operationbifrost.com/steins-gate/"
+  ogImage="/og-steins-gate.png"
+  ogDescription={ogDescription}
+  twitterTitle={title}
+  twitterDescription={twitterDescription}
+>
+  <Fragment slot="head">
+    <meta
+      name="keywords"
+      content="ม็อดแปลไทย Steins;Gate, แพตช์ไทย Steins;Gate, STEINS;GATE ภาษาไทย, ดาวน์โหลดม็อด Steins;Gate, Steins;Gate Steam, fan translation, visual novel, Operation Bifrost, ปฏิบัติการไบฟรอสต์, Science Adventure, สไตนส์เกต"
+    />
+    <JsonLd schema={steinsGateJsonLd} />
+  </Fragment>
+
+  <Navbar client:load />
+
+  {
+    /* Single page-level stacking context: section decorations sit at -z-10
+      behind all content and bleed across section seams. overflow-x-clip
+      stops rotated/oversized decor from spawning a horizontal scrollbar
+      (replaces the per-section overflow-hidden that used to clip gears). */
+  }
+  <div class="relative isolate overflow-x-clip">
+    <Hero />
+    <Features client:visible={{ rootMargin: "200px" }} />
+    <Gallery client:visible={{ rootMargin: "200px" }} />
+    <Download client:visible={{ rootMargin: "200px" }} />
+    <Faq client:visible={{ rootMargin: "200px" }} />
+    <Credits client:visible />
+    <Donate client:visible />
+    <Wall client:visible />
+  </div>
+
+  <Footer client:visible={{ rootMargin: "200px" }} />
+</SteinsGateLayout>

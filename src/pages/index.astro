@@ -1,72 +1,164 @@
 ---
-import ComingSoon from "../components/ComingSoon.svelte";
-import "@fontsource/iosevka-etoile";
-import "@fontsource/ibm-plex-sans-thai";
-import "../styles/global.css";
+import BaseLayout from "@/layouts/base.astro";
+import JsonLd from "@/components/seo/json-ld.astro";
+import { homeContent } from "@/data/home";
+import { SITE } from "@/data/site";
+
+const { masthead, projects } = homeContent;
+
+const title = "Operation Bifrost · ปฏิบัติการไบฟรอสต์";
+const description = "ศูนย์รวมม็อดแปลเกมเป็นภาษาไทยจากทีม Operation Bifrost เริ่มจาก STEINS;GATE!";
+
+// Hub-level structured data: the Organization (anchored by @id so sub-project
+// pages can reference it as publisher/author) and the WebSite it owns.
+const homeJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${SITE.url}/#organization`,
+      name: SITE.name,
+      alternateName: SITE.alternateName,
+      url: `${SITE.url}/`,
+      logo: `${SITE.url}/favicon.svg`,
+      description: SITE.description,
+      sameAs: SITE.social,
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${SITE.url}/#website`,
+      url: `${SITE.url}/`,
+      name: SITE.name,
+      alternateName: SITE.alternateName,
+      description: SITE.description,
+      inLanguage: "th",
+      publisher: { "@id": `${SITE.url}/#organization` },
+    },
+  ],
+};
 ---
 
-<html lang="th">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-    <meta name="generator" content={Astro.generator} />
-    <title>
-      Operation Bifrost | ปฏิบัติการไบฟรอส - โปรเจกต์แปล Steins;Gate ภาษาไทย
-    </title>
+{
+  /*
+    Hub homepage — the "/" portal. Deliberately its own restrained identity
+    (editorial / Swiss catalogue) so each localization project keeps its own.
+    It borrows ~30-40% from the Steins;Gate theme: the warm-charcoal substrate
+    (shared default tokens in global.css) and mono catalogue numerals. No BONX
+    wordmark, no Nixie glow, no footer.
+    Pure static — the only interaction (group / group-hover) is the live row's
+    cover keyart, which sits dimmed behind a charcoal scrim at rest, then
+    brightens, scales up, and clears the scrim on hover, reading as "crossing
+    the bridge into the world."
+  */
+}
+<BaseLayout
+  title={title}
+  description={description}
+  canonical="https://operationbifrost.com/"
+  lang="th"
+>
+  <Fragment slot="head">
+    <JsonLd schema={homeJsonLd} />
+  </Fragment>
 
-    <!-- Primary Meta Tags -->
-    <meta
-      name="title"
-      content="Operation Bifrost | ปฏิบัติการไบฟรอส - โปรเจกต์แปล Steins;Gate ภาษาไทย"
-    />
-    <meta
-      name="description"
-      content="โครงการแปลเกมวิชวลโนเวล Steins;Gate เป็นภาษาไทย ทลายกำแพงภาษาสำหรับแฟนๆ ชาวไทยของซีรีส์ Science Adventure ติดตามความคืบหน้าการแปลแบบเรียลไทม์ได้ที่นี่"
-    />
-    <meta
-      name="keywords"
-      content="Steins;Gate, การแปลภาษาไทย, fan translation, visual novel, Operation Bifrost, ปฏิบัติการไบฟรอส, Science Adventure, localization, สไตนส์เกต"
-    />
-    <meta name="author" content="Operation Bifrost Team" />
+  {/* Warm-charcoal substrate + barely-there paper grain. */}
+  <div
+    class="min-h-screen bg-[radial-gradient(rgba(255,255,255,0.02)_1px,transparent_1px)] bg-size-[4px_4px]"
+  >
+    <div class="relative mx-auto flex min-h-screen max-w-6xl flex-col px-6 sm:px-10 lg:px-14">
+      <header class="pt-20 pb-10 sm:pt-24 sm:pb-12 lg:pt-28">
+        <h1
+          class="text-foreground flex flex-wrap items-baseline gap-x-2 text-3xl/tight font-extrabold tracking-tight sm:text-4xl lg:text-5xl"
+        >
+          <span class="whitespace-nowrap">{masthead.titleEn}</span>
+          <span class="text-muted-foreground/70" aria-hidden="true">{masthead.separator}</span>
+          <span class="whitespace-nowrap">{masthead.titleTh}</span>
+        </h1>
+        <p class="text-muted-foreground mt-4 text-base sm:text-lg">{masthead.lede}</p>
+      </header>
 
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://operationbifrost.com/" />
-    <meta
-      property="og:title"
-      content="Operation Bifrost | ปฏิบัติการไบฟรอส - โปรเจกต์แปล Steins;Gate ภาษาไทย"
-    />
-    <meta
-      property="og:description"
-      content="โครงการแปลเกมวิชวลโนเวล Steins;Gate เป็นภาษาไทย ติดตามความคืบหน้าการแปลแบบเรียลไทม์และเข้าร่วมชุมชนของเราได้ที่นี่"
-    />
-    <meta property="og:image" content="/og-image.png" />
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://operationbifrost.com/" />
-    <meta
-      property="twitter:title"
-      content="ปฏิบัติการไบฟรอส | Operation Bifrost"
-    />
-    <meta
-      property="twitter:description"
-      content="โครงการแปลเกมวิชวลโนเวล Steins;Gate เป็นภาษาไทย ติดตามความคืบหน้าการแปลแบบเรียลไทม์ได้ที่นี่"
-    />
-    <meta property="twitter:image" content="/og-image.png" />
-
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://operationbifrost.com/" />
-
-    <!-- Statistics -->
-    <script
-      defer
-      data-domain="operationbifrost.com"
-      src="https://plausible.io/js/script.js"></script>
-  </head>
-
-  <body>
-    <ComingSoon client:load />
-  </body>
-</html>
+      <main class="flex-1 pb-12 sm:pb-20">
+        {
+          projects.map((p) =>
+            p.status === "live" ? (
+              <a
+                href={p.href}
+                aria-label={p.ariaLabel}
+                class="group border-border focus-visible:outline-primary relative isolate grid min-h-60 grid-cols-1 items-center gap-4 overflow-hidden border-b py-8 transition-all duration-500 ease-[cubic-bezier(0.2,0.8,0.2,1)] focus-visible:outline-2 focus-visible:outline-offset-4 sm:min-h-88 sm:grid-cols-[5rem_1fr_auto] sm:gap-6 sm:py-12 sm:pr-6 sm:pl-2 lg:py-14"
+              >
+                {p.cover && (
+                  <>
+                    {/* Keyart: dimmed behind a scrim at rest; brightens, scales, and clears the scrim on hover — "crossing the bridge into the world." */}
+                    <img
+                      src={p.cover}
+                      alt={p.coverAlt}
+                      width={1920}
+                      height={647}
+                      loading="lazy"
+                      decoding="async"
+                      class="pointer-events-none absolute inset-0 -z-20 size-full object-cover object-right brightness-80 transition-all duration-500 ease-out group-hover:scale-110 group-hover:brightness-100"
+                    />
+                    {/* Charcoal scrim: flat base keeps the whole row legible; left→right gradient anchors text on the dark side. */}
+                    <div class="bg-background/35 group-hover:bg-background/0 pointer-events-none absolute inset-0 -z-10 transition-colors duration-500" />
+                    <div class="from-background via-background/60 to-background/20 pointer-events-none absolute inset-0 -z-10 bg-linear-to-r" />
+                  </>
+                )}
+                <span class="text-muted-foreground/70 font-mono text-lg font-bold tabular-nums sm:text-2xl lg:text-3xl">
+                  {p.number}
+                </span>
+                <div>
+                  <span class="text-muted-foreground/70 font-mono text-xs font-semibold tracking-[0.16em] uppercase">
+                    {p.series}
+                  </span>
+                  <h2 class="mt-2 text-5xl leading-[0.95] font-extrabold tracking-[-0.04em] uppercase [text-shadow:0_2px_24px_rgba(0,0,0,0.6)] sm:text-6xl lg:text-7xl">
+                    {p.title}
+                  </h2>
+                  <p class="text-foreground/75 mt-2 max-w-[44ch] text-base">{p.thaiSub}</p>
+                </div>
+                <div class="mt-4 flex flex-row flex-wrap items-center gap-x-4 gap-y-2 sm:mt-0 sm:flex-col sm:items-end sm:gap-3 sm:text-right">
+                  <span class="inline-flex items-center gap-2 text-base font-bold [text-shadow:0_1px_12px_rgba(0,0,0,0.7)]">
+                    {p.ctaLabel}
+                    <span
+                      aria-hidden="true"
+                      class="inline-block transition-transform duration-500 ease-[cubic-bezier(0.2,0.8,0.2,1)] group-hover:translate-x-2"
+                    >
+                      →
+                    </span>
+                  </span>
+                </div>
+              </a>
+            ) : (
+              <div
+                aria-label={p.ariaLabel}
+                class="border-border relative grid grid-cols-1 items-center gap-4 border-b border-dashed py-7 opacity-70 sm:grid-cols-[5rem_1fr_auto] sm:gap-6 sm:py-9 sm:pl-2"
+              >
+                <span class="text-muted-foreground/55 font-mono text-lg font-bold tabular-nums sm:text-2xl lg:text-3xl">
+                  {p.number}
+                </span>
+                <div>
+                  <span class="text-muted-foreground/55 font-mono text-xs font-semibold tracking-[0.16em] uppercase">
+                    {p.series}
+                  </span>
+                  <h3 class="mt-1.5 text-4xl font-extrabold tracking-[-0.03em] text-transparent uppercase [-webkit-text-stroke:1px_var(--muted-foreground)] sm:text-5xl">
+                    {p.title}
+                  </h3>
+                  <p class="text-muted-foreground/55 mt-2 max-w-[44ch] text-base">{p.thaiSub}</p>
+                </div>
+                <div class="mt-4 flex flex-row flex-wrap items-center gap-x-4 gap-y-2 sm:mt-0 sm:flex-col sm:items-end sm:gap-3 sm:text-right">
+                  <span class="border-border text-muted-foreground/55 inline-flex items-center rounded-full border px-3 py-1.5 text-xs font-bold tracking-[0.05em]">
+                    {p.badge}
+                  </span>
+                  <span class="flex gap-1.5" aria-hidden="true">
+                    <span class="bg-muted-foreground/50 size-[7px] rounded-full" />
+                    <span class="bg-muted-foreground/50 size-[7px] rounded-full" />
+                    <span class="bg-muted-foreground/50 size-[7px] rounded-full" />
+                  </span>
+                </div>
+              </div>
+            ),
+          )
+        }
+      </main>
+    </div>
+  </div>
+</BaseLayout>

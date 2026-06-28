@@ -1,0 +1,932 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Social Icon Treatments — Operation Bifrost</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Major+Mono+Display&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --nixie: rgb(251, 192, 0);
+        --nixie-soft: rgba(255, 199, 0, 0.55);
+        --nixie-glow: rgba(255, 199, 0, 0.35);
+
+        /* Brand colors for variant 02 */
+        --brand-facebook: #0866ff;
+        --brand-discord: #5865f2;
+        --brand-youtube: #ff0033;
+
+        --stone-50: #fafaf9;
+        --stone-200: #e7e5e4;
+        --stone-300: #d6d3d1;
+        --stone-400: #a8a29e;
+        --stone-500: #78716c;
+        --stone-700: #44403c;
+        --stone-800: #292524;
+        --stone-900: #1c1917;
+        --bg-deep: #15110f;
+
+        --shadow-button: 4px 5px 0 rgba(87, 83, 78, 0.5);
+        --navbar-gradient: linear-gradient(
+          180deg,
+          rgba(41, 37, 36, 0.9) 0%,
+          rgba(68, 64, 59, 0.9) 100%
+        );
+
+        --font-sans: "DM Sans", system-ui, sans-serif;
+        --font-mono: "JetBrains Mono", ui-monospace, monospace;
+        --font-display: "Major Mono Display", monospace;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        min-height: 100vh;
+        font-family: var(--font-sans);
+        color: var(--stone-200);
+        background:
+          radial-gradient(
+            ellipse at 50% 0%,
+            rgba(251, 192, 0, 0.06) 0%,
+            transparent 55%
+          ),
+          radial-gradient(
+            ellipse at 80% 90%,
+            rgba(251, 192, 0, 0.04) 0%,
+            transparent 50%
+          ),
+          var(--bg-deep);
+        background-attachment: fixed;
+        position: relative;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image: repeating-linear-gradient(
+          to bottom,
+          transparent 0px,
+          transparent 2px,
+          rgba(0, 0, 0, 0.18) 2px,
+          rgba(0, 0, 0, 0.18) 3px
+        );
+        mix-blend-mode: overlay;
+        opacity: 0.4;
+        z-index: 1;
+      }
+
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background: radial-gradient(
+          ellipse at center,
+          transparent 40%,
+          rgba(0, 0, 0, 0.55) 100%
+        );
+        z-index: 1;
+      }
+
+      main {
+        position: relative;
+        z-index: 2;
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 64px 32px 120px;
+      }
+
+      /* ---------- Page header ---------- */
+      .page-header {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        margin-bottom: 80px;
+      }
+
+      .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--stone-500);
+      }
+
+      .breadcrumb .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--nixie);
+        box-shadow:
+          0 0 8px var(--nixie),
+          0 0 14px rgba(255, 199, 0, 0.5);
+        animation: pulse 2.4s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.6;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      h1 {
+        font-family: var(--font-display);
+        font-size: clamp(2.5rem, 1rem + 4vw, 4.25rem);
+        line-height: 1;
+        margin: 0;
+        color: var(--stone-50);
+        letter-spacing: -0.01em;
+        text-transform: lowercase;
+      }
+
+      h1 .accent {
+        color: var(--nixie);
+        text-shadow:
+          0 0 8px var(--nixie),
+          0 0 24px rgba(255, 199, 0, 0.45);
+      }
+
+      .intro {
+        max-width: 56ch;
+        font-size: 16px;
+        line-height: 1.65;
+        color: var(--stone-300);
+      }
+
+      .intro code {
+        font-family: var(--font-mono);
+        font-size: 0.85em;
+        background: rgba(251, 192, 0, 0.1);
+        color: var(--nixie);
+        padding: 2px 6px;
+        border-radius: 2px;
+        border: 1px solid rgba(251, 192, 0, 0.2);
+      }
+
+      /* ---------- Variant sections ---------- */
+      .variant {
+        margin-bottom: 96px;
+      }
+
+      .variant-meta {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: end;
+        gap: 24px;
+        padding-bottom: 16px;
+        border-bottom: 1px dashed rgba(168, 162, 158, 0.25);
+        margin-bottom: 40px;
+      }
+
+      .variant-index {
+        font-family: var(--font-mono);
+        font-size: 56px;
+        font-weight: 700;
+        line-height: 0.85;
+        color: rgba(251, 192, 0, 0.85);
+        text-shadow: 0 0 12px rgba(251, 192, 0, 0.3);
+      }
+
+      .variant-titleblock h2 {
+        font-family: var(--font-display);
+        font-size: 28px;
+        margin: 0 0 6px 0;
+        color: var(--stone-50);
+        letter-spacing: -0.01em;
+        text-transform: lowercase;
+      }
+
+      .variant-titleblock p {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.55;
+        color: var(--stone-400);
+        max-width: 60ch;
+      }
+
+      .variant-tag {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--nixie);
+        padding: 4px 10px;
+        border: 1px solid rgba(251, 192, 0, 0.45);
+        white-space: nowrap;
+      }
+
+      /* ---------- Stage ---------- */
+      .stage {
+        position: relative;
+        padding: 56px 24px;
+        background-image:
+          linear-gradient(rgba(168, 162, 158, 0.06) 1px, transparent 1px),
+          linear-gradient(
+            90deg,
+            rgba(168, 162, 158, 0.06) 1px,
+            transparent 1px
+          );
+        background-size: 24px 24px;
+        border: 1px solid rgba(120, 113, 108, 0.3);
+        border-radius: 4px;
+      }
+
+      .stage::before,
+      .stage::after {
+        content: "";
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        border: 1px solid var(--nixie);
+      }
+      .stage::before {
+        top: -1px;
+        left: -1px;
+        border-right: none;
+        border-bottom: none;
+      }
+      .stage::after {
+        bottom: -1px;
+        right: -1px;
+        border-left: none;
+        border-top: none;
+      }
+
+      .stage-label {
+        position: absolute;
+        top: -10px;
+        left: 24px;
+        padding: 0 10px;
+        background: var(--bg-deep);
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--stone-500);
+      }
+
+      /* ---------- Navbar shell ---------- */
+      .navbar {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 32px;
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 8px 16px;
+        border: 1px solid var(--stone-500);
+        border-radius: 6px;
+        background: var(--navbar-gradient);
+        box-shadow: var(--shadow-button);
+        backdrop-filter: blur(8px);
+      }
+
+      @media (min-width: 1024px) {
+        .navbar {
+          padding: 8px 32px;
+        }
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--font-display);
+        font-size: 18px;
+        color: var(--stone-50);
+        text-transform: lowercase;
+      }
+
+      .brand .brand-mark {
+        width: 28px;
+        height: 28px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--nixie);
+        color: var(--nixie);
+        font-family: var(--font-mono);
+        font-size: 14px;
+        font-weight: 700;
+        text-shadow: 0 0 6px var(--nixie);
+        box-shadow: inset 0 0 8px rgba(251, 192, 0, 0.2);
+      }
+
+      .nav-cluster {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+      }
+
+      .socials {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .social {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        color: var(--stone-50);
+        text-decoration: none;
+        border-radius: 4px;
+      }
+
+      .social svg {
+        width: 20px;
+        height: 20px;
+        fill: currentColor;
+        transition:
+          fill 220ms ease,
+          filter 320ms ease,
+          transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .nav-cta {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--stone-900);
+        background: var(--nixie);
+        padding: 8px 14px;
+        border: 1px solid var(--nixie);
+        border-radius: 4px;
+        text-decoration: none;
+        box-shadow:
+          4px 5px 0 rgba(87, 83, 78, 0.5),
+          0 0 12px rgba(255, 199, 0, 0.25);
+        transition: transform 200ms ease;
+      }
+
+      .nav-cta:hover {
+        transform: translate(-1px, -1px);
+      }
+
+      /* For context — the nav-links from the previous demo, set to bracket mode */
+      .nav-menu {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .nav-link {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        height: 40px;
+        padding: 0 16px;
+        font-family: var(--font-sans);
+        font-size: 13px;
+        color: var(--stone-50);
+        text-decoration: none;
+      }
+
+      .nav-link::before,
+      .nav-link::after {
+        position: absolute;
+        top: 50%;
+        font-family: var(--font-mono);
+        color: var(--nixie);
+        opacity: 0;
+        transition:
+          opacity 220ms ease,
+          transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .nav-link::before {
+        content: "[";
+        left: 8px;
+        transform: translate(4px, -50%);
+      }
+      .nav-link::after {
+        content: "]";
+        right: 8px;
+        transform: translate(-4px, -50%);
+      }
+      .nav-link:hover::before,
+      .nav-link:hover::after {
+        opacity: 1;
+        transform: translate(0, -50%);
+      }
+
+      /* ==================================================================
+         VARIANT 1 — Nixie ignite (uniform amber)
+         ================================================================== */
+      .social--nixie:hover,
+      .social--nixie:focus-visible {
+        color: var(--nixie);
+        outline: none;
+      }
+
+      .social--nixie:hover svg,
+      .social--nixie:focus-visible svg {
+        fill: var(--nixie);
+        filter: drop-shadow(0 0 4px rgba(255, 199, 0, 0.55))
+          drop-shadow(0 0 10px rgba(255, 199, 0, 0.25));
+        transform: translateY(-1px);
+      }
+
+      /* ==================================================================
+         VARIANT 2 — Brand-color ignite
+         ================================================================== */
+      .social--brand[data-brand="facebook"]:hover svg,
+      .social--brand[data-brand="facebook"]:focus-visible svg {
+        fill: var(--brand-facebook);
+        filter: drop-shadow(0 0 4px rgba(8, 102, 255, 0.55))
+          drop-shadow(0 0 10px rgba(8, 102, 255, 0.3));
+      }
+
+      .social--brand[data-brand="discord"]:hover svg,
+      .social--brand[data-brand="discord"]:focus-visible svg {
+        fill: var(--brand-discord);
+        filter: drop-shadow(0 0 4px rgba(88, 101, 242, 0.6))
+          drop-shadow(0 0 10px rgba(88, 101, 242, 0.3));
+      }
+
+      .social--brand[data-brand="youtube"]:hover svg,
+      .social--brand[data-brand="youtube"]:focus-visible svg {
+        fill: var(--brand-youtube);
+        filter: drop-shadow(0 0 4px rgba(255, 0, 51, 0.55))
+          drop-shadow(0 0 10px rgba(255, 0, 51, 0.3));
+      }
+
+      .social--brand:hover svg,
+      .social--brand:focus-visible svg {
+        transform: translateY(-1px);
+      }
+
+      .social--brand:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(251, 192, 0, 0.6);
+      }
+
+      /* ==================================================================
+         VARIANT 3 — Tube-frame outline
+         ================================================================== */
+      .social--frame {
+        border: 1px solid transparent;
+        transition:
+          border-color 220ms ease,
+          background-color 220ms ease,
+          box-shadow 320ms ease;
+      }
+
+      .social--frame:hover,
+      .social--frame:focus-visible {
+        color: var(--nixie);
+        border-color: var(--nixie);
+        background-color: rgba(251, 192, 0, 0.06);
+        box-shadow:
+          inset 0 0 8px rgba(251, 192, 0, 0.15),
+          0 0 10px rgba(255, 199, 0, 0.2);
+        outline: none;
+      }
+
+      .social--frame:hover svg,
+      .social--frame:focus-visible svg {
+        fill: var(--nixie);
+        filter: drop-shadow(0 0 3px rgba(255, 199, 0, 0.45));
+      }
+
+      /* ---------- Notes ---------- */
+      .notes {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1px;
+        margin-top: 32px;
+        background: rgba(120, 113, 108, 0.25);
+        border: 1px solid rgba(120, 113, 108, 0.25);
+      }
+
+      .notes > div {
+        background: var(--bg-deep);
+        padding: 18px 20px;
+      }
+
+      .notes dt {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--stone-500);
+        margin-bottom: 8px;
+      }
+
+      .notes dd {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.55;
+        color: var(--stone-300);
+      }
+
+      .notes dd strong {
+        color: var(--nixie);
+        font-weight: 500;
+      }
+
+      /* ---------- Footer ---------- */
+      .meta-footer {
+        margin-top: 80px;
+        padding-top: 24px;
+        border-top: 1px dashed rgba(168, 162, 158, 0.2);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--stone-500);
+      }
+
+      .meta-footer .right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .meta-footer .blinker {
+        width: 8px;
+        height: 14px;
+        background: var(--nixie);
+        box-shadow: 0 0 8px var(--nixie);
+        animation: caret 1s steps(1, end) infinite;
+      }
+
+      @keyframes caret {
+        0%,
+        50% {
+          opacity: 1;
+        }
+        51%,
+        100% {
+          opacity: 0;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation: none !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+
+      @media (max-width: 760px) {
+        .nav-cluster {
+          gap: 12px;
+        }
+        .nav-menu {
+          display: none;
+        }
+        .variant-meta {
+          grid-template-columns: auto 1fr;
+        }
+        .variant-tag {
+          grid-column: 1 / -1;
+          justify-self: start;
+        }
+        .notes {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <header class="page-header">
+        <div class="breadcrumb">
+          <span class="dot" aria-hidden="true"></span>
+          <span>FGL / Bifrost / Navbar / Social Icon Trials</span>
+        </div>
+        <h1>social <span class="accent">icons</span></h1>
+        <p class="intro">
+          Three hover treatments for the social cluster, all mounted on the
+          same navbar shell shipping the
+          <code>nav-link</code> bracket markers chosen in the previous trial.
+          Hover any icon to compare. The amber <em>Join Discord</em> CTA is
+          held constant so you can judge how each treatment plays against it.
+        </p>
+      </header>
+
+      <!-- SVG sprite — Simple Icons paths (matching react-icons/si) -->
+      <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+        <defs>
+          <symbol id="i-facebook" viewBox="0 0 24 24">
+            <path
+              d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"
+            />
+          </symbol>
+          <symbol id="i-discord" viewBox="0 0 24 24">
+            <path
+              d="M20.317 4.3698a19.7913 19.7913 0 0 0-4.8851-1.5152.0741.0741 0 0 0-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 0 0-.0785-.037 19.7363 19.7363 0 0 0-4.8852 1.515.0699.0699 0 0 0-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 0 0 .0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 0 0 .0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 0 0-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 0 1-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 0 1 .0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 0 1 .0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 0 1-.0066.1276 12.2986 12.2986 0 0 1-1.873.8914.0766.0766 0 0 0-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 0 0 .0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 0 0 .0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 0 0-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419-.0188 1.3332-.946 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1568 2.4189Z"
+            />
+          </symbol>
+          <symbol id="i-youtube" viewBox="0 0 24 24">
+            <path
+              d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"
+            />
+          </symbol>
+        </defs>
+      </svg>
+
+      <!-- ============================================================ -->
+      <!-- VARIANT 1 — Nixie ignite                                     -->
+      <!-- ============================================================ -->
+      <section class="variant" aria-labelledby="v1-title">
+        <div class="variant-meta">
+          <div class="variant-index">01</div>
+          <div class="variant-titleblock">
+            <h2 id="v1-title">nixie ignite</h2>
+            <p>
+              Same amber glow language as the nav-link option-1 — icons tint
+              to <code>--color-nixie-base</code> on hover with a faint
+              drop-shadow. Quietest treatment, fully consistent vocabulary.
+            </p>
+          </div>
+          <span class="variant-tag">Quietest</span>
+        </div>
+
+        <div class="stage">
+          <span class="stage-label">— LIVE PREVIEW</span>
+          <nav class="navbar" aria-label="Variant 1 navigation">
+            <div class="brand">
+              <span class="brand-mark" aria-hidden="true">β</span>
+              <span>operation bifrost</span>
+            </div>
+            <div class="nav-cluster">
+              <ul class="nav-menu">
+                <li><a class="nav-link" href="#">About</a></li>
+                <li><a class="nav-link" href="#">Progress</a></li>
+                <li><a class="nav-link" href="#">Team</a></li>
+              </ul>
+              <ul class="socials">
+                <li>
+                  <a class="social social--nixie" href="#" aria-label="Facebook">
+                    <svg><use href="#i-facebook" /></svg>
+                  </a>
+                </li>
+                <li>
+                  <a class="social social--nixie" href="#" aria-label="Discord">
+                    <svg><use href="#i-discord" /></svg>
+                  </a>
+                </li>
+                <li>
+                  <a class="social social--nixie" href="#" aria-label="YouTube">
+                    <svg><use href="#i-youtube" /></svg>
+                  </a>
+                </li>
+              </ul>
+              <a class="nav-cta" href="#">Join Discord</a>
+            </div>
+          </nav>
+        </div>
+
+        <dl class="notes">
+          <div>
+            <dt>Hover</dt>
+            <dd>
+              Icon fills with <strong>--color-nixie-base</strong>, lifts 1px,
+              gains a soft amber drop-shadow.
+            </dd>
+          </div>
+          <div>
+            <dt>Consistency</dt>
+            <dd>
+              Locks the whole navbar into a single hue. Reads as one system.
+            </dd>
+          </div>
+          <div>
+            <dt>Tradeoff</dt>
+            <dd>
+              Amber-on-amber-on-amber-CTA in the same cluster — risks visual
+              monotony, especially when hovering near the call to action.
+            </dd>
+          </div>
+        </dl>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- VARIANT 2 — Brand-color ignite                               -->
+      <!-- ============================================================ -->
+      <section class="variant" aria-labelledby="v2-title">
+        <div class="variant-meta">
+          <div class="variant-index">02</div>
+          <div class="variant-titleblock">
+            <h2 id="v2-title">brand-color ignite</h2>
+            <p>
+              Same ignite <em>mechanic</em>, but each icon lights to its real
+              brand colour with a matching drop-shadow. Universal recognition
+              cue, chromatic relief next to the amber CTA — without breaking
+              the "fill + glow" hover system.
+            </p>
+          </div>
+          <span class="variant-tag">Recommended</span>
+        </div>
+
+        <div class="stage">
+          <span class="stage-label">— LIVE PREVIEW</span>
+          <nav class="navbar" aria-label="Variant 2 navigation">
+            <div class="brand">
+              <span class="brand-mark" aria-hidden="true">β</span>
+              <span>operation bifrost</span>
+            </div>
+            <div class="nav-cluster">
+              <ul class="nav-menu">
+                <li><a class="nav-link" href="#">About</a></li>
+                <li><a class="nav-link" href="#">Progress</a></li>
+                <li><a class="nav-link" href="#">Team</a></li>
+              </ul>
+              <ul class="socials">
+                <li>
+                  <a
+                    class="social social--brand"
+                    data-brand="facebook"
+                    href="#"
+                    aria-label="Facebook"
+                  >
+                    <svg><use href="#i-facebook" /></svg>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="social social--brand"
+                    data-brand="discord"
+                    href="#"
+                    aria-label="Discord"
+                  >
+                    <svg><use href="#i-discord" /></svg>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="social social--brand"
+                    data-brand="youtube"
+                    href="#"
+                    aria-label="YouTube"
+                  >
+                    <svg><use href="#i-youtube" /></svg>
+                  </a>
+                </li>
+              </ul>
+              <a class="nav-cta" href="#">Join Discord</a>
+            </div>
+          </nav>
+        </div>
+
+        <dl class="notes">
+          <div>
+            <dt>Hover</dt>
+            <dd>
+              FB → <strong style="color: #0866ff">#0866FF</strong>, Discord →
+              <strong style="color: #5865f2">#5865F2</strong>, YT →
+              <strong style="color: #ff0033">#FF0033</strong>. Each gets a
+              colour-matched drop-shadow and a 1px lift.
+            </dd>
+          </div>
+          <div>
+            <dt>Recognition</dt>
+            <dd>
+              Brand colours are universally recognised — users know where
+              they're going before they read the label.
+            </dd>
+          </div>
+          <div>
+            <dt>Tradeoff</dt>
+            <dd>
+              Introduces three non-theme hues. Mitigated by the
+              <em>default-state</em> staying stone-50, so the navbar at rest
+              is still single-hue.
+            </dd>
+          </div>
+        </dl>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- VARIANT 3 — Tube-frame                                       -->
+      <!-- ============================================================ -->
+      <section class="variant" aria-labelledby="v3-title">
+        <div class="variant-meta">
+          <div class="variant-index">03</div>
+          <div class="variant-titleblock">
+            <h2 id="v3-title">tube-frame</h2>
+            <p>
+              A thin amber square border fades in around each icon on hover,
+              echoing the bordered brand mark (β in a frame). Reads as
+              "selecting a hardware switch on the FGL console."
+            </p>
+          </div>
+          <span class="variant-tag">Most thematic</span>
+        </div>
+
+        <div class="stage">
+          <span class="stage-label">— LIVE PREVIEW</span>
+          <nav class="navbar" aria-label="Variant 3 navigation">
+            <div class="brand">
+              <span class="brand-mark" aria-hidden="true">β</span>
+              <span>operation bifrost</span>
+            </div>
+            <div class="nav-cluster">
+              <ul class="nav-menu">
+                <li><a class="nav-link" href="#">About</a></li>
+                <li><a class="nav-link" href="#">Progress</a></li>
+                <li><a class="nav-link" href="#">Team</a></li>
+              </ul>
+              <ul class="socials">
+                <li>
+                  <a class="social social--frame" href="#" aria-label="Facebook">
+                    <svg><use href="#i-facebook" /></svg>
+                  </a>
+                </li>
+                <li>
+                  <a class="social social--frame" href="#" aria-label="Discord">
+                    <svg><use href="#i-discord" /></svg>
+                  </a>
+                </li>
+                <li>
+                  <a class="social social--frame" href="#" aria-label="YouTube">
+                    <svg><use href="#i-youtube" /></svg>
+                  </a>
+                </li>
+              </ul>
+              <a class="nav-cta" href="#">Join Discord</a>
+            </div>
+          </nav>
+        </div>
+
+        <dl class="notes">
+          <div>
+            <dt>Hover</dt>
+            <dd>
+              Amber 1px frame fades in, inner background tints
+              <strong>rgba(amber, 6%)</strong>, icon tints amber with a faint
+              glow. Echoes the brand-mark.
+            </dd>
+          </div>
+          <div>
+            <dt>Theme fit</dt>
+            <dd>
+              Strongest Steins;Gate flavour — feels like flipping a lab
+              switch.
+            </dd>
+          </div>
+          <div>
+            <dt>Tradeoff</dt>
+            <dd>
+              Adds a new shape next to the bracket nav-links. Three rectangles
+              and brackets on the same row competes for visual rhythm.
+            </dd>
+          </div>
+        </dl>
+      </section>
+
+      <footer class="meta-footer">
+        <span>REV 2026.05.28 · SOCIAL ICON TRIALS · DRAFT</span>
+        <div class="right">
+          <span>STAND BY</span>
+          <span class="blinker" aria-hidden="true"></span>
+        </div>
+      </footer>
+    </main>
+  </body>
+</html>

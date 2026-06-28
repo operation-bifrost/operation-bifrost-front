@@ -1,97 +1,194 @@
 @import "tailwindcss";
+@source not "../../design";
+@source not "../../legacy";
+@import "tw-animate-css";
 
+@custom-variant dark (&:where(.dark *));
+
+/* Shared base typography across all projects on the site. */
 @theme {
-  --color-nixie-base: rgb(251, 192, 0);
-  --font-iosevka: "Iosevka Etoile", monospace;
-  --font-bonx: "bonx", monospace;
-  --font-bonx-frame: "bonx-frame", monospace;
-  --font-bonx-sihouette: "bonx-sihouette", monospace;
-  --font-ibm: "IBM Plex Sans Thai", sans-serif;
+  --font-line-seed-th: "LINE Seed Sans TH", sans-serif;
+  --font-krub: "Krub", sans-serif;
+
+  /* Wide-screen page-container cap (one step above Tailwind's 7xl/80rem).
+   * Powers `max-w-8xl`, applied as `wide:max-w-8xl` on every section container
+   * so content fills genuinely wide screens instead of stranding huge side
+   * gutters (a 1920px @ 100% OS scale screen sees a ~1920px CSS viewport; 7xl
+   * alone leaves ~320px empty each side).
+   *
+   * Trigger is the custom `wide` breakpoint below (1700px), NOT Tailwind's 2xl
+   * (1536px): a 1920px panel at 125% Windows scale renders to a CSS viewport of
+   * exactly 1920 / 1.25 = 1536px, landing right on 2xl and wrongly snapping
+   * those users to the wide layout. 1700px clears that case while still catching
+   * real 1920px @ 100% screens (~1903px). Single source of truth for both. */
+  --container-8xl: 96rem;
+  --breakpoint-wide: 1700px;
+}
+
+/* shadcn-style design-token → utility mapping.
+ * Declared once; values resolve from whichever .theme-* class is on <html>.
+ */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-serif: var(--font-serif);
+  --font-bonx: var(--font-bonx);
+  --font-bonx-frame: var(--font-bonx-frame);
+  --font-bonx-sihouette: var(--font-bonx-sihouette);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --shadow-2xs: var(--shadow-2xs);
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow: var(--shadow);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+  --shadow-2xl: var(--shadow-2xl);
+  --shadow-button: var(--shadow-button);
+  --shadow-button-glow: var(--shadow-button-glow);
+
+  --tracking-tighter: calc(var(--tracking-normal) - 0.05em);
+  --tracking-tight: calc(var(--tracking-normal) - 0.025em);
+  --tracking-normal: var(--tracking-normal);
+  --tracking-wide: calc(var(--tracking-normal) + 0.025em);
+  --tracking-wider: calc(var(--tracking-normal) + 0.05em);
+  --tracking-widest: calc(var(--tracking-normal) + 0.1em);
 }
 
 @layer base {
+  /* ---------------------------------------------------------------------- *
+   * Default site theme = Operation Bifrost hub (the "/" portal).
+   *
+   * These are the base token values that resolve when NO .theme-<project>
+   * class is on <html>. The hub borrows the Steins;Gate family's warm-charcoal
+   * substrate (~30-40% kinship) but keeps its own restrained vermilion accent
+   * and drops the game-specific Nixie glow / CRT language.
+   *
+   * Declared in @layer base so the unlayered .theme-<project> blocks in
+   * src/styles/themes/*.css always override them — steins-gate is unaffected.
+   * ---------------------------------------------------------------------- */
+  :root {
+    --background: oklch(0.216 0.006 56.043); /* warm charcoal — dim, not black */
+    --foreground: oklch(0.95 0.006 70); /* warm off-white */
+    --muted-foreground: oklch(0.708 0.012 60); /* mid warm gray — hierarchy */
+    --border: oklch(0.85 0.02 75 / 0.12); /* faint warm hairline */
+    --primary: oklch(0.681 0.197 33.5); /* vermilion (#ff5a36) — focus / interaction only */
+    --primary-foreground: oklch(0.99 0 0);
+    --ring: oklch(0.681 0.197 33.5);
+    --font-mono:
+      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+      monospace;
+    --radius: 0.5rem;
+    --tracking-normal: 0em;
+  }
+
   @font-face {
-    font-family: "bonx";
-    src: url("/fonts/BONX-Medium.otf") format("opentype");
-    font-weight: normal;
+    font-family: "LINE Seed Sans TH";
+    src: url("/fonts/line-seed-sans-th/LINESeedSansTH_Th.woff2") format("woff2"); /* Thin */
+    font-weight: 100;
     font-style: normal;
     font-display: swap;
   }
 
   @font-face {
-    font-family: "bonx-frame";
-    src: url("/fonts/BONX-Frame.otf") format("opentype");
-    font-weight: normal;
+    font-family: "LINE Seed Sans TH";
+    src: url("/fonts/line-seed-sans-th/LINESeedSansTH_Rg.woff2") format("woff2"); /* Regular */
+    font-weight: 400;
     font-style: normal;
     font-display: swap;
   }
 
   @font-face {
-    font-family: "bonx-sihouette";
-    src: url("/fonts/BONX-Silhouette.otf") format("opentype");
-    font-weight: normal;
+    font-family: "LINE Seed Sans TH";
+    src: url("/fonts/line-seed-sans-th/LINESeedSansTH.woff2") format("woff2"); /* Bold  */
+    font-weight: 700;
     font-style: normal;
     font-display: swap;
+  }
+
+  @font-face {
+    font-family: "LINE Seed Sans TH";
+    src: url("/fonts/line-seed-sans-th/LINESeedSansTH_XBd.woff2") format("woff2"); /* Extra Bold */
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "LINE Seed Sans TH";
+    src: url("/fonts/line-seed-sans-th/LINESeedSansTH_He.woff2") format("woff2"); /* Heavy */
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+  }
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-line-seed-th);
+    letter-spacing: var(--tracking-normal);
+  }
+
+  /* Smooth in-page navigation for #anchor links (navbar menu, hero CTAs,
+     back-to-top). scroll-padding-top offsets the landing point by the fixed
+     navbar's footprint (top gutter + height) so a target heading doesn't come
+     to rest tucked under the navbar when it's on screen. */
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
   }
 }
 
-@layer components {
-  .frame {
-    color: rgba(255, 0, 0, 0.4);
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 
-  .sihouette {
-    color: rgba(220, 42, 27, 0.4);
-  }
-
-  .title {
-    @apply text-nixie-base;
-    animation: glow 3s ease-in-out infinite alternate;
-  }
-
-  .glow-all {
-    @apply text-nixie-base border-nixie-base;
-    animation: glow-all 3s ease-in-out infinite alternate;
-  }
-
-  .typing {
-    animation: typing 400ms ease-in-out infinite alternate;
-  }
-}
-
-@layer utilities {
-  @keyframes glow {
-    from {
-      text-shadow: 0 0 20px var(--color-nixie-base),
-        0 0 50px var(--color-nixie-base), 0 0 5px rgb(255, 212, 71);
-    }
-    to {
-      text-shadow: 0 0 30px rgb(255, 219, 101), 0 0 60px rgb(255, 219, 101),
-        0 0 15px rgb(255, 203, 30);
-    }
-  }
-
-  @keyframes glow-all {
-    from {
-      text-shadow: 0 0 20px var(--color-nixie-base),
-        0 0 50px var(--color-nixie-base), 0 0 5px rgb(255, 212, 71);
-      border-color: var(--color-nixie-base);
-      filter: drop-shadow(0 0 20px var(--color-nixie-base));
-    }
-    to {
-      text-shadow: 0 0 30px rgb(255, 219, 101), 0 0 60px rgb(255, 219, 101),
-        0 0 15px rgb(255, 203, 30);
-      border-color: rgb(255, 219, 101);
-      filter: drop-shadow(0 0 30px rgb(255, 219, 101));
-    }
-  }
-
-  @keyframes typing {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
+  html {
+    scroll-behavior: auto;
   }
 }

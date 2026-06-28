@@ -1,0 +1,47 @@
+import { describe, expect, it } from "vitest";
+import { sanitizeText, validateComment } from "@/lib/comments/validate";
+
+const limits = { maxName: 40, maxMessage: 280 };
+
+describe("sanitizeText", () => {
+  it("trims surrounding whitespace", () => {
+    expect(sanitizeText("  hi  ")).toBe("hi");
+  });
+  it("strips C0 control characters and DEL", () => {
+    expect(sanitizeText("a\u0000b\u0007c")).toBe("abc");
+    expect(sanitizeText("line1\nline2")).toBe("line1line2");
+  });
+});
+
+describe("validateComment", () => {
+  it("accepts a normal named comment", () => {
+    const r = validateComment({ name: " Okabe ", message: " El Psy Kongroo " }, limits);
+    expect(r).toEqual({ ok: true, value: { name: "Okabe", message: "El Psy Kongroo" } });
+  });
+  it("treats blank name as anonymous (null)", () => {
+    const r = validateComment({ name: "   ", message: "hi" }, limits);
+    expect(r.ok && r.value.name).toBe(null);
+  });
+  it("treats missing name as anonymous (null)", () => {
+    const r = validateComment({ message: "hi" }, limits);
+    expect(r.ok && r.value.name).toBe(null);
+  });
+  it("rejects empty message", () => {
+    expect(validateComment({ message: "   " }, limits)).toEqual({ ok: false, error: "empty" });
+  });
+  it("rejects non-string message", () => {
+    expect(validateComment({ message: 42 }, limits)).toEqual({ ok: false, error: "empty" });
+  });
+  it("rejects over-long message", () => {
+    expect(validateComment({ message: "x".repeat(281) }, limits)).toEqual({
+      ok: false,
+      error: "tooLong",
+    });
+  });
+  it("rejects over-long name", () => {
+    expect(validateComment({ name: "y".repeat(41), message: "hi" }, limits)).toEqual({
+      ok: false,
+      error: "nameTooLong",
+    });
+  });
+});

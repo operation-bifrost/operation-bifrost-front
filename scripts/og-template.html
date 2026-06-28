@@ -1,0 +1,609 @@
+<!doctype html>
+<!--
+  ============================================================================
+  Operation Bifrost — Open Graph / social card template (render SSOT)
+  ============================================================================
+
+  WHAT THIS IS
+  The single source of truth for the site's share cards. `scripts/render-og.mjs`
+  (run via `yarn assets:og`) serves the repo over http, screenshots the two
+  card nodes below at exactly 1200×630, and writes them to /public:
+
+    #og-sg   → public/og-steins-gate.png   (og:image on /steins-gate/)
+    #og-home → public/og-image.png          (base.astro default, used by /)
+
+  Edit the cards here, then re-run `yarn assets:og` to rebuild the PNGs. This is
+  NOT served by Astro and NOT part of the app bundle — it exists only to be
+  rendered to images, so it can use browser-only CSS (filters, mix-blend-mode,
+  text-stroke, the Nixie text-shadow glow) that the WASM OG generators can't.
+  Paths are relative (../public/...) so it also opens standalone via file:// for
+  a quick visual check.
+
+  TWO SURFACES, TWO IDENTITIES
+    1. STEINS;GATE → /steins-gate/  "Key Art" — the SG Nixie identity: near-black
+       charcoal, Nixie-amber glow, CRT scanlines, the localized hero key art,
+       the layered BONX wordmark (amber .title over red .frame/.sihouette).
+    2. HUB → /                      "Catalogue" — the hub's warm-charcoal
+       editorial identity from src/pages/index.astro + src/data/home.ts + the
+       default tokens in src/styles/global.css (NOT the SG theme). Bilingual
+       wordmark, real lede, the catalogue whose live row blooms the sg-cover
+       keyart, plus the project emblem as a faint backdrop.
+
+  TYPE — existing self-hosted families only (public/fonts), no new fonts
+    - LINE Seed Sans TH : all EN + TH copy on both cards.
+    - BONX (Medium / Frame / Silhouette) : SG card — Nixie numerals + the
+      STEINS;GATE wordmark, stacked for the red-ghost-behind-amber glow.
+    - system monospace  : SG terminal URL + hub catalogue numerals.
+
+  COPY — verbatim from the live sources
+    Hub : homeContent.masthead + homeContent.projects (src/data/home.ts).
+    SG  : the live /steins-gate/ meta (modda's hand-edited Thai).
+
+  ASSETS (already in the repo)
+    - public/images/steins-gate/bifrost-logo.webp   (SG lockup + hub backdrop)
+    - public/images/steins-gate/hero-bg-large.webp  (SG key art)
+    - public/images/home/sg-cover.webp              (hub live-row keyart)
+  ============================================================================
+-->
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Operation Bifrost — OG cards</title>
+    <style>
+      /* ---- Fonts: the repo's self-hosted copies under public/fonts ---- */
+      @font-face {
+        font-family: "LINE Seed Sans TH";
+        src: url("../public/fonts/line-seed-sans-th/LINESeedSansTH_Rg.woff2") format("woff2");
+        font-weight: 400;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "LINE Seed Sans TH";
+        src: url("../public/fonts/line-seed-sans-th/LINESeedSansTH.woff2") format("woff2");
+        font-weight: 700;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "LINE Seed Sans TH";
+        src: url("../public/fonts/line-seed-sans-th/LINESeedSansTH_XBd.woff2") format("woff2");
+        font-weight: 800;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "LINE Seed Sans TH";
+        src: url("../public/fonts/line-seed-sans-th/LINESeedSansTH_He.woff2") format("woff2");
+        font-weight: 900;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "bonx";
+        src: url("../public/fonts/bonx/BONX-Medium.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "bonx-frame";
+        src: url("../public/fonts/bonx/BONX-Frame.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "bonx-sihouette";
+        src: url("../public/fonts/bonx/BONX-Silhouette.woff2") format("woff2");
+      }
+
+      :root {
+        --nixie: rgb(251, 192, 0);
+        --nixie-soft: rgb(255, 212, 71);
+        --ink: #f4ead2;
+        --ink-2: #c9bfa8;
+        --ink-3: #8c8473;
+        --font: "LINE Seed Sans TH", system-ui, sans-serif;
+        --font-bonx: "bonx", monospace;
+        --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono",
+          "Courier New", monospace;
+        --glow: 0 0 20px var(--nixie), 0 0 50px var(--nixie), 0 0 5px var(--nixie-soft);
+        --glow-soft: 0 0 12px rgba(251, 192, 0, 0.6), 0 0 28px rgba(251, 192, 0, 0.45);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      /* The body is just a backdrop for a standalone file:// preview; the render
+         script screenshots the .og nodes, not the page. */
+      body {
+        margin: 0;
+        background: #100e0c;
+        font-family: var(--font);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+        padding: 24px;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* ===================================================================
+         Shared card shell — exact OG canvas
+         =================================================================== */
+      .og {
+        position: relative;
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+        background: #14110f;
+        color: var(--ink);
+        isolation: isolate;
+      }
+
+      /* ===================================================================
+         CARD 1 — STEINS;GATE "Key Art" (localized hero in the Nixie dark)
+         Route: /steins-gate/   →  public/og-steins-gate.png
+         =================================================================== */
+      .og--sg {
+        background: #0c0a08;
+      }
+      .og--sg .scan {
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        pointer-events: none;
+        background-image: repeating-linear-gradient(
+          to bottom,
+          transparent 0,
+          transparent 2px,
+          rgba(0, 0, 0, 0.22) 2px,
+          rgba(0, 0, 0, 0.22) 3px
+        );
+        mix-blend-mode: overlay;
+        opacity: 0.5;
+      }
+      .og--sg .vignette {
+        position: absolute;
+        inset: 0;
+        z-index: 4;
+        pointer-events: none;
+        background: radial-gradient(120% 130% at 50% 38%, transparent 52%, rgba(0, 0, 0, 0.62) 100%);
+      }
+      .og--sg .art {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background: url("../public/images/steins-gate/hero-bg-large.webp") right center / cover
+          no-repeat;
+        filter: brightness(0.56) contrast(1.06) saturate(1.05) sepia(0.16) hue-rotate(-8deg);
+      }
+      .og--sg .scrim {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background: linear-gradient(
+          100deg,
+          rgba(12, 10, 8, 0.98) 0%,
+          rgba(12, 10, 8, 0.95) 34%,
+          rgba(12, 10, 8, 0.62) 56%,
+          rgba(12, 10, 8, 0.18) 78%,
+          rgba(12, 10, 8, 0.05) 100%
+        );
+      }
+      .og--sg .glow {
+        position: absolute;
+        z-index: 2;
+        left: -8%;
+        top: 18%;
+        width: 70%;
+        height: 70%;
+        background: radial-gradient(ellipse at center, rgba(251, 192, 0, 0.16) 0%, transparent 65%);
+        pointer-events: none;
+      }
+      .og--sg .content {
+        position: relative;
+        z-index: 6;
+        height: 100%;
+        padding: 60px 72px;
+        display: flex;
+        flex-direction: column;
+        max-width: 760px;
+      }
+      .og--sg .row-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .lockup {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .lockup img {
+        width: 56px;
+        height: 56px;
+        display: block;
+        filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
+      }
+      .lockup .name {
+        display: flex;
+        align-items: baseline;
+        gap: 0.5em;
+        font-size: 22px;
+        line-height: 1;
+      }
+      .lockup .name .en {
+        font-weight: 800;
+        color: var(--ink);
+        letter-spacing: 0.01em;
+      }
+      .lockup .name .sep {
+        color: var(--nixie);
+        opacity: 0.7;
+      }
+      .lockup .name .th {
+        font-weight: 700;
+        color: var(--ink-2);
+      }
+      .og--sg .core {
+        margin-top: auto;
+        margin-bottom: auto;
+      }
+      .og--sg .kicker {
+        font-size: 14px;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--ink-3);
+        font-weight: 700;
+        margin: 0 0 20px;
+      }
+      .sg-title {
+        position: relative;
+        display: inline-block;
+        line-height: 0.86;
+        letter-spacing: 0.005em;
+      }
+      .sg-title > span {
+        display: block;
+        white-space: nowrap;
+      }
+      .sg-title .ghost {
+        position: absolute;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+      }
+      .sg-title .title {
+        position: relative;
+        font-family: var(--font-bonx);
+        color: var(--nixie);
+        text-shadow: var(--glow);
+      }
+      .sg-title .frame {
+        font-family: "bonx-frame", var(--font-bonx);
+        color: rgba(255, 0, 0, 0.4);
+        transform: translate(3px, 3px);
+      }
+      .sg-title .sihouette {
+        font-family: "bonx-sihouette", var(--font-bonx);
+        color: rgba(220, 42, 27, 0.4);
+        transform: translate(-2px, -1px);
+      }
+      .og--sg .sg-title {
+        font-size: 92px;
+      }
+      .og--sg .th-title {
+        margin: 24px 0 0;
+        font-weight: 900;
+        font-size: 40px;
+        line-height: 1.08;
+        color: #fff;
+        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.7);
+      }
+      .og--sg .th-title .hl {
+        color: var(--nixie);
+        text-shadow: var(--glow-soft);
+      }
+      .og--sg .sub {
+        margin: 16px 0 0;
+        font-size: 20px;
+        line-height: 1.5;
+        color: var(--ink-2);
+        max-width: 40ch;
+        text-shadow: 0 1px 10px rgba(0, 0, 0, 0.8);
+      }
+      .og--sg .row-foot {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+      }
+      .og--sg .url {
+        font-family: var(--font-mono);
+        font-size: 20px;
+        letter-spacing: 0.01em;
+        color: var(--ink);
+      }
+      .og--sg .url .pfx {
+        color: var(--nixie);
+        text-shadow: var(--glow-soft);
+      }
+      .caret {
+        animation: blink 1.1s steps(1, end) infinite;
+      }
+      @keyframes blink {
+        0%,
+        55% {
+          opacity: 1;
+        }
+        56%,
+        100% {
+          opacity: 0;
+        }
+      }
+      .og--sg .free {
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #0d0b09;
+        background: var(--nixie);
+        padding: 7px 13px;
+        border-radius: 3px;
+        box-shadow: var(--glow-soft);
+      }
+
+      /* ===================================================================
+         CARD 2 — HUB "Catalogue" — a poster of the live src/pages/index.astro
+         Route: /   →  public/og-image.png
+         (default tokens from global.css; copy from home.ts)
+         =================================================================== */
+      .og--home {
+        /* exact default-theme tokens from src/styles/global.css :root */
+        --background: oklch(0.216 0.006 56.043);
+        --foreground: oklch(0.95 0.006 70);
+        --muted-foreground: oklch(0.708 0.012 60);
+        --border: oklch(0.85 0.02 75 / 0.12);
+        --primary: oklch(0.681 0.197 33.5); /* vermilion — focus / live entry */
+        font-family: var(--font);
+        color: var(--foreground);
+        background-color: var(--background);
+        /* barely-there paper grain — the homepage substrate */
+        background-image: radial-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        background-size: 4px 4px;
+        padding: 56px 64px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Big emblem backdrop — the OG adds the mark the bare page omits. An
+         oversized, faint gear bleeding off the top-right brands the share card
+         without competing with the wordmark. Sits above the grain, below text. */
+      .og--home .watermark {
+        position: absolute;
+        z-index: -1;
+        right: -120px;
+        top: -90px;
+        width: 500px;
+        height: 500px;
+        opacity: 0.14;
+        pointer-events: none;
+      }
+      .og--home .masthead .wordmark {
+        margin: 0;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        column-gap: 0.35em;
+        row-gap: 0.05em;
+        font-weight: 800;
+        font-size: 50px;
+        line-height: 1.08;
+        letter-spacing: -0.02em;
+        color: var(--foreground);
+      }
+      .og--home .masthead .wordmark .en,
+      .og--home .masthead .wordmark .th {
+        white-space: nowrap;
+      }
+      .og--home .masthead .wordmark .sep {
+        color: color-mix(in oklab, var(--muted-foreground) 70%, transparent);
+      }
+      .og--home .masthead .lede {
+        margin: 16px 0 0;
+        max-width: 62ch;
+        font-size: 20px;
+        line-height: 1.5;
+        color: var(--muted-foreground);
+      }
+
+      /* Catalogue — the homepage's main visual, anchored to the lower half */
+      .og--home .catalogue {
+        margin-top: auto;
+      }
+      .og--home .entry {
+        position: relative;
+        display: grid;
+        grid-template-columns: 72px 1fr auto;
+        align-items: center;
+        column-gap: 24px;
+        overflow: hidden;
+        border-bottom: 1px solid var(--border);
+      }
+      .og--home .entry .num {
+        font-family: var(--font-mono);
+        font-weight: 700;
+        font-size: 30px;
+        font-variant-numeric: tabular-nums;
+        color: color-mix(in oklab, var(--muted-foreground) 70%, transparent);
+      }
+      .og--home .entry .series {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: color-mix(in oklab, var(--muted-foreground) 70%, transparent);
+      }
+      .og--home .entry .name {
+        margin: 6px 0 0;
+        font-weight: 800;
+        line-height: 0.95;
+        letter-spacing: -0.04em;
+        text-transform: uppercase;
+        color: var(--foreground);
+      }
+      /* Live row — Steins;Gate, over the bloomed keyart. `isolation` scopes the
+         row's own layers so the page substrate (and the emblem backdrop behind
+         the whole card) can't bleed through the cover image. */
+      .og--home .entry.live {
+        min-height: 212px;
+        padding: 26px 24px 26px 8px;
+        grid-template-columns: 72px 1fr;
+        isolation: isolate;
+      }
+      .og--home .entry.live .cover {
+        position: absolute;
+        inset: 0;
+        z-index: -2;
+        background: url("../public/images/home/sg-cover.webp") right center / cover no-repeat;
+        /* The page's "bloomed" hover state so the SG keyart colour reads at full
+           strength — only the left-edge gradient anchors the text. */
+        filter: brightness(1) saturate(1.12);
+      }
+      /* gradient anchors text on the dark left; right side stays full keyart */
+      .og--home .entry.live .scrim-grad {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: linear-gradient(
+          to right,
+          oklch(0.216 0.006 56.043) 0%,
+          oklch(0.216 0.006 56.043 / 0.6) 50%,
+          oklch(0.216 0.006 56.043 / 0.15) 100%
+        );
+      }
+      .og--home .entry.live .num {
+        color: color-mix(in oklab, var(--muted-foreground) 80%, transparent);
+      }
+      .og--home .entry.live .name {
+        font-size: 64px;
+        text-shadow: 0 2px 24px rgba(0, 0, 0, 0.6);
+      }
+      .og--home .entry.live .th-sub {
+        margin: 10px 0 0;
+        max-width: 44ch;
+        font-size: 18px;
+        color: color-mix(in oklab, var(--foreground) 75%, transparent);
+        text-shadow: 0 1px 10px rgba(0, 0, 0, 0.7);
+      }
+
+      /* Soon row — ghosted placeholder */
+      .og--home .entry.soon {
+        min-height: 78px;
+        padding: 16px 8px;
+        border-bottom-style: dashed;
+        opacity: 0.7;
+      }
+      .og--home .entry.soon .num,
+      .og--home .entry.soon .series {
+        color: color-mix(in oklab, var(--muted-foreground) 55%, transparent);
+      }
+      .og--home .entry.soon .name {
+        font-size: 26px;
+        color: transparent;
+        -webkit-text-stroke: 1px var(--muted-foreground);
+      }
+      .og--home .entry.soon .pill {
+        justify-self: end;
+        align-self: center;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        color: color-mix(in oklab, var(--muted-foreground) 60%, transparent);
+        padding: 6px 13px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ============ CARD 1 — STEINS;GATE → public/og-steins-gate.png ============ -->
+    <div class="og og--sg" id="og-sg">
+      <div class="art"></div>
+      <div class="scrim"></div>
+      <div class="glow"></div>
+
+      <div class="content">
+        <div class="row-top">
+          <div class="lockup">
+            <img src="../public/images/steins-gate/bifrost-logo.webp" alt="Operation Bifrost" />
+            <span class="name">
+              <span class="en">Operation Bifrost</span>
+              <span class="sep">·</span>
+              <span class="th">ปฏิบัติการไบฟรอสต์</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="core">
+          <p class="kicker">Thai Fan Translation · Steam</p>
+          <div class="sg-title" aria-label="STEINS;GATE">
+            <span class="ghost sihouette" aria-hidden="true">STEINS;GATE</span>
+            <span class="ghost frame" aria-hidden="true">STEINS;GATE</span>
+            <span class="title">STEINS;GATE</span>
+          </div>
+          <p class="th-title">ม็อดแปลไทย<span class="hl">เต็มรูปแบบ</span></p>
+          <p class="sub">แปลครบทั้งเนื้อเรื่อง สารานุกรม เมลตัวละคร และซับเพลงประกอบ</p>
+        </div>
+
+        <div class="row-foot">
+          <span class="url"><span class="pfx">&gt;</span> operationbifrost.com<span class="caret">_</span></span>
+          <span class="free">แจกฟรี</span>
+        </div>
+      </div>
+
+      <div class="vignette"></div>
+      <div class="scan"></div>
+    </div>
+
+    <!-- ============ CARD 2 — HUB → public/og-image.png ============ -->
+    <div class="og og--home" id="og-home">
+      <img class="watermark" src="../public/images/steins-gate/bifrost-logo.webp" alt="" />
+      <header class="masthead">
+        <h1 class="wordmark">
+          <span class="en">Operation Bifrost</span>
+          <span class="sep" aria-hidden="true">·</span>
+          <span class="th">ปฏิบัติการไบฟรอสต์</span>
+        </h1>
+        <p class="lede">
+          เพจทำม็อดแปลเกมที่อยากแปล เกมไหนอยากมาก ๆ ก็จะหาทางแปลให้ได้ ฝึกไปเรื่อย ๆ จนกว่าจะโปร
+        </p>
+      </header>
+
+      <div class="catalogue">
+        <div class="entry live">
+          <div class="cover" aria-hidden="true"></div>
+          <div class="scrim-grad" aria-hidden="true"></div>
+          <span class="num">01</span>
+          <div class="body">
+            <span class="series">Science Adventure · MAGES / Nitroplus · 2009</span>
+            <h2 class="name">Steins;Gate</h2>
+            <p class="th-sub">ม็อด STEINS;GATE ฉบับแปลไทยเต็มรูปแบบ</p>
+          </div>
+        </div>
+
+        <div class="entry soon">
+          <span class="num">02</span>
+          <div class="body">
+            <span class="series">Future Project</span>
+            <h3 class="name">Untitled</h3>
+          </div>
+          <span class="pill">or not to [B]e</span>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
