@@ -5,6 +5,12 @@ export const gallery = {
   heading: "ภาพ-วิดิโอตัวอย่าง",
   videos: [
     {
+      id: "_hBitbkesvw",
+      title: "[Teaser] ตัวอย่างม็อดภาษาไทย STEINS;GATE | Operation Bifrost - ปฏิบัติการไบฟรอสต์",
+      channel: "Operation Bifrost",
+      duration: "0:59",
+    },
+    {
       id: "LL3arzyY_Ew",
       title: "[ตัวอย่างซับไทย] คลิป Prologue (อารัมภบท) | Steins;Gate ม็อดภาษาไทย",
       channel: "Operation Bifrost",
@@ -15,12 +21,6 @@ export const gallery = {
       title: "[ตัวอย่างซับไทย] Visual Novel Opening: Skyclad Observer | Steins;Gate ม็อดภาษาไทย",
       channel: "Operation Bifrost",
       duration: "1:55",
-    },
-    {
-      id: "BctM6HuQE7M",
-      title: "[ตัวอย่างซับไทย] Visual Novel Bonus Opening: A.R. | Steins;Gate ม็อดภาษาไทย",
-      channel: "Operation Bifrost",
-      duration: "1:57",
     },
   ] satisfies ReadonlyArray<GalleryVideo>,
   photos: [
