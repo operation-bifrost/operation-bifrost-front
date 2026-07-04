@@ -1,4 +1,4 @@
--- One row per download click. The counting route (/api/steins-gate/download)
+-- One row per download click. The counting route (/downloads/<file>)
 -- inserts here before 302-redirecting to the file on R2. Append-only event log:
 -- total = COUNT(*), and version/country/created_at support per-version,
 -- per-country, and per-day breakdowns with plain SQL. Volume is tiny

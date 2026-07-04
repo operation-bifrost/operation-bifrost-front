@@ -103,12 +103,16 @@ const ogImageUrl = new URL(ogImage, imageOrigin).href;
     <link rel="canonical" href={canonical} />
     <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
 
-    <!-- Site-wide analytics: tracks all routes that use this layout (or any layout that wraps it). -->
+    <!-- Site-wide analytics: tracks all routes that use this layout (or any layout that wraps it).
+         The file-downloads extension additionally fires a "File Download" event (with the URL as
+         a prop) on clicks of links ending in a tracked extension — which is why the patch CTA
+         points at the same-origin /downloads/*.zip counting route rather than the extensionless
+         API path or the dl.* R2 domain. See src/pages/downloads/[file].ts. -->
     <script
       is:inline
       defer
       data-domain="operationbifrost.com"
-      src="https://plausible.io/js/script.js"></script>
+      src="https://plausible.io/js/script.file-downloads.js"></script>
 
     <slot name="head" />
   </head>
