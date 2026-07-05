@@ -108,11 +108,27 @@ const ogImageUrl = new URL(ogImage, imageOrigin).href;
          a prop) on clicks of links ending in a tracked extension — which is why the patch CTA
          points at the same-origin /downloads/*.zip counting route rather than the extensionless
          API path or the dl.* R2 domain. See src/pages/downloads/[file].ts. -->
-    <script
-      is:inline
-      defer
-      data-domain="operationbifrost.com"
-      src="https://plausible.io/js/script.file-downloads.js"></script>
+    {
+      isProductionBuild ? (
+        <script is:inline async src="https://plausible.io/js/pa-e4xC7i_j5jXmrLCcU_U8X.js" />
+      ) : (
+        <script is:inline async src="https://plausible.io/js/pa-mxs8HC8Fu3jES3PENE9Qx.js" />
+      )
+    }
+    <script is:inline>
+      /* eslint-disable */
+      ((window.plausible =
+        window.plausible ||
+        function () {
+          (plausible.q = plausible.q || []).push(arguments);
+        }),
+        (plausible.init =
+          plausible.init ||
+          function (i) {
+            plausible.o = i || {};
+          }));
+      plausible.init();
+    </script>
 
     <slot name="head" />
   </head>
