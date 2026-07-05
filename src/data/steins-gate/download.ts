@@ -23,7 +23,7 @@ export const download = {
     href: `/downloads/${patchFileName}`,
     // ISO-8601 target date for the countdown timer. Change this to set the release date.
     // If not specified, displays the disabled "เร็ว ๆ นี้" button.
-    targetDate: "2025-07-07T07:07:07+07:00",
+    targetDate: "2026-07-07T07:07:07+07:00",
     note: "*** แพตช์ภาษาไทยนี้พัฒนาจากแพตช์ภาษาอังกฤษของ Committee of Zero สามารถใช้ได้กับ STEINS;GATE เวอร์ชัน Steam ที่เป็นเวอร์ชันภาษาอังกฤษเท่านั้น ไม่สามารถทำงานบนเวอร์ชันอื่นได้",
   } as DownloadState,
   // Canonical location of the patch archive on the R2 public bucket. The counting
