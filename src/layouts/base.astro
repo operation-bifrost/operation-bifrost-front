@@ -103,12 +103,32 @@ const ogImageUrl = new URL(ogImage, imageOrigin).href;
     <link rel="canonical" href={canonical} />
     <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
 
-    <!-- Site-wide analytics: tracks all routes that use this layout (or any layout that wraps it). -->
-    <script
-      is:inline
-      defer
-      data-domain="operationbifrost.com"
-      src="https://plausible.io/js/script.js"></script>
+    <!-- Site-wide analytics: tracks all routes that use this layout (or any layout that wraps it).
+         The file-downloads extension additionally fires a "File Download" event (with the URL as
+         a prop) on clicks of links ending in a tracked extension — which is why the patch CTA
+         points at the same-origin /downloads/*.zip counting route rather than the extensionless
+         API path or the dl.* R2 domain. See src/pages/downloads/[file].ts. -->
+    {
+      isProductionBuild ? (
+        <script is:inline async src="https://plausible.io/js/pa-e4xC7i_j5jXmrLCcU_U8X.js" />
+      ) : (
+        <script is:inline async src="https://plausible.io/js/pa-mxs8HC8Fu3jES3PENE9Qx.js" />
+      )
+    }
+    <script is:inline>
+      /* eslint-disable */
+      ((window.plausible =
+        window.plausible ||
+        function () {
+          (plausible.q = plausible.q || []).push(arguments);
+        }),
+        (plausible.init =
+          plausible.init ||
+          function (i) {
+            plausible.o = i || {};
+          }));
+      plausible.init();
+    </script>
 
     <slot name="head" />
   </head>

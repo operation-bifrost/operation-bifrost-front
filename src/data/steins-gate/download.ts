@@ -2,6 +2,11 @@ import { SiDiscord, SiFacebook } from "react-icons/si";
 
 import type { DownloadState, InstallStep, SocialBrand, SocialLink } from "./types";
 
+// Single source of truth for the patch archive filename — the CTA href, the
+// counting route, and the R2 URL are all derived from it. Bump on each release
+// (together with `version` below).
+const patchFileName = "SGPatch-v1.0.0-Setup.zip";
+
 export const download = {
   eyebrow: "download_",
   heading: "ดาวน์โหลดม็อด",
@@ -12,8 +17,10 @@ export const download = {
   downloadState: {
     label: "ดาวน์โหลด (.zip ขนาด 1.24GB)",
     // Points at the counting route (not R2 directly): it records the click in D1,
-    // then 302-redirects to `file.url`. See src/pages/api/steins-gate/download.ts.
-    href: "/api/steins-gate/download",
+    // then 302-redirects to `file.url`. See src/pages/downloads/[file].ts.
+    // Same-origin + .zip-suffixed on purpose: Plausible's file-downloads script
+    // classifies clicks on it as a "File Download" event.
+    href: `/downloads/${patchFileName}`,
     // ISO-8601 target date for the countdown timer. Change this to set the release date.
     // If not specified, displays the disabled "เร็ว ๆ นี้" button.
     targetDate: "2026-07-07T07:07:07+07:00",
@@ -21,10 +28,10 @@ export const download = {
   } as DownloadState,
   // Canonical location of the patch archive on the R2 public bucket. The counting
   // route 302-redirects here; R2 serves the bytes directly. Same URL across local,
-  // dev, and production. Bump `name`/`url` (and `version` above) on each release.
+  // dev, and production.
   file: {
-    name: "SGPatch-v1.0.0-Setup.zip",
-    url: "https://dl.operationbifrost.com/SGPatch-v1.0.0-Setup.zip",
+    name: patchFileName,
+    url: `https://dl.operationbifrost.com/${patchFileName}`,
   },
   installSteps: [
     {
