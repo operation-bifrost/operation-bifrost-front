@@ -4,8 +4,7 @@ import type { CtaConfig, NavItem, SocialLink } from "./types";
 
 export const navbar = {
   brand: {
-    logoSrc: "/images/steins-gate/bifrost-logo.webp",
-    logoAlt: "Operation Bifrost",
+    wordmarkSrc: "/images/steins-gate/bifrost-typo-logo-color.webp",
   },
   navItems: [
     { label: "รายละเอียดม็อด", href: "#features" },
