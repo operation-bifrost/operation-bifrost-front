@@ -1,7 +1,7 @@
 import { steinsGateContent } from "@/data/steins-gate";
 import { cn } from "@/lib/utils";
 
-interface BifrostLockupProps {
+interface BifrostTypoProps {
   /** Sizing / positioning classes. Set a height (e.g. `h-12`); width tracks via `w-auto`. */
   className?: string;
   /** Accessible name. Leave empty when a labeled ancestor already names it — the image renders decorative. */
@@ -15,7 +15,7 @@ const WIDTH = 1080;
 const HEIGHT = 360;
 
 /** The full "Operation Bifrost" color lockup (typographic logo + gear/rainbow mark). */
-export function BifrostLockup({ className, alt = "", loading = "eager" }: BifrostLockupProps) {
+export function BifrostTypo({ className, alt = "", loading = "eager" }: BifrostTypoProps) {
   const { wordmarkSrc } = steinsGateContent.navbar.brand;
 
   return (
