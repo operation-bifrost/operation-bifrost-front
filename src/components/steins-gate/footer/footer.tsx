@@ -1,5 +1,5 @@
 import { DiscordCard } from "@/components/steins-gate/footer/discord-card";
-import { BifrostWordmark } from "@/components/steins-gate/ui/bifrost-wordmark";
+import { BifrostTypo } from "@/components/steins-gate/ui/bifrost-typo";
 import { steinsGateContent } from "@/data/steins-gate";
 
 export function Footer() {
@@ -15,7 +15,7 @@ export function Footer() {
         <div className="mx-auto grid max-w-7xl gap-12 py-12 lg:grid-cols-[1fr_auto] lg:items-center lg:gap-16 lg:py-16">
           {/* Identity column */}
           <div className="flex flex-col items-start gap-6">
-            <BifrostWordmark size={28} />
+            <BifrostTypo className="h-14" alt="Operation Bifrost" loading="lazy" />
             <p className="text-muted-foreground max-w-md text-sm/relaxed">{tagline}</p>
 
             <ul className="flex items-center gap-4">
