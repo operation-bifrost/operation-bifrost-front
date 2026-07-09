@@ -1,12 +1,16 @@
 export const BANGKOK_OFFSET_MS = 7 * 60 * 60 * 1000;
 
+/** Format a `Date`'s UTC calendar fields as "YYYY-MM-DD". */
+function formatUtcDayKey(date: Date): string {
+  const y = date.getUTCFullYear();
+  const m = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const d = String(date.getUTCDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
 /** "YYYY-MM-DD" for the Bangkok (UTC+7) calendar day containing `epochMs`. */
 export function bangkokDayKey(epochMs: number): string {
-  const shifted = new Date(epochMs + BANGKOK_OFFSET_MS);
-  const y = shifted.getUTCFullYear();
-  const m = String(shifted.getUTCMonth() + 1).padStart(2, "0");
-  const d = String(shifted.getUTCDate()).padStart(2, "0");
-  return `${y}-${m}-${d}`;
+  return formatUtcDayKey(new Date(epochMs + BANGKOK_OFFSET_MS));
 }
 
 /** Parse a "YYYY-MM-DD" key into a UTC-midnight epoch ms (timezone-neutral cursor). */
@@ -21,11 +25,7 @@ export function enumerateDays(startDay: string, endDay: string): string[] {
   let cursor = dayKeyToUtcMs(startDay);
   const end = dayKeyToUtcMs(endDay);
   while (cursor <= end) {
-    const dt = new Date(cursor);
-    const y = dt.getUTCFullYear();
-    const m = String(dt.getUTCMonth() + 1).padStart(2, "0");
-    const d = String(dt.getUTCDate()).padStart(2, "0");
-    out.push(`${y}-${m}-${d}`);
+    out.push(formatUtcDayKey(new Date(cursor)));
     cursor += 24 * 60 * 60 * 1000;
   }
   return out;
@@ -34,14 +34,5 @@ export function enumerateDays(startDay: string, endDay: string): string[] {
 /** Day key `days-1` before `todayKey` (so a `days`-length window ends today). */
 export function rangeStartDay(todayKey: string, days: number): string {
   const start = dayKeyToUtcMs(todayKey) - (days - 1) * 24 * 60 * 60 * 1000;
-  return enumerateDays(bangkokDayKeyFromUtcMidnight(start), bangkokDayKeyFromUtcMidnight(start))[0];
-}
-
-/** A UTC-midnight cursor is already date-only; format it directly. */
-function bangkokDayKeyFromUtcMidnight(utcMs: number): string {
-  const dt = new Date(utcMs);
-  const y = dt.getUTCFullYear();
-  const m = String(dt.getUTCMonth() + 1).padStart(2, "0");
-  const d = String(dt.getUTCDate()).padStart(2, "0");
-  return `${y}-${m}-${d}`;
+  return formatUtcDayKey(new Date(start));
 }

@@ -19,6 +19,12 @@ describe("bangkokDayKey", () => {
   it("exposes a 7-hour offset in ms", () => {
     expect(BANGKOK_OFFSET_MS).toBe(7 * 60 * 60 * 1000);
   });
+  it("stays on day D at 16:59:59.999 UTC (23:59:59.999 Bangkok)", () => {
+    expect(bangkokDayKey(Date.UTC(2026, 6, 8, 16, 59, 59, 999))).toBe("2026-07-08");
+  });
+  it("rolls to D+1 exactly at 17:00:00.000 UTC (00:00 Bangkok)", () => {
+    expect(bangkokDayKey(Date.UTC(2026, 6, 8, 17, 0, 0, 0))).toBe("2026-07-09");
+  });
 });
 
 describe("enumerateDays", () => {
@@ -33,6 +39,14 @@ describe("enumerateDays", () => {
   it("returns a single day when start == end", () => {
     expect(enumerateDays("2026-07-09", "2026-07-09")).toEqual(["2026-07-09"]);
   });
+  it("crosses a year boundary", () => {
+    expect(enumerateDays("2026-12-30", "2027-01-02")).toEqual([
+      "2026-12-30",
+      "2026-12-31",
+      "2027-01-01",
+      "2027-01-02",
+    ]);
+  });
 });
 
 describe("rangeStartDay", () => {
@@ -41,5 +55,8 @@ describe("rangeStartDay", () => {
   });
   it("returns today for a 1-day window", () => {
     expect(rangeStartDay("2026-07-09", 1)).toBe("2026-07-09");
+  });
+  it("crosses a year boundary backward", () => {
+    expect(rangeStartDay("2027-01-01", 3)).toBe("2026-12-30");
   });
 });
