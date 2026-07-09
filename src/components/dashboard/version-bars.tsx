@@ -1,38 +1,78 @@
+import { Bar, BarChart, LabelList, XAxis, YAxis } from "recharts";
+
 import type { VersionCount } from "@/lib/downloads/repository";
-import { formatCount } from "@/lib/dashboard/format";
 import { dashboardContent } from "@/data/dashboard";
-import { ChartFrame } from "@/components/dashboard/ui/chart-frame";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  type ChartConfig,
+} from "@/components/ui/chart";
 
 interface VersionBarsProps {
   data: VersionCount[];
   total: number;
 }
 
+export interface VersionRow {
+  version: string;
+  count: number;
+  pct: number;
+}
+
+export function toVersionRows(data: VersionCount[], total: number): VersionRow[] {
+  return data.map((v) => ({
+    version: v.version,
+    count: v.count,
+    pct: total > 0 ? Math.round((v.count / total) * 100) : 0,
+  }));
+}
+
+const chartConfig = {
+  count: { label: "Downloads", color: "var(--chart-1)" },
+} satisfies ChartConfig;
+
 export function VersionBars({ data, total }: VersionBarsProps) {
+  const rows = toVersionRows(data, total);
   return (
-    <ChartFrame title={dashboardContent.version.title} a11yLabel="Downloads by version">
-      <ul className="flex flex-col gap-3">
-        {data.length === 0 && <li className="text-muted-foreground font-mono text-xs">—</li>}
-        {data.map((v) => {
-          const pct = total > 0 ? Math.round((v.count / total) * 100) : 0;
-          return (
-            <li key={v.version} className="flex flex-col gap-1">
-              <div className="flex items-center justify-between font-mono text-xs">
-                <span className="text-foreground">{v.version}</span>
-                <span className="text-muted-foreground">
-                  {formatCount(v.count)} · {pct}%
-                </span>
-              </div>
-              <div className="bg-secondary h-2.5 w-full overflow-hidden rounded-sm">
-                <div
-                  className="bg-chart-nixie-1 h-full rounded-sm transition-[width] duration-700"
-                  style={{ width: `${pct}%` }}
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-sm font-medium">{dashboardContent.version.title}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        {rows.length === 0 ? (
+          <p className="text-muted-foreground text-sm">—</p>
+        ) : (
+          <ChartContainer config={chartConfig} className="h-64 w-full">
+            <BarChart
+              accessibilityLayer
+              data={rows}
+              layout="vertical"
+              margin={{ left: 8, right: 40 }}
+            >
+              <XAxis type="number" dataKey="count" hide />
+              <YAxis
+                type="category"
+                dataKey="version"
+                tickLine={false}
+                axisLine={false}
+                width={72}
+              />
+              <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+              <Bar dataKey="count" fill="var(--color-count)" radius={4}>
+                <LabelList
+                  dataKey="pct"
+                  position="right"
+                  className="fill-muted-foreground"
+                  fontSize={11}
+                  formatter={(v) => `${v}%`}
                 />
-              </div>
-            </li>
-          );
-        })}
-      </ul>
-    </ChartFrame>
+              </Bar>
+            </BarChart>
+          </ChartContainer>
+        )}
+      </CardContent>
+    </Card>
   );
 }
