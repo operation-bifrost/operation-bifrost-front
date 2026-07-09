@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getDashboardSnapshot } from "@/lib/downloads/repository";
+import { getDashboardSnapshot, getWindowCounts } from "@/lib/downloads/repository";
 
 type Row = Record<string, unknown>;
 
@@ -62,5 +62,40 @@ describe("getDashboardSnapshot", () => {
     expect(snap.peakDay).toBeNull();
     expect(snap.daily).toEqual([]);
     expect(snap.windows).toEqual({ last24h: 0, prev24h: 0, last7d: 0, prev7d: 0 });
+  });
+});
+
+describe("getWindowCounts bind order", () => {
+  it("binds the six window boundaries in declaration order", async () => {
+    const d = 86_400_000;
+    const now = 1_000_000_000_000;
+    let captured: unknown[] = [];
+    const stmt = {
+      bind(...args: unknown[]) {
+        captured = args;
+        return stmt;
+      },
+      async first<T>() {
+        return { last24h: 0, prev24h: 0, last7d: 0, prev7d: 0 } as T;
+      },
+      async all<T>() {
+        return { results: [] as T[] };
+      },
+      async run() {
+        return { meta: { changes: 0 } };
+      },
+    };
+    const db = { prepare: () => stmt } as unknown as D1Database;
+
+    await getWindowCounts(db, now);
+
+    expect(captured).toEqual([
+      now - d,
+      now - 2 * d,
+      now - d,
+      now - 7 * d,
+      now - 14 * d,
+      now - 7 * d,
+    ]);
   });
 });
