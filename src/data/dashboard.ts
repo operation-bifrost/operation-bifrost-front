@@ -2,10 +2,10 @@ export const DAY_MS = 86_400_000;
 
 /** Range options for the time-series chart. `days: null` means "all time". */
 export const RANGE_OPTIONS = [
-  { key: "24h", label: "24H", days: 1 },
-  { key: "7d", label: "7D", days: 7 },
-  { key: "30d", label: "30D", days: 30 },
-  { key: "all", label: "ALL", days: null },
+  { key: "24h", label: "24h", days: 1 },
+  { key: "7d", label: "7d", days: 7 },
+  { key: "30d", label: "30d", days: 30 },
+  { key: "all", label: "All", days: null },
 ] as const;
 
 export type RangeKey = (typeof RANGE_OPTIONS)[number]["key"];
@@ -17,40 +17,40 @@ export const dashboardContent = {
     description: "Private download analytics dashboard.",
   },
   console: {
-    brand: "OPERATION BIFROST",
-    subtitle: "// DOWNLOAD TELEMETRY",
-    sessionLabel: "SESSION ACTIVE",
-    refreshLabel: "SYNC",
-    logoutLabel: "LOGOUT",
-    syncedPrefix: "last sync",
+    brand: "Operation Bifrost",
+    subtitle: "Download telemetry",
+    sessionLabel: "Live",
+    refreshLabel: "Refresh",
+    logoutLabel: "Log out",
+    syncedPrefix: "Updated",
   },
   hero: {
-    label: "TOTAL DOWNLOADS",
-    emptyCaption: "AWAITING FIRST SIGNAL",
+    label: "Total downloads",
+    emptyCaption: "No downloads yet",
   },
   tiles: {
-    last24h: "LAST 24H",
-    last7d: "LAST 7D",
-    peakDay: "PEAK DAY",
-    avgPerDay: "AVG / DAY",
+    last24h: "Last 24h",
+    last7d: "Last 7d",
+    peakDay: "Peak day",
+    avgPerDay: "Avg / day",
   },
-  timeseries: { title: "DOWNLOADS OVER TIME", empty: "NO DATA" },
-  version: { title: "BY VERSION" },
-  country: { title: "BY COUNTRY", topN: 8, othersLabel: "Others", unknownLabel: "Unknown" },
+  timeseries: { title: "Downloads over time", empty: "No data" },
+  version: { title: "By version" },
+  country: { title: "By country", topN: 8, othersLabel: "Others", unknownLabel: "Unknown" },
   heatmap: {
-    title: "ACTIVITY",
+    title: "Activity",
     caption: "Asia/Bangkok · hour × weekday",
     weekdays: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
   },
   provenance:
     "Source: D1 downloads log · counts are click events, not unique users · times in Asia/Bangkok",
   login: {
-    title: "RESTRICTED",
-    prompt: "ENTER ACCESS KEY",
-    submitLabel: "AUTHENTICATE",
-    errorInvalid: "ACCESS DENIED",
-    errorRateLimited: "TOO MANY ATTEMPTS — WAIT 60s",
-    errorNetwork: "SIGNAL LOST — RETRY",
+    title: "Sign in",
+    prompt: "Password",
+    submitLabel: "Sign in",
+    errorInvalid: "Incorrect password",
+    errorRateLimited: "Too many attempts — wait 60s",
+    errorNetwork: "Network error — try again",
   },
-  errors: { snapshotFailed: "SIGNAL LOST", retryLabel: "RETRY" },
+  errors: { snapshotFailed: "Couldn't load the dashboard", retryLabel: "Retry" },
 } as const;

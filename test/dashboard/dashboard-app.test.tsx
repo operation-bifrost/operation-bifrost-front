@@ -26,7 +26,7 @@ describe("DashboardApp", () => {
 
   it("renders the initial total from props", () => {
     render(<DashboardApp snapshot={snap(42)} />);
-    expect(screen.getByText(/TOTAL DOWNLOADS/i)).toBeInTheDocument();
+    expect(screen.getByText(/Total downloads/i)).toBeInTheDocument();
   });
 
   it("refetches and updates the total when SYNC is clicked", async () => {
@@ -34,7 +34,7 @@ describe("DashboardApp", () => {
       new Response(JSON.stringify(snap(99)), { status: 200 }),
     );
     render(<DashboardApp snapshot={snap(42)} />);
-    fireEvent.click(screen.getByRole("button", { name: /SYNC/i }));
+    fireEvent.click(screen.getByRole("button", { name: /Refresh/i }));
     await waitFor(() => expect(globalThis.fetch).toHaveBeenCalledWith("/api/dashboard/snapshot"));
     await waitFor(() => expect(screen.getByRole("img", { name: /99/ })).toBeInTheDocument());
   });
