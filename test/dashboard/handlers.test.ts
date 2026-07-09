@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { handleLogin, handleLogout, handleSnapshot } from "@/lib/dashboard/handlers";
 import { verifySession, SESSION_COOKIE } from "@/lib/dashboard/auth";
 import type { DashboardSnapshot } from "@/lib/downloads/repository";
+import { dashboardContent } from "@/data/dashboard";
 
 const okRatelimiter = {
   async limit() {
@@ -47,6 +48,7 @@ describe("handleLogin", () => {
     expect(res.status).toBe(200);
     const setCookie = res.headers.get("Set-Cookie") ?? "";
     expect(setCookie).toContain(`${SESSION_COOKIE}=`);
+    expect(setCookie).toContain("Secure");
     const token = setCookie.split(`${SESSION_COOKIE}=`)[1].split(";")[0];
     expect(await verifySession(secret, token, 1_000)).toBe(true);
   });
@@ -75,5 +77,6 @@ describe("handleSnapshot", () => {
       },
     });
     expect(res.status).toBe(500);
+    expect(await res.json()).toEqual({ error: dashboardContent.errors.snapshotFailed });
   });
 });
