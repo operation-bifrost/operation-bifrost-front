@@ -3,12 +3,17 @@ import { env } from "cloudflare:workers";
 
 import DashboardLayout from "@/layouts/dashboard.astro";
 import { dashboardContent } from "@/data/dashboard";
-import { getDashboardSnapshot } from "@/lib/downloads/repository";
+import { getDashboardSnapshot, type DashboardSnapshot } from "@/lib/downloads/repository";
 import { DashboardApp } from "@/components/dashboard/dashboard-app";
 
 export const prerender = false;
 
-const snapshot = await getDashboardSnapshot(env.DB!, Date.now());
+let snapshot: DashboardSnapshot | null = null;
+try {
+  snapshot = await getDashboardSnapshot(env.DB!, Date.now());
+} catch (err) {
+  console.error("dashboard: failed to build initial snapshot", err);
+}
 ---
 
 <DashboardLayout
@@ -16,6 +21,24 @@ const snapshot = await getDashboardSnapshot(env.DB!, Date.now());
   description={dashboardContent.meta.description}
 >
   <main class="min-h-screen">
-    <DashboardApp client:load snapshot={snapshot} />
+    {
+      snapshot ? (
+        <DashboardApp client:load snapshot={snapshot} />
+      ) : (
+        <div class="flex min-h-screen items-center justify-center px-4">
+          <div class="dash-scanline bg-card/90 border-border rounded-md border p-8 text-center backdrop-blur-sm">
+            <p class="dash-glow-number font-mono text-lg font-bold tracking-[0.3em]">
+              {dashboardContent.errors.snapshotFailed}
+            </p>
+            <a
+              href="/dashboard"
+              class="text-muted-foreground hover:text-primary mt-4 inline-block font-mono text-xs tracking-widest uppercase transition-colors"
+            >
+              {dashboardContent.errors.retryLabel}
+            </a>
+          </div>
+        </div>
+      )
+    }
   </main>
 </DashboardLayout>

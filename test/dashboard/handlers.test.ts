@@ -56,6 +56,10 @@ describe("handleLogin", () => {
     const token = setCookie.split(`${SESSION_COOKIE}=`)[1].split(";")[0];
     expect(await verifySession(secret, token, 1_000)).toBe(true);
   });
+  it("500s (fails closed) when the session secret is not configured", async () => {
+    const res = await handleLogin(baseLoginDeps({ sessionSecret: "" }), { password: "letmein" });
+    expect(res.status).toBe(500);
+  });
 });
 
 describe("handleLogout", () => {

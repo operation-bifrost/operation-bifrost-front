@@ -30,9 +30,8 @@ export const onRequest = defineMiddleware(async (context, next) => {
   }
 
   const token = context.cookies.get(SESSION_COOKIE)?.value ?? null;
-  const authed = token
-    ? await verifySession(env.DASHBOARD_SESSION_SECRET, token, Date.now())
-    : false;
+  const secret = env.DASHBOARD_SESSION_SECRET;
+  const authed = secret && token ? await verifySession(secret, token, Date.now()) : false;
   if (authed) return applySecurityHeaders(await next());
 
   if (isApiPath(pathname)) {

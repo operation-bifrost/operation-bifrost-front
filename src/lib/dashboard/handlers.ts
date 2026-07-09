@@ -25,6 +25,11 @@ export interface LoginDeps {
 }
 
 export async function handleLogin(deps: LoginDeps, body: unknown): Promise<Response> {
+  if (!deps.password || !deps.sessionSecret) {
+    console.error("dashboard: auth not configured (missing password or session secret)");
+    return json({ error: dashboardContent.login.errorNetwork }, 500);
+  }
+
   const { success } = await deps.ratelimiter.limit({ key: deps.ip ?? "anonymous" });
   if (!success) return json({ error: dashboardContent.login.errorRateLimited }, 429);
 
