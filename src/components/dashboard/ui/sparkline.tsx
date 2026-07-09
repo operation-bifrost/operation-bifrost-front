@@ -1,5 +1,4 @@
-import { line, curveMonotoneX } from "d3-shape";
-import { scaleLinear } from "d3-scale";
+import { Line, LineChart } from "recharts";
 
 interface SparklineProps {
   data: number[];
@@ -7,33 +6,28 @@ interface SparklineProps {
   height?: number;
 }
 
+/**
+ * Tiny trend line for KPI tiles. Fixed width/height (no ResponsiveContainer)
+ * so it renders deterministically in tests and adds no layout measurement.
+ */
 export function Sparkline({ data, width = 96, height = 28 }: SparklineProps) {
   if (data.length < 2) return <svg width={width} height={height} aria-hidden="true" />;
-
-  const x = scaleLinear()
-    .domain([0, data.length - 1])
-    .range([1, width - 1]);
-  const max = Math.max(...data, 1);
-  const y = scaleLinear()
-    .domain([0, max])
-    .range([height - 2, 2]);
-
-  const path = line<number>()
-    .x((_, i) => x(i))
-    .y((d) => y(d))
-    .curve(curveMonotoneX)(data);
-
+  const points = data.map((value, index) => ({ index, value }));
   return (
-    <svg width={width} height={height} aria-hidden="true" className="overflow-visible">
-      {path && (
-        <path
-          d={path}
-          fill="none"
-          stroke="var(--color-nixie-base)"
-          strokeWidth={1.5}
-          strokeLinecap="round"
-        />
-      )}
-    </svg>
+    <LineChart
+      width={width}
+      height={height}
+      data={points}
+      margin={{ top: 2, right: 2, bottom: 2, left: 2 }}
+    >
+      <Line
+        type="monotone"
+        dataKey="value"
+        stroke="var(--chart-1)"
+        strokeWidth={1.5}
+        dot={false}
+        isAnimationActive={false}
+      />
+    </LineChart>
   );
 }
