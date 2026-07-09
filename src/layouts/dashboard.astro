@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "@/layouts/base.astro";
-import "@/styles/themes/steins-gate.css";
+import "@/styles/themes/dashboard.css";
 
 interface Props {
   title: string;
@@ -15,7 +15,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).hr
   {title}
   {description}
   {canonical}
-  htmlClass="theme-steins-gate dark"
+  htmlClass="theme-dashboard dark"
   lang="en"
   analytics={false}
   noindex

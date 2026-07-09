@@ -26,13 +26,11 @@ try {
         <DashboardApp client:load snapshot={snapshot} />
       ) : (
         <div class="flex min-h-screen items-center justify-center px-4">
-          <div class="dash-scanline bg-card/90 border-border rounded-md border p-8 text-center backdrop-blur-sm">
-            <p class="dash-glow-number font-mono text-lg font-bold tracking-[0.3em]">
-              {dashboardContent.errors.snapshotFailed}
-            </p>
+          <div class="bg-card text-card-foreground border-border rounded-xl border p-8 text-center shadow-sm">
+            <p class="text-lg font-semibold">{dashboardContent.errors.snapshotFailed}</p>
             <a
               href="/dashboard"
-              class="text-muted-foreground hover:text-primary mt-4 inline-block font-mono text-xs tracking-widest uppercase transition-colors"
+              class="text-primary mt-4 inline-block text-sm underline-offset-4 transition-colors hover:underline"
             >
               {dashboardContent.errors.retryLabel}
             </a>
