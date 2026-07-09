@@ -10,24 +10,19 @@ interface HeroTotalProps {
 export function HeroTotal({ total, version, hasData }: HeroTotalProps) {
   const { hero } = dashboardContent;
   return (
-    <div className="flex flex-col items-center py-10 text-center">
-      <span
-        className="dash-glow-number font-mono"
-        role="img"
-        aria-label={`${hero.label}: ${total}`}
-      >
+    <div className="flex flex-col gap-1">
+      <span className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+        {hero.label}
+      </span>
+      <span role="img" aria-label={`${hero.label}: ${total}`} className="text-foreground">
         <span aria-hidden="true">
-          <Counter value={total} fontSize={72} gap={4} textColor="inherit" fontWeight={700} />
+          <Counter value={total} fontSize={56} gap={2} fontWeight={700} gradientHeight={0} />
         </span>
       </span>
-      <p className="text-muted-foreground mt-4 font-mono text-xs tracking-widest uppercase">
-        {hero.label} · {version}
-      </p>
-      {!hasData && (
-        <p className="text-primary mt-1 font-mono text-[0.7rem] tracking-[0.3em] uppercase opacity-80">
-          {hero.emptyCaption}
-        </p>
-      )}
+      <span className="text-muted-foreground text-sm">
+        {version}
+        {!hasData && ` · ${hero.emptyCaption}`}
+      </span>
     </div>
   );
 }
