@@ -25,12 +25,12 @@ export interface LoginDeps {
 }
 
 export async function handleLogin(deps: LoginDeps, body: unknown): Promise<Response> {
+  const { success } = await deps.ratelimiter.limit({ key: deps.ip ?? "anonymous" });
+  if (!success) return json({ error: dashboardContent.login.errorRateLimited }, 429);
+
   const raw = (body ?? {}) as { password?: unknown };
   const password = typeof raw.password === "string" ? raw.password : "";
   if (password.length === 0) return json({ error: "missing" }, 400);
-
-  const { success } = await deps.ratelimiter.limit({ key: deps.ip ?? "anonymous" });
-  if (!success) return json({ error: dashboardContent.login.errorRateLimited }, 429);
 
   if (!timingSafeEqual(password, deps.password)) {
     return json({ error: dashboardContent.login.errorInvalid }, 401);

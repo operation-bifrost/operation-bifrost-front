@@ -39,6 +39,10 @@ describe("handleLogin", () => {
     });
     expect(res.status).toBe(429);
   });
+  it("rate-limits before the empty-password check", async () => {
+    const res = await handleLogin(baseLoginDeps({ ratelimiter: blockedRatelimiter }), {});
+    expect(res.status).toBe(429);
+  });
   it("401s on a wrong password", async () => {
     const res = await handleLogin(baseLoginDeps(), { password: "nope" });
     expect(res.status).toBe(401);
