@@ -18,6 +18,8 @@ interface Props {
   siteName?: string;
   htmlClass?: string;
   author?: string;
+  analytics?: boolean;
+  noindex?: boolean;
 }
 
 const {
@@ -35,6 +37,8 @@ const {
   siteName = "Operation Bifrost",
   htmlClass = "",
   author = "Operation Bifrost Team",
+  analytics = true,
+  noindex = false,
 } = Astro.props;
 
 // The dev/staging Worker (operationbifrost-dev → develop.operationbifrost.com) is
@@ -65,6 +69,28 @@ const imageOrigin = import.meta.env.DEV
     ? (Astro.site ?? canonical)
     : "https://develop.operationbifrost.com";
 const ogImageUrl = new URL(ogImage, imageOrigin).href;
+
+// prettier-plugin-astro (and the underlying script parser it shares with
+// eslint-plugin-astro) cannot parse a raw `<script is:inline>` body that opens
+// with `(` once that script is nested inside a parenthesized `{expr && (...)}`
+// JSX conditional (reproduced in isolation; unrelated to this script's content).
+// Hoisting the script text to a frontmatter string and injecting it via
+// `set:html` sidesteps the parser bug while keeping the exact same runtime
+// output — unlike `<script>{\`...\`}</script>`, which Astro treats as literal
+// template source (not evaluated) inside `<script>` bodies and would ship
+// broken analytics.
+const plausibleInitScript = `/* eslint-disable */
+((window.plausible =
+  window.plausible ||
+  function () {
+    (plausible.q = plausible.q || []).push(arguments);
+  }),
+  (plausible.init =
+    plausible.init ||
+    function (i) {
+      plausible.o = i || {};
+    }));
+plausible.init();`;
 ---
 
 <html lang={lang} class={htmlClass}>
@@ -78,8 +104,10 @@ const ogImageUrl = new URL(ogImage, imageOrigin).href;
     <meta name="title" content={title} />
     <meta name="description" content={description} />
     <meta name="author" content={author} />
-    {/* Non-production (dev/staging) builds only — keeps develop.* out of the index. */}
-    {!isProductionBuild && <meta name="robots" content="noindex,nofollow" />}
+    {
+      /* Non-production (dev/staging) builds, or explicit opt-out (e.g. dashboard.astro), keep the page out of the index. */
+    }
+    {(!isProductionBuild || noindex) && <meta name="robots" content="noindex,nofollow" />}
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={siteName} />
@@ -109,26 +137,17 @@ const ogImageUrl = new URL(ogImage, imageOrigin).href;
          points at the same-origin /downloads/*.zip counting route rather than the extensionless
          API path or the dl.* R2 domain. See src/pages/downloads/[file].ts. -->
     {
-      isProductionBuild ? (
-        <script is:inline async src="https://plausible.io/js/pa-e4xC7i_j5jXmrLCcU_U8X.js" />
-      ) : (
-        <script is:inline async src="https://plausible.io/js/pa-mxs8HC8Fu3jES3PENE9Qx.js" />
+      analytics && (
+        <>
+          {isProductionBuild ? (
+            <script is:inline async src="https://plausible.io/js/pa-e4xC7i_j5jXmrLCcU_U8X.js" />
+          ) : (
+            <script is:inline async src="https://plausible.io/js/pa-mxs8HC8Fu3jES3PENE9Qx.js" />
+          )}
+          <script is:inline set:html={plausibleInitScript} />
+        </>
       )
     }
-    <script is:inline>
-      /* eslint-disable */
-      ((window.plausible =
-        window.plausible ||
-        function () {
-          (plausible.q = plausible.q || []).push(arguments);
-        }),
-        (plausible.init =
-          plausible.init ||
-          function (i) {
-            plausible.o = i || {};
-          }));
-      plausible.init();
-    </script>
 
     <slot name="head" />
   </head>
