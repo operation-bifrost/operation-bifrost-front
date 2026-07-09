@@ -10,6 +10,7 @@ import { TimeseriesChart } from "@/components/dashboard/timeseries-chart";
 import { VersionBars } from "@/components/dashboard/version-bars";
 import { CountryList } from "@/components/dashboard/country-list";
 import { ActivityHeatmap } from "@/components/dashboard/activity-heatmap";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface DashboardAppProps {
   snapshot: DashboardSnapshot;
@@ -43,14 +44,18 @@ export function DashboardApp({ snapshot: initial }: DashboardAppProps) {
   const avgPerDay = Math.round(snapshot.total / daysSpan(snapshot.firstAt, snapshot.lastAt));
 
   return (
-    <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
+    <div className="wide:max-w-8xl mx-auto flex max-w-7xl flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
       <ConsoleBar syncedAt={snapshot.generatedAt} onRefresh={refresh} refreshing={refreshing} />
 
-      <HeroTotal
-        total={snapshot.total}
-        version={snapshot.currentVersion}
-        hasData={snapshot.total > 0}
-      />
+      <Card>
+        <CardContent className="p-6">
+          <HeroTotal
+            total={snapshot.total}
+            version={snapshot.currentVersion}
+            hasData={snapshot.total > 0}
+          />
+        </CardContent>
+      </Card>
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <StatTile
@@ -89,7 +94,7 @@ export function DashboardApp({ snapshot: initial }: DashboardAppProps) {
 
       <ActivityHeatmap heat={snapshot.heat} />
 
-      <p className="text-muted-foreground border-border border-t pt-4 text-center font-mono text-[0.65rem] tracking-wide">
+      <p className="text-muted-foreground border-border border-t pt-4 text-center text-xs">
         {dashboardContent.provenance}
       </p>
     </div>
