@@ -1,6 +1,9 @@
 import { useState } from "react";
 
 import { dashboardContent } from "@/data/dashboard";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 
 export function LoginForm() {
   const { login } = dashboardContent;
@@ -31,39 +34,30 @@ export function LoginForm() {
   }
 
   return (
-    <form
-      onSubmit={submit}
-      className="dash-scanline bg-card/90 border-border w-full max-w-sm rounded-md border p-8 backdrop-blur-sm"
-    >
-      <h1 className="dash-glow-number mb-1 text-center font-mono text-lg font-bold tracking-[0.3em]">
-        {login.title}
-      </h1>
-      <p className="text-muted-foreground mb-6 text-center font-mono text-[0.7rem] tracking-widest uppercase">
-        {login.prompt}
-      </p>
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        autoFocus
-        className="bg-background border-input text-foreground focus:border-ring focus:ring-ring/40 w-full rounded border px-3 py-2 text-center font-mono tracking-widest outline-none focus:ring-2"
-        aria-label={login.prompt}
-      />
-      {error && (
-        <p
-          role="alert"
-          className="text-destructive mt-3 text-center font-mono text-xs tracking-widest"
-        >
-          {error}
-        </p>
-      )}
-      <button
-        type="submit"
-        disabled={busy || password.length === 0}
-        className="bg-primary text-primary-foreground hover:bg-accent mt-5 w-full rounded py-2 font-mono text-xs font-bold tracking-widest uppercase transition-colors disabled:opacity-50"
-      >
-        {login.submitLabel}
-      </button>
-    </form>
+    <Card className="w-full max-w-sm">
+      <CardHeader>
+        <h1 className="text-lg font-semibold">{login.title}</h1>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={submit} className="flex flex-col gap-4">
+          <Input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoFocus
+            aria-label={login.prompt}
+            placeholder={login.prompt}
+          />
+          {error && (
+            <p role="alert" className="text-destructive text-sm">
+              {error}
+            </p>
+          )}
+          <Button type="submit" disabled={busy || password.length === 0}>
+            {login.submitLabel}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
   );
 }
