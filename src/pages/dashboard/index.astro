@@ -1,0 +1,21 @@
+---
+import { env } from "cloudflare:workers";
+
+import DashboardLayout from "@/layouts/dashboard.astro";
+import { dashboardContent } from "@/data/dashboard";
+import { getDashboardSnapshot } from "@/lib/downloads/repository";
+import { DashboardApp } from "@/components/dashboard/dashboard-app";
+
+export const prerender = false;
+
+const snapshot = await getDashboardSnapshot(env.DB!, Date.now());
+---
+
+<DashboardLayout
+  title={dashboardContent.meta.title}
+  description={dashboardContent.meta.description}
+>
+  <main class="min-h-screen">
+    <DashboardApp client:load snapshot={snapshot} />
+  </main>
+</DashboardLayout>
