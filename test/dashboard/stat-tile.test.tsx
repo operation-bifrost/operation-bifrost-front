@@ -19,4 +19,17 @@ describe("StatTile", () => {
     render(<StatTile label="PEAK DAY" value={212} subLabel="2026-07-08" />);
     expect(screen.getByText("2026-07-08")).toBeInTheDocument();
   });
+
+  it("shows a down delta with a ▼ marker in the destructive color", () => {
+    render(<StatTile label="LAST 24H" value={80} delta={{ pct: -20, direction: "down" }} />);
+    const marker = screen.getByText(/▼/);
+    expect(marker).toBeInTheDocument();
+    expect(marker.className).toContain("text-destructive");
+    expect(screen.getByText(/20%/)).toBeInTheDocument();
+  });
+
+  it("shows a flat delta with a → marker", () => {
+    render(<StatTile label="LAST 24H" value={100} delta={{ pct: 0, direction: "flat" }} />);
+    expect(screen.getByText(/→/)).toBeInTheDocument();
+  });
 });

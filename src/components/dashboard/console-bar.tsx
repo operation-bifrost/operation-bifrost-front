@@ -23,6 +23,8 @@ export function ConsoleBar({ syncedAt, onRefresh, refreshing }: ConsoleBarProps)
     setLoggingOut(true);
     try {
       await fetch("/api/dashboard/logout", { method: "POST" });
+    } catch {
+      // Best-effort: redirect to login regardless of network failure.
     } finally {
       window.location.href = "/dashboard/login";
     }
@@ -36,7 +38,10 @@ export function ConsoleBar({ syncedAt, onRefresh, refreshing }: ConsoleBarProps)
       </div>
       <div className="flex items-center gap-4 font-mono text-xs">
         <span className="text-primary hidden items-center gap-2 sm:flex">
-          <span className="bg-primary inline-block size-2 animate-pulse rounded-full" />
+          <span
+            className="bg-primary inline-block size-2 animate-pulse rounded-full"
+            aria-hidden="true"
+          />
           {c.sessionLabel}
         </span>
         <span className="text-muted-foreground hidden md:inline">
