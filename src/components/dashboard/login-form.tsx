@@ -22,8 +22,7 @@ export function LoginForm() {
         window.location.href = "/dashboard";
         return;
       }
-      const data = (await res.json().catch(() => ({}))) as { error?: string };
-      setError(res.status === 429 ? login.errorRateLimited : (data.error ?? login.errorInvalid));
+      setError(res.status === 429 ? login.errorRateLimited : login.errorInvalid);
     } catch {
       setError(login.errorNetwork);
     } finally {

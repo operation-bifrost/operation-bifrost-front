@@ -36,5 +36,6 @@ describe("DashboardApp", () => {
     render(<DashboardApp snapshot={snap(42)} />);
     fireEvent.click(screen.getByRole("button", { name: /SYNC/i }));
     await waitFor(() => expect(globalThis.fetch).toHaveBeenCalledWith("/api/dashboard/snapshot"));
+    await waitFor(() => expect(screen.getByRole("img", { name: /99/ })).toBeInTheDocument());
   });
 });
