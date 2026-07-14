@@ -11,5 +11,7 @@ declare namespace Cloudflare {
     DISCORD_BOT_TOKEN: string;
     DISCORD_CHANNEL_ID: string;
     TURNSTILE_SECRET_KEY: string;
+    DASHBOARD_PASSWORD: string;
+    DASHBOARD_SESSION_SECRET: string;
   }
 }

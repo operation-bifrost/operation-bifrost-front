@@ -1,0 +1,16 @@
+---
+import DashboardLayout from "@/layouts/dashboard.astro";
+import { dashboardContent } from "@/data/dashboard";
+import { LoginForm } from "@/components/dashboard/login-form";
+
+export const prerender = false;
+---
+
+<DashboardLayout
+  title={`${dashboardContent.login.title} — แดชบอร์ด`}
+  description={dashboardContent.meta.description}
+>
+  <main class="flex min-h-screen items-center justify-center px-4">
+    <LoginForm client:load />
+  </main>
+</DashboardLayout>

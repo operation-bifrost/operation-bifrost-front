@@ -1,0 +1,24 @@
+---
+import BaseLayout from "@/layouts/base.astro";
+import "@/styles/themes/dashboard.css";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href;
+---
+
+<BaseLayout
+  {title}
+  {description}
+  {canonical}
+  htmlClass="theme-dashboard dark"
+  lang="th"
+  analytics={false}
+  noindex
+>
+  <slot />
+</BaseLayout>
