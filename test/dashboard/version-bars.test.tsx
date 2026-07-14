@@ -38,4 +38,28 @@ describe("VersionBars", () => {
     render(<VersionBars data={[]} total={0} />);
     expect(screen.getByText("—")).toBeInTheDocument();
   });
+
+  it("renders a lone version as a mono readout, not a full-width bar", () => {
+    render(<VersionBars data={[{ version: "v1.0.0", count: 1727 }]} total={1727} />);
+    expect(screen.getByText("v1.0.0")).toBeInTheDocument();
+    expect(screen.getByText("1,727")).toBeInTheDocument();
+    // No bar chart is rendered for a single version.
+    expect(document.querySelector(".recharts-wrapper")).toBeNull();
+  });
+
+  it("renders the bar chart once there are multiple versions", () => {
+    render(
+      <VersionBars
+        data={[
+          { version: "v1.0.0", count: 70 },
+          { version: "v1.0.1", count: 30 },
+        ]}
+        total={100}
+      />,
+    );
+    expect(
+      screen.getByRole("region", { name: dashboardContent.version.title }),
+    ).toBeInTheDocument();
+    expect(document.querySelector(".recharts-wrapper")).not.toBeNull();
+  });
 });
