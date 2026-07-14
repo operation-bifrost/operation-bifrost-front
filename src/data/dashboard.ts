@@ -53,7 +53,13 @@ export const dashboardContent = {
     customRangeAria: "เลือกช่วงวันที่เอง",
   },
   version: { title: "ตามเวอร์ชัน", metric: "ดาวน์โหลด" },
-  country: { title: "ตามประเทศ", topN: 8, othersLabel: "อื่น ๆ", unknownLabel: "ไม่ทราบ" },
+  country: {
+    title: "ตามประเทศ",
+    topN: 8,
+    unknownLabel: "ไม่ทราบ",
+    showAllLabel: "แสดงทั้งหมด",
+    showLessLabel: "แสดงน้อยลง",
+  },
   heatmap: {
     title: "ช่วงเวลาที่ใช้งาน",
     caption: "เอเชีย/กรุงเทพฯ · ชั่วโมง × วันในสัปดาห์",
