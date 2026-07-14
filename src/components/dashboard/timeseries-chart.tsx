@@ -4,9 +4,9 @@ import { type DateRange } from "react-day-picker";
 import { CalendarDays } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import type { DayBucket } from "@/lib/downloads/repository";
+import type { DayBucket, HourBucket } from "@/lib/downloads/repository";
 import { bangkokDayKey } from "@/lib/dashboard/time";
-import { buildSeriesPoints, isCustomRangeActive } from "@/lib/dashboard/series";
+import { buildSeriesPoints, buildHourlyPoints, isCustomRangeActive } from "@/lib/dashboard/series";
 import {
   RANGE_OPTIONS,
   dashboardContent,
@@ -42,6 +42,7 @@ function dateToDayKey(date: Date): string {
 
 interface TimeseriesChartProps {
   daily: DayBucket[];
+  hourly: HourBucket[];
   generatedAt: number;
   range: RangeKey;
   series: SeriesMode;
@@ -57,6 +58,7 @@ const chartConfig = {
 
 export function TimeseriesChart({
   daily,
+  hourly,
   generatedAt,
   range,
   series,
@@ -65,9 +67,15 @@ export function TimeseriesChart({
   onSeriesChange,
   onCustomRangeChange,
 }: TimeseriesChartProps) {
+  // The 24h preset is shown at hourly resolution; every other preset (and any
+  // custom day-range) stays daily.
+  const useHourly = range === "24h" && !isCustomRangeActive(customRange);
   const points = useMemo(
-    () => buildSeriesPoints(daily, generatedAt, range, series, customRange),
-    [daily, generatedAt, range, series, customRange],
+    () =>
+      useHourly
+        ? buildHourlyPoints(hourly, generatedAt, series)
+        : buildSeriesPoints(daily, generatedAt, range, series, customRange),
+    [useHourly, hourly, daily, generatedAt, range, series, customRange],
   );
 
   const hasData = points.some((p) => p.value > 0);
@@ -105,7 +113,9 @@ export function TimeseriesChart({
             value={series}
             onValueChange={(v) => v && onSeriesChange(v as SeriesMode)}
           >
-            <ToggleGroupItem value="daily">{timeseries.daily}</ToggleGroupItem>
+            <ToggleGroupItem value="daily">
+              {useHourly ? timeseries.hourly : timeseries.daily}
+            </ToggleGroupItem>
             <ToggleGroupItem value="cumulative">{timeseries.cumulative}</ToggleGroupItem>
           </ToggleGroup>
           <ToggleGroup
@@ -160,7 +170,7 @@ export function TimeseriesChart({
             <AreaChart accessibilityLayer data={points} margin={{ left: 4, right: 8, top: 8 }}>
               <CartesianGrid vertical={false} />
               <XAxis
-                dataKey="day"
+                dataKey="label"
                 tickLine={false}
                 axisLine={false}
                 tickMargin={8}

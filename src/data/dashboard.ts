@@ -48,6 +48,7 @@ export const dashboardContent = {
     empty: "ไม่มีข้อมูล",
     metric: "ดาวน์โหลด",
     daily: "รายวัน",
+    hourly: "รายชั่วโมง",
     cumulative: "สะสม",
     customRange: "กำหนดเอง",
     customRangeAria: "เลือกช่วงวันที่เอง",

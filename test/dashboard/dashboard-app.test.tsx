@@ -14,6 +14,7 @@ function snap(total: number): DashboardSnapshot {
     windows: { last24h: total, prev24h: 0, last7d: total, prev7d: 0 },
     peakDay: total > 0 ? { day: "2026-07-08", count: total } : null,
     daily: total > 0 ? [{ day: "2026-07-08", count: total }] : [],
+    hourly: total > 0 ? [{ hour: "2026-07-08T13", count: total }] : [],
     byVersion: total > 0 ? [{ version: "v1.0.0", count: total }] : [],
     byCountry: total > 0 ? [{ country: "TH", count: total }] : [],
     heat: [],

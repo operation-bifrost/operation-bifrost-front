@@ -1,8 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
   bangkokDayKey,
+  bangkokHourKey,
   enumerateDays,
+  enumerateHours,
+  formatHourLabel,
   rangeStartDay,
+  rangeStartHour,
   BANGKOK_OFFSET_MS,
 } from "@/lib/dashboard/time";
 
@@ -58,5 +62,46 @@ describe("rangeStartDay", () => {
   });
   it("crosses a year boundary backward", () => {
     expect(rangeStartDay("2027-01-01", 3)).toBe("2026-12-30");
+  });
+});
+
+describe("bangkokHourKey", () => {
+  it("uses the Bangkok clock hour (UTC+7)", () => {
+    // 2026-07-08 18:30 UTC = 2026-07-09 01:xx Bangkok
+    expect(bangkokHourKey(Date.UTC(2026, 6, 8, 18, 30))).toBe("2026-07-09T01");
+  });
+  it("stays on hour H at :59:59.999 and rolls at the next :00", () => {
+    expect(bangkokHourKey(Date.UTC(2026, 6, 8, 16, 59, 59, 999))).toBe("2026-07-08T23");
+    expect(bangkokHourKey(Date.UTC(2026, 6, 8, 17, 0, 0, 0))).toBe("2026-07-09T00");
+  });
+});
+
+describe("enumerateHours", () => {
+  it("lists inclusive ascending hours across a day boundary", () => {
+    expect(enumerateHours("2026-07-13T22", "2026-07-14T01")).toEqual([
+      "2026-07-13T22",
+      "2026-07-13T23",
+      "2026-07-14T00",
+      "2026-07-14T01",
+    ]);
+  });
+  it("returns a single hour when start == end", () => {
+    expect(enumerateHours("2026-07-14T09", "2026-07-14T09")).toEqual(["2026-07-14T09"]);
+  });
+});
+
+describe("rangeStartHour", () => {
+  it("returns the hour (hours-1) before the end for a 24-hour window", () => {
+    expect(rangeStartHour("2026-07-14T07", 24)).toBe("2026-07-13T08");
+  });
+  it("crosses a day boundary backward", () => {
+    expect(rangeStartHour("2026-07-14T01", 3)).toBe("2026-07-13T23");
+  });
+});
+
+describe("formatHourLabel", () => {
+  it("renders an hour key as HH:00", () => {
+    expect(formatHourLabel("2026-07-14T09")).toBe("09:00");
+    expect(formatHourLabel("2026-07-14T00")).toBe("00:00");
   });
 });

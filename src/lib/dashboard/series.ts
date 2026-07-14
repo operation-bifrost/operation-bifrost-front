@@ -1,10 +1,32 @@
-import type { DayBucket } from "@/lib/downloads/repository";
-import { bangkokDayKey, enumerateDays, rangeStartDay } from "@/lib/dashboard/time";
+import type { DayBucket, HourBucket } from "@/lib/downloads/repository";
+import {
+  bangkokDayKey,
+  bangkokHourKey,
+  enumerateDays,
+  enumerateHours,
+  formatHourLabel,
+  rangeStartDay,
+  rangeStartHour,
+} from "@/lib/dashboard/time";
 import { RANGE_OPTIONS, type RangeKey, type SeriesMode, type CustomRange } from "@/data/dashboard";
 
 export interface SeriesPoint {
+  /** Bucket key: a day key ("YYYY-MM-DD") or hour key ("YYYY-MM-DDTHH"). */
   day: string;
+  /** X-axis display string ("YYYY-MM-DD" for days, "HH:00" for hours). */
+  label: string;
   value: number;
+}
+
+/** Number of hourly buckets in the 24h view. */
+const HOURS_IN_WINDOW = 24;
+
+/** Running total, resetting at the window start (matches the daily behaviour). */
+function runningTotal(counts: number[]): number[] {
+  return counts.reduce<number[]>((acc, count) => {
+    const prev = acc.length > 0 ? acc[acc.length - 1] : 0;
+    return [...acc, prev + count];
+  }, []);
 }
 
 /**
@@ -56,13 +78,36 @@ export function buildSeriesPoints(
 
   const days = enumerateDays(startDay, endDay);
   const dailyCounts = days.map((day) => byDay.get(day) ?? 0);
-  const cumulativeCounts = dailyCounts.reduce<number[]>((acc, count) => {
-    const prev = acc.length > 0 ? acc[acc.length - 1] : 0;
-    return [...acc, prev + count];
-  }, []);
+  const cumulativeCounts = runningTotal(dailyCounts);
 
   return days.map((day, i) => ({
     day,
+    label: day,
     value: series === "cumulative" ? cumulativeCounts[i] : dailyCounts[i],
+  }));
+}
+
+/**
+ * Build the 24h chart series: one point per hour across the last 24 Bangkok
+ * clock hours ending at `generatedAt`, missing hours filled to 0. Pure — the
+ * window is derived from `generatedAt`, not `Date.now()`.
+ */
+export function buildHourlyPoints(
+  hourly: HourBucket[],
+  generatedAt: number,
+  series: SeriesMode,
+): SeriesPoint[] {
+  const byHour = new Map(hourly.map((h) => [h.hour, h.count]));
+  const endHour = bangkokHourKey(generatedAt);
+  const startHour = rangeStartHour(endHour, HOURS_IN_WINDOW);
+
+  const hours = enumerateHours(startHour, endHour);
+  const counts = hours.map((hour) => byHour.get(hour) ?? 0);
+  const cumulativeCounts = runningTotal(counts);
+
+  return hours.map((hour, i) => ({
+    day: hour,
+    label: formatHourLabel(hour),
+    value: series === "cumulative" ? cumulativeCounts[i] : counts[i],
   }));
 }
