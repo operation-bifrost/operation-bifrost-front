@@ -1,6 +1,7 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { DashboardApp } from "@/components/dashboard/dashboard-app";
+import { dashboardContent } from "@/data/dashboard";
 import type { DashboardSnapshot } from "@/lib/downloads/repository";
 
 function snap(total: number): DashboardSnapshot {
@@ -26,7 +27,7 @@ describe("DashboardApp", () => {
 
   it("renders the initial total from props", () => {
     render(<DashboardApp snapshot={snap(42)} />);
-    expect(screen.getByText(/Total downloads/i)).toBeInTheDocument();
+    expect(screen.getByText(dashboardContent.hero.label)).toBeInTheDocument();
   });
 
   it("refetches and updates the total when Refresh is clicked", async () => {
@@ -34,7 +35,7 @@ describe("DashboardApp", () => {
       new Response(JSON.stringify(snap(99)), { status: 200 }),
     );
     render(<DashboardApp snapshot={snap(42)} />);
-    fireEvent.click(screen.getByRole("button", { name: /Refresh/i }));
+    fireEvent.click(screen.getByRole("button", { name: dashboardContent.console.refreshLabel }));
     await waitFor(() => expect(globalThis.fetch).toHaveBeenCalledWith("/api/dashboard/snapshot"));
     await waitFor(() => expect(screen.getByRole("img", { name: /99/ })).toBeInTheDocument());
   });

@@ -34,7 +34,7 @@ let regionNames: Intl.DisplayNames | null = null;
 function getRegionNames(): Intl.DisplayNames | null {
   if (regionNames) return regionNames;
   try {
-    regionNames = new Intl.DisplayNames(["en"], { type: "region" });
+    regionNames = new Intl.DisplayNames(["th"], { type: "region" });
   } catch {
     regionNames = null;
   }
@@ -42,7 +42,7 @@ function getRegionNames(): Intl.DisplayNames | null {
 }
 
 export function resolveCountryName(code: string): string {
-  if (!/^[A-Za-z]{2}$/.test(code)) return "Unknown";
+  if (!/^[A-Za-z]{2}$/.test(code)) return "ไม่ทราบ";
   const upper = code.toUpperCase();
   const names = getRegionNames();
   try {

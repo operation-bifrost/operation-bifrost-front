@@ -1,9 +1,19 @@
 import { useId, useMemo } from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { type DateRange } from "react-day-picker";
+import { CalendarDays } from "lucide-react";
 
+import { cn } from "@/lib/utils";
 import type { DayBucket } from "@/lib/downloads/repository";
-import { bangkokDayKey, enumerateDays, rangeStartDay } from "@/lib/dashboard/time";
-import { RANGE_OPTIONS, dashboardContent, type RangeKey, type SeriesMode } from "@/data/dashboard";
+import { bangkokDayKey } from "@/lib/dashboard/time";
+import { buildSeriesPoints, isCustomRangeActive } from "@/lib/dashboard/series";
+import {
+  RANGE_OPTIONS,
+  dashboardContent,
+  type RangeKey,
+  type SeriesMode,
+  type CustomRange,
+} from "@/data/dashboard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartContainer,
@@ -11,19 +21,38 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+
+/** "YYYY-MM-DD" day key → local-midnight Date (for the calendar's Date model). */
+function dayKeyToDate(key: string): Date {
+  const [y, m, d] = key.split("-").map(Number);
+  return new Date(y, m - 1, d);
+}
+
+/** Local Date → "YYYY-MM-DD" day key (matches the repository's day-key format). */
+function dateToDayKey(date: Date): string {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
 
 interface TimeseriesChartProps {
   daily: DayBucket[];
   generatedAt: number;
   range: RangeKey;
   series: SeriesMode;
+  customRange: CustomRange | null;
   onRangeChange: (r: RangeKey) => void;
   onSeriesChange: (s: SeriesMode) => void;
+  onCustomRangeChange: (c: CustomRange | null) => void;
 }
 
 const chartConfig = {
-  value: { label: "Downloads", color: "var(--chart-1)" },
+  value: { label: dashboardContent.timeseries.metric, color: "var(--chart-1)" },
 } satisfies ChartConfig;
 
 export function TimeseriesChart({
@@ -31,35 +60,41 @@ export function TimeseriesChart({
   generatedAt,
   range,
   series,
+  customRange,
   onRangeChange,
   onSeriesChange,
+  onCustomRangeChange,
 }: TimeseriesChartProps) {
-  const points = useMemo(() => {
-    const byDay = new Map(daily.map((d) => [d.day, d.count]));
-    const todayKey = bangkokDayKey(generatedAt);
-    const rangeDays = RANGE_OPTIONS.find((o) => o.key === range)?.days ?? null;
-    const startDay =
-      rangeDays === null ? (daily[0]?.day ?? todayKey) : rangeStartDay(todayKey, rangeDays);
-    const days = enumerateDays(startDay, todayKey);
-    const dailyCounts = days.map((day) => byDay.get(day) ?? 0);
-    const cumulativeCounts = dailyCounts.reduce<number[]>((acc, count) => {
-      const prev = acc.length > 0 ? acc[acc.length - 1] : 0;
-      return [...acc, prev + count];
-    }, []);
-    return days.map((day, i) => ({
-      day,
-      value: series === "cumulative" ? cumulativeCounts[i] : dailyCounts[i],
-    }));
-  }, [daily, generatedAt, range, series]);
+  const points = useMemo(
+    () => buildSeriesPoints(daily, generatedAt, range, series, customRange),
+    [daily, generatedAt, range, series, customRange],
+  );
 
   const hasData = points.some((p) => p.value > 0);
   const { timeseries } = dashboardContent;
   const titleId = useId();
 
+  const customActive = isCustomRangeActive(customRange);
+  const maxDate = dayKeyToDate(bangkokDayKey(generatedAt));
+  const minDate = daily[0]?.day ? dayKeyToDate(daily[0].day) : undefined;
+  const selectedRange: DateRange | undefined = customRange
+    ? {
+        from: customRange.from ? dayKeyToDate(customRange.from) : undefined,
+        to: customRange.to ? dayKeyToDate(customRange.to) : undefined,
+      }
+    : undefined;
+  const handleRangeSelect = (range: DateRange | undefined) => {
+    onCustomRangeChange(
+      range?.from
+        ? { from: dateToDayKey(range.from), to: range.to ? dateToDayKey(range.to) : "" }
+        : null,
+    );
+  };
+
   return (
     <Card role="region" aria-labelledby={titleId}>
       <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-3 space-y-0">
-        <CardTitle id={titleId} className="text-sm font-medium">
+        <CardTitle id={titleId} className="dash-eyebrow">
           {timeseries.title}
         </CardTitle>
         <div className="flex flex-wrap items-center gap-2">
@@ -70,15 +105,20 @@ export function TimeseriesChart({
             value={series}
             onValueChange={(v) => v && onSeriesChange(v as SeriesMode)}
           >
-            <ToggleGroupItem value="daily">Daily</ToggleGroupItem>
-            <ToggleGroupItem value="cumulative">Cumulative</ToggleGroupItem>
+            <ToggleGroupItem value="daily">{timeseries.daily}</ToggleGroupItem>
+            <ToggleGroupItem value="cumulative">{timeseries.cumulative}</ToggleGroupItem>
           </ToggleGroup>
           <ToggleGroup
             type="single"
             size="sm"
             variant="outline"
-            value={range}
-            onValueChange={(v) => v && onRangeChange(v as RangeKey)}
+            value={customActive ? "" : range}
+            onValueChange={(v) => {
+              if (v) {
+                onRangeChange(v as RangeKey);
+                onCustomRangeChange(null);
+              }
+            }}
           >
             {RANGE_OPTIONS.map((o) => (
               <ToggleGroupItem key={o.key} value={o.key}>
@@ -86,6 +126,32 @@ export function TimeseriesChart({
               </ToggleGroupItem>
             ))}
           </ToggleGroup>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                aria-label={timeseries.customRangeAria}
+                className={cn("gap-2", !customActive && "text-muted-foreground")}
+              >
+                <CalendarDays className="size-3.5" aria-hidden="true" />
+                {isCustomRangeActive(customRange)
+                  ? `${customRange.from} – ${customRange.to}`
+                  : timeseries.customRange}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="end">
+              <Calendar
+                mode="range"
+                numberOfMonths={2}
+                autoFocus
+                defaultMonth={selectedRange?.from ?? maxDate}
+                selected={selectedRange}
+                onSelect={handleRangeSelect}
+                disabled={minDate ? [{ before: minDate }, { after: maxDate }] : { after: maxDate }}
+              />
+            </PopoverContent>
+          </Popover>
         </div>
       </CardHeader>
       <CardContent>

@@ -2,54 +2,73 @@ export const DAY_MS = 86_400_000;
 
 /** Range options for the time-series chart. `days: null` means "all time". */
 export const RANGE_OPTIONS = [
-  { key: "24h", label: "24h", days: 1 },
-  { key: "7d", label: "7d", days: 7 },
-  { key: "30d", label: "30d", days: 30 },
-  { key: "all", label: "All", days: null },
+  { key: "24h", label: "24 ชม.", days: 1 },
+  { key: "7d", label: "7 วัน", days: 7 },
+  { key: "30d", label: "30 วัน", days: 30 },
+  { key: "all", label: "ทั้งหมด", days: null },
 ] as const;
 
 export type RangeKey = (typeof RANGE_OPTIONS)[number]["key"];
 export type SeriesMode = "daily" | "cumulative";
 
+/**
+ * Inclusive custom day-range for the time-series chart. Both fields are
+ * "YYYY-MM-DD" day keys — the native `<input type="date">` value format, which
+ * matches the repository's day keys exactly (no timezone conversion needed).
+ * Empty strings mean "not set"; a range is only applied when both are set and
+ * `from <= to` (see `isCustomRangeActive`).
+ */
+export type CustomRange = { from: string; to: string };
+
 export const dashboardContent = {
   meta: {
-    title: "Download Telemetry — Operation Bifrost",
-    description: "Private download analytics dashboard.",
+    title: "สถิติการดาวน์โหลด — Operation Bifrost",
+    description: "แดชบอร์ดวิเคราะห์การดาวน์โหลดแบบส่วนตัว",
   },
   console: {
+    // Brand wordmark stays in English (BONX display face has no Thai glyphs).
     brand: "Operation Bifrost",
-    subtitle: "Download telemetry",
-    refreshLabel: "Refresh",
-    logoutLabel: "Log out",
-    syncedPrefix: "Updated",
+    subtitle: "สถิติการดาวน์โหลด",
+    refreshLabel: "รีเฟรช",
+    logoutLabel: "ออกจากระบบ",
+    syncedPrefix: "อัปเดตเมื่อ",
   },
   hero: {
-    label: "Total downloads",
-    emptyCaption: "No downloads yet",
+    label: "ยอดดาวน์โหลดทั้งหมด",
+    emptyCaption: "ยังไม่มีการดาวน์โหลด",
   },
   tiles: {
-    last24h: "Last 24h",
-    last7d: "Last 7d",
-    peakDay: "Peak day",
-    avgPerDay: "Avg / day",
+    last24h: "24 ชม.ล่าสุด",
+    last7d: "7 วันล่าสุด",
+    peakDay: "วันที่สูงสุด",
+    avgPerDay: "เฉลี่ยต่อวัน",
   },
-  timeseries: { title: "Downloads over time", empty: "No data" },
-  version: { title: "By version" },
-  country: { title: "By country", topN: 8, othersLabel: "Others", unknownLabel: "Unknown" },
+  timeseries: {
+    title: "ยอดดาวน์โหลดตามช่วงเวลา",
+    empty: "ไม่มีข้อมูล",
+    metric: "ดาวน์โหลด",
+    daily: "รายวัน",
+    cumulative: "สะสม",
+    customRange: "กำหนดเอง",
+    customRangeAria: "เลือกช่วงวันที่เอง",
+  },
+  version: { title: "ตามเวอร์ชัน", metric: "ดาวน์โหลด" },
+  country: { title: "ตามประเทศ", topN: 8, othersLabel: "อื่น ๆ", unknownLabel: "ไม่ทราบ" },
   heatmap: {
-    title: "Activity",
-    caption: "Asia/Bangkok · hour × weekday",
-    weekdays: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+    title: "ช่วงเวลาที่ใช้งาน",
+    caption: "เอเชีย/กรุงเทพฯ · ชั่วโมง × วันในสัปดาห์",
+    metricLabel: "ดาวน์โหลด",
+    weekdays: ["อา.", "จ.", "อ.", "พ.", "พฤ.", "ศ.", "ส."],
   },
   provenance:
-    "Source: D1 downloads log · counts are click events, not unique users · times in Asia/Bangkok",
+    "ที่มา: บันทึกการดาวน์โหลดจาก D1 · นับตามจำนวนคลิก ไม่ใช่ผู้ใช้ที่ไม่ซ้ำ · เวลาเป็นเขตเอเชีย/กรุงเทพฯ",
   login: {
-    title: "Sign in",
-    prompt: "Password",
-    submitLabel: "Sign in",
-    errorInvalid: "Incorrect password",
-    errorRateLimited: "Too many attempts — wait 60s",
-    errorNetwork: "Network error — try again",
+    title: "เข้าสู่ระบบ",
+    prompt: "รหัสผ่าน",
+    submitLabel: "เข้าสู่ระบบ",
+    errorInvalid: "รหัสผ่านไม่ถูกต้อง",
+    errorRateLimited: "พยายามมากเกินไป — รอ 60 วินาที",
+    errorNetwork: "เกิดข้อผิดพลาดเครือข่าย — ลองใหม่อีกครั้ง",
   },
-  errors: { snapshotFailed: "Couldn't load the dashboard", retryLabel: "Retry" },
+  errors: { snapshotFailed: "ไม่สามารถโหลดแดชบอร์ดได้", retryLabel: "ลองใหม่" },
 } as const;

@@ -2,7 +2,12 @@ import { useCallback, useState } from "react";
 
 import type { DashboardSnapshot } from "@/lib/downloads/repository";
 import { computeDelta } from "@/lib/dashboard/format";
-import { dashboardContent, type RangeKey, type SeriesMode } from "@/data/dashboard";
+import {
+  dashboardContent,
+  type RangeKey,
+  type SeriesMode,
+  type CustomRange,
+} from "@/data/dashboard";
 import { ConsoleBar } from "@/components/dashboard/console-bar";
 import { HeroTotal } from "@/components/dashboard/hero-total";
 import { StatTile } from "@/components/dashboard/stat-tile";
@@ -25,6 +30,7 @@ export function DashboardApp({ snapshot: initial }: DashboardAppProps) {
   const [snapshot, setSnapshot] = useState(initial);
   const [range, setRange] = useState<RangeKey>("30d");
   const [series, setSeries] = useState<SeriesMode>("daily");
+  const [customRange, setCustomRange] = useState<CustomRange | null>(null);
   const [refreshing, setRefreshing] = useState(false);
 
   const refresh = useCallback(async () => {
@@ -83,8 +89,10 @@ export function DashboardApp({ snapshot: initial }: DashboardAppProps) {
         generatedAt={snapshot.generatedAt}
         range={range}
         series={series}
+        customRange={customRange}
         onRangeChange={setRange}
         onSeriesChange={setSeries}
+        onCustomRangeChange={setCustomRange}
       />
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">

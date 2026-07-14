@@ -11,11 +11,9 @@ export function HeroTotal({ total, version, hasData }: HeroTotalProps) {
   const { hero } = dashboardContent;
   return (
     <div className="flex flex-col gap-1">
-      <span className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-        {hero.label}
-      </span>
-      <span role="img" aria-label={`${hero.label}: ${total}`} className="text-foreground">
-        <span aria-hidden="true">
+      <span className="dash-eyebrow dash-eyebrow--accent">{hero.label}</span>
+      <span role="img" aria-label={`${hero.label}: ${total}`}>
+        <span aria-hidden="true" className="dash-readout">
           <Counter value={total} fontSize={56} gap={2} fontWeight={700} gradientHeight={0} />
         </span>
       </span>

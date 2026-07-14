@@ -44,10 +44,10 @@ describe("codeToFlagEmoji", () => {
 });
 
 describe("resolveCountryName", () => {
-  it("resolves a known code to a display name", () => {
-    expect(resolveCountryName("TH")).toBe("Thailand");
+  it("resolves a known code to a Thai display name", () => {
+    expect(resolveCountryName("TH")).toBe("ไทย");
   });
   it("labels UNKNOWN explicitly", () => {
-    expect(resolveCountryName("UNKNOWN")).toBe("Unknown");
+    expect(resolveCountryName("UNKNOWN")).toBe("ไม่ทราบ");
   });
 });

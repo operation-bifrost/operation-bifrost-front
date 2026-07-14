@@ -35,8 +35,9 @@ export function LoginForm() {
 
   return (
     <Card className="w-full max-w-sm">
-      <CardHeader>
-        <h1 className="text-lg font-semibold">{login.title}</h1>
+      <CardHeader className="gap-1">
+        <span className="dash-wordmark text-lg">{dashboardContent.console.brand}</span>
+        <h1 className="text-foreground text-base font-semibold">{login.title}</h1>
       </CardHeader>
       <CardContent>
         <form onSubmit={submit} className="flex flex-col gap-4">

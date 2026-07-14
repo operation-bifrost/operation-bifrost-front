@@ -31,7 +31,7 @@ export function toVersionRows(data: VersionCount[], total: number): VersionRow[]
 }
 
 const chartConfig = {
-  count: { label: "Downloads", color: "var(--chart-1)" },
+  count: { label: dashboardContent.version.metric, color: "var(--chart-1)" },
 } satisfies ChartConfig;
 
 export function VersionBars({ data, total }: VersionBarsProps) {
@@ -40,7 +40,7 @@ export function VersionBars({ data, total }: VersionBarsProps) {
   return (
     <Card role="region" aria-labelledby={titleId}>
       <CardHeader>
-        <CardTitle id={titleId} className="text-sm font-medium">
+        <CardTitle id={titleId} className="dash-eyebrow">
           {dashboardContent.version.title}
         </CardTitle>
       </CardHeader>

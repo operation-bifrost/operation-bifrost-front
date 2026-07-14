@@ -27,9 +27,7 @@ export function StatTile({ label, value, delta, sparkline, subLabel }: StatTileP
   return (
     <Card className="py-0">
       <CardContent className="flex flex-col gap-2 p-4">
-        <span className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-          {label}
-        </span>
+        <span className="dash-eyebrow">{label}</span>
         <div className="flex items-end justify-between gap-2">
           <span className="text-foreground text-2xl font-semibold tabular-nums">
             {formatCount(value)}

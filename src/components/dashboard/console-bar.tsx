@@ -31,10 +31,10 @@ export function ConsoleBar({ syncedAt, onRefresh, refreshing }: ConsoleBarProps)
   }
 
   return (
-    <header className="flex flex-wrap items-center justify-between gap-3">
-      <div className="flex flex-col">
-        <span className="text-foreground text-base font-semibold tracking-tight">{c.brand}</span>
-        <span className="text-muted-foreground text-xs">{c.subtitle}</span>
+    <header className="border-border flex flex-wrap items-center justify-between gap-3 border-b pb-4">
+      <div className="flex flex-col gap-1">
+        <span className="dash-wordmark text-lg">{c.brand}</span>
+        <span className="dash-eyebrow">{c.subtitle}</span>
       </div>
       <div className="flex items-center gap-2">
         <span className="text-muted-foreground hidden text-xs sm:inline">
