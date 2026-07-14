@@ -28,6 +28,7 @@ describe("VersionBars", () => {
   it("renders the section title", () => {
     render(<VersionBars data={[{ version: "v1.0.0", count: 10 }]} total={10} />);
     expect(screen.getByText("By version")).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "By version" })).toBeInTheDocument();
   });
 
   it("shows an empty marker when there is no data", () => {

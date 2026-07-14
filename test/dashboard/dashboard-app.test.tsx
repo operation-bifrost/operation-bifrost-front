@@ -29,7 +29,7 @@ describe("DashboardApp", () => {
     expect(screen.getByText(/Total downloads/i)).toBeInTheDocument();
   });
 
-  it("refetches and updates the total when SYNC is clicked", async () => {
+  it("refetches and updates the total when Refresh is clicked", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(JSON.stringify(snap(99)), { status: 200 }),
     );

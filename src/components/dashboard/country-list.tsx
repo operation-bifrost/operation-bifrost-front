@@ -1,3 +1,5 @@
+import { useId } from "react";
+
 import type { CountryCount } from "@/lib/downloads/repository";
 import { codeToFlagEmoji, resolveCountryName, formatCount } from "@/lib/dashboard/format";
 import { dashboardContent } from "@/data/dashboard";
@@ -22,11 +24,14 @@ export function CountryList({ data, total }: CountryListProps) {
   const othersRow =
     othersCount > 0 ? [{ key: "__others", flag: "…", name: othersLabel, count: othersCount }] : [];
   const rows = [...topRows, ...othersRow];
+  const titleId = useId();
 
   return (
-    <Card>
+    <Card role="region" aria-labelledby={titleId}>
       <CardHeader>
-        <CardTitle className="text-sm font-medium">{title}</CardTitle>
+        <CardTitle id={titleId} className="text-sm font-medium">
+          {title}
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <ul className="flex flex-col gap-2.5">

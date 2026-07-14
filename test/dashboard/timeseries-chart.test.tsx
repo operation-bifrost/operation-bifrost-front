@@ -18,6 +18,7 @@ describe("TimeseriesChart", () => {
       />,
     );
     expect(screen.getByText("Downloads over time")).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "Downloads over time" })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("radio", { name: "7d" }));
     expect(onRange).toHaveBeenCalledWith("7d");
   });

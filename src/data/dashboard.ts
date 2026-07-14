@@ -19,7 +19,6 @@ export const dashboardContent = {
   console: {
     brand: "Operation Bifrost",
     subtitle: "Download telemetry",
-    sessionLabel: "Live",
     refreshLabel: "Refresh",
     logoutLabel: "Log out",
     syncedPrefix: "Updated",

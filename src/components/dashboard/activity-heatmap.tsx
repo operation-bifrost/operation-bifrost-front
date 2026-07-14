@@ -1,3 +1,5 @@
+import { useId } from "react";
+
 import type { HeatCell } from "@/lib/downloads/repository";
 import { dashboardContent } from "@/data/dashboard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,11 +17,14 @@ export function ActivityHeatmap({ heat }: ActivityHeatmapProps) {
   const { weekdays, title, caption } = dashboardContent.heatmap;
   const byKey = new Map(heat.map((c) => [`${c.weekday}-${c.hour}`, c.count]));
   const max = Math.max(...heat.map((c) => c.count), 1);
+  const titleId = useId();
 
   return (
-    <Card>
+    <Card role="region" aria-labelledby={titleId}>
       <CardHeader>
-        <CardTitle className="text-sm font-medium">{title}</CardTitle>
+        <CardTitle id={titleId} className="text-sm font-medium">
+          {title}
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="overflow-x-auto">

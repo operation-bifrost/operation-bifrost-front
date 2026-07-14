@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useId, useMemo } from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 import type { DayBucket } from "@/lib/downloads/repository";
@@ -54,11 +54,14 @@ export function TimeseriesChart({
 
   const hasData = points.some((p) => p.value > 0);
   const { timeseries } = dashboardContent;
+  const titleId = useId();
 
   return (
-    <Card>
+    <Card role="region" aria-labelledby={titleId}>
       <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-3 space-y-0">
-        <CardTitle className="text-sm font-medium">{timeseries.title}</CardTitle>
+        <CardTitle id={titleId} className="text-sm font-medium">
+          {timeseries.title}
+        </CardTitle>
         <div className="flex flex-wrap items-center gap-2">
           <ToggleGroup
             type="single"

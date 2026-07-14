@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { Bar, BarChart, LabelList, XAxis, YAxis } from "recharts";
 
 import type { VersionCount } from "@/lib/downloads/repository";
@@ -35,10 +36,13 @@ const chartConfig = {
 
 export function VersionBars({ data, total }: VersionBarsProps) {
   const rows = toVersionRows(data, total);
+  const titleId = useId();
   return (
-    <Card>
+    <Card role="region" aria-labelledby={titleId}>
       <CardHeader>
-        <CardTitle className="text-sm font-medium">{dashboardContent.version.title}</CardTitle>
+        <CardTitle id={titleId} className="text-sm font-medium">
+          {dashboardContent.version.title}
+        </CardTitle>
       </CardHeader>
       <CardContent>
         {rows.length === 0 ? (

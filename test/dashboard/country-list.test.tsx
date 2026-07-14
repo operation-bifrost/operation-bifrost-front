@@ -17,6 +17,7 @@ describe("CountryList", () => {
     );
     expect(screen.getByText("Thailand")).toBeInTheDocument();
     expect(screen.getByText("Unknown")).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "By country" })).toBeInTheDocument();
   });
 
   it("rolls entries beyond topN into an Others row", () => {

@@ -9,5 +9,6 @@ describe("ActivityHeatmap", () => {
     expect(screen.getByText("Sun")).toBeInTheDocument();
     expect(screen.getByText("Mon")).toBeInTheDocument();
     expect(screen.getByText("Sat")).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "Activity" })).toBeInTheDocument();
   });
 });
