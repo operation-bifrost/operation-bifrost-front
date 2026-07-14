@@ -31,6 +31,11 @@ export interface DayBucket {
   day: string;
   count: number;
 }
+export interface HourBucket {
+  /** Bangkok clock hour, "YYYY-MM-DDTHH". */
+  hour: string;
+  count: number;
+}
 export interface VersionCount {
   version: string;
   count: number;
@@ -60,6 +65,7 @@ export interface DashboardSnapshot {
   windows: WindowCounts;
   peakDay: DayBucket | null;
   daily: DayBucket[];
+  hourly: HourBucket[];
   byVersion: VersionCount[];
   byCountry: CountryCount[];
   heat: HeatCell[];
@@ -87,6 +93,21 @@ export async function getDailySeries(db: D1Database): Promise<DayBucket[]> {
         "FROM downloads GROUP BY day ORDER BY day ASC",
     )
     .all<DayBucket>();
+  return results;
+}
+
+// Hourly buckets only feed the 24h view, so bound the scan to the recent past
+// (48h of margin) instead of grouping the whole table by hour.
+const HOURLY_LOOKBACK_MS = 2 * 86_400_000;
+
+export async function getHourlySeries(db: D1Database, nowMs: number): Promise<HourBucket[]> {
+  const { results } = await db
+    .prepare(
+      `SELECT strftime('%Y-%m-%dT%H', ${BKK}) AS hour, COUNT(*) AS count ` +
+        "FROM downloads WHERE created_at >= ? GROUP BY hour ORDER BY hour ASC",
+    )
+    .bind(nowMs - HOURLY_LOOKBACK_MS)
+    .all<HourBucket>();
   return results;
 }
 
@@ -140,9 +161,10 @@ export async function getDashboardSnapshot(
   db: D1Database,
   nowMs: number,
 ): Promise<DashboardSnapshot> {
-  const [totals, daily, windows, byVersion, byCountry, heat] = await Promise.all([
+  const [totals, daily, hourly, windows, byVersion, byCountry, heat] = await Promise.all([
     getTotals(db),
     getDailySeries(db),
+    getHourlySeries(db, nowMs),
     getWindowCounts(db, nowMs),
     getByVersion(db),
     getByCountry(db),
@@ -163,6 +185,7 @@ export async function getDashboardSnapshot(
     windows,
     peakDay,
     daily,
+    hourly,
     byVersion,
     byCountry,
     heat,

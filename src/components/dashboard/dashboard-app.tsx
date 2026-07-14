@@ -86,6 +86,7 @@ export function DashboardApp({ snapshot: initial }: DashboardAppProps) {
 
       <TimeseriesChart
         daily={snapshot.daily}
+        hourly={snapshot.hourly}
         generatedAt={snapshot.generatedAt}
         range={range}
         series={series}

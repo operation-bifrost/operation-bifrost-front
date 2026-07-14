@@ -34,6 +34,10 @@ describe("getDashboardSnapshot", () => {
         { day: "2026-07-07", count: 2 },
         { day: "2026-07-08", count: 4 },
       ],
+      "%Y-%m-%dT%H": [
+        { hour: "2026-07-08T13", count: 3 },
+        { hour: "2026-07-08T14", count: 1 },
+      ],
       "AS last24h": [{ last24h: 4, prev24h: 2, last7d: 6, prev7d: 0 }],
       "version, COUNT(*)": [{ version: "v1.0.0", count: 6 }],
       "AS country": [
@@ -47,6 +51,10 @@ describe("getDashboardSnapshot", () => {
 
     expect(snap.total).toBe(6);
     expect(snap.daily).toHaveLength(2);
+    expect(snap.hourly).toEqual([
+      { hour: "2026-07-08T13", count: 3 },
+      { hour: "2026-07-08T14", count: 1 },
+    ]);
     expect(snap.peakDay).toEqual({ day: "2026-07-08", count: 4 });
     expect(snap.windows.last24h).toBe(4);
     expect(snap.byCountry[0]).toEqual({ country: "TH", count: 5 });
@@ -61,6 +69,7 @@ describe("getDashboardSnapshot", () => {
     expect(snap.total).toBe(0);
     expect(snap.peakDay).toBeNull();
     expect(snap.daily).toEqual([]);
+    expect(snap.hourly).toEqual([]);
     expect(snap.windows).toEqual({ last24h: 0, prev24h: 0, last7d: 0, prev7d: 0 });
   });
 });

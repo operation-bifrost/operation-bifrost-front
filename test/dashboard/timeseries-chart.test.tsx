@@ -9,6 +9,7 @@ const label7d = RANGE_OPTIONS.find((o) => o.key === "7d")?.label ?? "7 วัน
 
 const baseProps = {
   daily: [],
+  hourly: [],
   generatedAt: 0,
   range: "30d" as const,
   series: "daily" as const,
@@ -41,5 +42,17 @@ describe("TimeseriesChart", () => {
   it("shows the empty state when there is no data", () => {
     render(<TimeseriesChart {...baseProps} />);
     expect(screen.getByText(timeseries.empty)).toBeInTheDocument();
+  });
+
+  it("relabels the interval toggle to hourly for the 24h range", () => {
+    render(<TimeseriesChart {...baseProps} range="24h" />);
+    expect(screen.getByRole("radio", { name: timeseries.hourly })).toBeInTheDocument();
+    expect(screen.queryByRole("radio", { name: timeseries.daily })).toBeNull();
+  });
+
+  it("keeps the daily interval label for non-24h ranges", () => {
+    render(<TimeseriesChart {...baseProps} range="7d" />);
+    expect(screen.getByRole("radio", { name: timeseries.daily })).toBeInTheDocument();
+    expect(screen.queryByRole("radio", { name: timeseries.hourly })).toBeNull();
   });
 });
