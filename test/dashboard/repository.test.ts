@@ -1,7 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { getDashboardSnapshot, getWindowCounts } from "@/lib/downloads/repository";
+import {
+  getDashboardSnapshot,
+  getRecentDownloads,
+  getWindowCounts,
+  recordDownload,
+} from "@/lib/downloads/repository";
 
 type Row = Record<string, unknown>;
+
+const CHROME_WIN =
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
 
 /** Minimal D1Database fake: matches a canned result by a substring of the SQL. */
 function fakeDb(cannedBySqlFragment: Record<string, Row[]>): D1Database {
@@ -45,6 +53,25 @@ describe("getDashboardSnapshot", () => {
         { country: "UNKNOWN", count: 1 },
       ],
       "AS weekday": [{ weekday: 2, hour: 13, count: 3 }],
+      "COUNT(DISTINCT ip)": [{ uniqueIps: 4 }],
+      "SELECT ip, COUNT(*)": [
+        { ip: "203.0.113.7", count: 3 },
+        { ip: "198.51.100.2", count: 1 },
+      ],
+      "GROUP BY user_agent": [
+        { userAgent: CHROME_WIN, count: 4 },
+        { userAgent: null, count: 2 },
+      ],
+      "AS createdAt": [
+        {
+          id: 2,
+          version: "v1.0.0",
+          country: "TH",
+          ip: "203.0.113.7",
+          userAgent: CHROME_WIN,
+          createdAt: 9000,
+        },
+      ],
     });
 
     const snap = await getDashboardSnapshot(db, 1_700_000_000_000);
@@ -59,6 +86,22 @@ describe("getDashboardSnapshot", () => {
     expect(snap.windows.last24h).toBe(4);
     expect(snap.byCountry[0]).toEqual({ country: "TH", count: 5 });
     expect(snap.heat[0]).toEqual({ weekday: 2, hour: 13, count: 3 });
+    expect(snap.clients.uniqueIps).toBe(4);
+    expect(snap.clients.topIps[0]).toEqual({ ip: "203.0.113.7", count: 3 });
+    expect(snap.clients.byBrowser).toEqual([
+      { label: "Chrome", count: 4 },
+      { label: "UNKNOWN", count: 2 },
+    ]);
+    expect(snap.clients.byOs).toEqual([
+      { label: "Windows", count: 4 },
+      { label: "UNKNOWN", count: 2 },
+    ]);
+    expect(snap.clients.byDevice).toEqual([
+      { label: "desktop", count: 4 },
+      { label: "UNKNOWN", count: 2 },
+    ]);
+    expect(snap.recent).toHaveLength(1);
+    expect(snap.recent[0]).toMatchObject({ ip: "203.0.113.7", userAgent: CHROME_WIN });
     expect(snap.currentVersion).toBe("v1.0.0");
     expect(snap.generatedAt).toBe(1_700_000_000_000);
   });
@@ -71,6 +114,91 @@ describe("getDashboardSnapshot", () => {
     expect(snap.daily).toEqual([]);
     expect(snap.hourly).toEqual([]);
     expect(snap.windows).toEqual({ last24h: 0, prev24h: 0, last7d: 0, prev7d: 0 });
+    expect(snap.clients).toEqual({
+      uniqueIps: 0,
+      topIps: [],
+      byBrowser: [],
+      byOs: [],
+      byDevice: [],
+    });
+    expect(snap.recent).toEqual([]);
+  });
+});
+
+/** Captures the bound parameters of the single statement the call prepares. */
+function capturingDb(rows: Row[] = []) {
+  const captured: { sql: string; args: unknown[] } = { sql: "", args: [] };
+  const stmt = (sql: string) => ({
+    bind(...args: unknown[]) {
+      captured.sql = sql;
+      captured.args = args;
+      return stmt(sql);
+    },
+    async first<T>() {
+      return (rows[0] ?? null) as T | null;
+    },
+    async all<T>() {
+      return { results: rows as T[] };
+    },
+    async run() {
+      return { meta: { changes: 1 } };
+    },
+  });
+  return { db: { prepare: (sql: string) => stmt(sql) } as unknown as D1Database, captured };
+}
+
+describe("recordDownload", () => {
+  it("persists ip and user agent alongside version, country, and timestamp", async () => {
+    const { db, captured } = capturingDb();
+
+    await recordDownload(db, {
+      version: "v1.0.0",
+      country: "TH",
+      ip: "203.0.113.7",
+      userAgent: CHROME_WIN,
+      createdAt: 1234,
+    });
+
+    expect(captured.sql).toContain("ip");
+    expect(captured.sql).toContain("user_agent");
+    expect(captured.args).toEqual(["v1.0.0", "TH", "203.0.113.7", CHROME_WIN, 1234]);
+  });
+
+  it("stores nulls when Cloudflare headers and the User-Agent are absent (local dev)", async () => {
+    const { db, captured } = capturingDb();
+
+    await recordDownload(db, {
+      version: "v1.0.0",
+      country: null,
+      ip: null,
+      userAgent: null,
+      createdAt: 1,
+    });
+
+    expect(captured.args).toEqual(["v1.0.0", null, null, null, 1]);
+  });
+
+  it("truncates an oversized User-Agent rather than rejecting the write", async () => {
+    const { db, captured } = capturingDb();
+
+    await recordDownload(db, {
+      version: "v1.0.0",
+      country: null,
+      ip: null,
+      userAgent: "x".repeat(2000),
+      createdAt: 1,
+    });
+
+    expect((captured.args[3] as string).length).toBe(512);
+  });
+});
+
+describe("getRecentDownloads", () => {
+  it("binds the row limit", async () => {
+    const { db, captured } = capturingDb([]);
+    await getRecentDownloads(db, 50);
+    expect(captured.args).toEqual([50]);
+    expect(captured.sql).toContain("ORDER BY created_at DESC");
   });
 });
 

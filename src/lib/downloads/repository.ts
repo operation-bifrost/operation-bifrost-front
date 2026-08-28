@@ -1,11 +1,25 @@
 import { steinsGateContent } from "@/data/steins-gate";
+import { foldUserAgents, type LabelCount, type UserAgentCount } from "@/lib/downloads/user-agent";
 
 export interface DownloadEvent {
   /** Patch version downloaded, e.g. "v1.0.0". */
   version: string;
   /** ISO 3166-1 alpha-2 country from Cloudflare, or null when unavailable (e.g. local dev). */
   country: string | null;
+  /** Client IP from Cloudflare's CF-Connecting-IP, or null when unavailable (e.g. local dev). */
+  ip: string | null;
+  /** Raw User-Agent header, stored unparsed; classified at read time. */
+  userAgent: string | null;
   createdAt: number;
+}
+
+/** Longest User-Agent stored. Real headers sit well under this; the cap only
+ *  guards against a hostile client padding the column. */
+const MAX_USER_AGENT_LEN = 512;
+
+function truncate(value: string | null, max: number): string | null {
+  if (value === null) return null;
+  return value.length > max ? value.slice(0, max) : value;
 }
 
 /**
@@ -14,8 +28,10 @@ export interface DownloadEvent {
  */
 export async function recordDownload(db: D1Database, e: DownloadEvent): Promise<void> {
   await db
-    .prepare("INSERT INTO downloads (version, country, created_at) VALUES (?, ?, ?)")
-    .bind(e.version, e.country, e.createdAt)
+    .prepare(
+      "INSERT INTO downloads (version, country, ip, user_agent, created_at) VALUES (?, ?, ?, ?, ?)",
+    )
+    .bind(e.version, e.country, e.ip, truncate(e.userAgent, MAX_USER_AGENT_LEN), e.createdAt)
     .run();
 }
 
@@ -55,6 +71,28 @@ export interface WindowCounts {
   last7d: number;
   prev7d: number;
 }
+export interface IpCount {
+  ip: string;
+  count: number;
+}
+/** One download click, as shown in the detail table. */
+export interface DownloadRow {
+  id: number;
+  version: string;
+  country: string | null;
+  ip: string | null;
+  userAgent: string | null;
+  createdAt: number;
+}
+export interface ClientStats {
+  /** Distinct IPs seen — an approximation of unique downloaders. */
+  uniqueIps: number;
+  /** Busiest IPs, capped at `TOP_IP_LIMIT`. */
+  topIps: IpCount[];
+  byBrowser: LabelCount[];
+  byOs: LabelCount[];
+  byDevice: LabelCount[];
+}
 
 export interface DashboardSnapshot {
   generatedAt: number;
@@ -69,6 +107,9 @@ export interface DashboardSnapshot {
   byVersion: VersionCount[];
   byCountry: CountryCount[];
   heat: HeatCell[];
+  clients: ClientStats;
+  /** Newest-first download log, capped at `RECENT_LIMIT`. */
+  recent: DownloadRow[];
 }
 
 // created_at is epoch MS. Divide to seconds, shift +25200s for Bangkok (UTC+7),
@@ -157,19 +198,83 @@ export async function getHeat(db: D1Database): Promise<HeatCell[]> {
   return results;
 }
 
+/** How many busiest IPs the dashboard lists. */
+export const TOP_IP_LIMIT = 10;
+/** How many rows the download-log table receives. */
+export const RECENT_LIMIT = 200;
+
+/** Distinct client IPs. Rows with no IP (pre-migration, local dev) are excluded
+ *  rather than collapsed into one phantom visitor. */
+export async function getUniqueIpCount(db: D1Database): Promise<number> {
+  const row = await db
+    .prepare("SELECT COUNT(DISTINCT ip) AS uniqueIps FROM downloads WHERE ip IS NOT NULL")
+    .first<{ uniqueIps: number }>();
+  return row?.uniqueIps ?? 0;
+}
+
+export async function getTopIps(db: D1Database, limit = TOP_IP_LIMIT): Promise<IpCount[]> {
+  const { results } = await db
+    .prepare(
+      "SELECT ip, COUNT(*) AS count FROM downloads WHERE ip IS NOT NULL " +
+        "GROUP BY ip ORDER BY count DESC, ip ASC LIMIT ?",
+    )
+    .bind(limit)
+    .all<IpCount>();
+  return results;
+}
+
+/** Raw User-Agent groups. The distinct-UA set is small, so the browser / OS /
+ *  device split is folded in JS (see `foldUserAgents`) instead of SQL. */
+export async function getUserAgentCounts(db: D1Database): Promise<UserAgentCount[]> {
+  const { results } = await db
+    .prepare(
+      "SELECT user_agent AS userAgent, COUNT(*) AS count FROM downloads " +
+        "GROUP BY user_agent ORDER BY count DESC",
+    )
+    .all<UserAgentCount>();
+  return results;
+}
+
+export async function getClientStats(db: D1Database): Promise<ClientStats> {
+  const [uniqueIps, topIps, agents] = await Promise.all([
+    getUniqueIpCount(db),
+    getTopIps(db),
+    getUserAgentCounts(db),
+  ]);
+  return { uniqueIps, topIps, ...foldUserAgents(agents) };
+}
+
+/** Newest-first download log for the detail table. */
+export async function getRecentDownloads(
+  db: D1Database,
+  limit = RECENT_LIMIT,
+): Promise<DownloadRow[]> {
+  const { results } = await db
+    .prepare(
+      "SELECT id, version, country, ip, user_agent AS userAgent, created_at AS createdAt " +
+        "FROM downloads ORDER BY created_at DESC, id DESC LIMIT ?",
+    )
+    .bind(limit)
+    .all<DownloadRow>();
+  return results;
+}
+
 export async function getDashboardSnapshot(
   db: D1Database,
   nowMs: number,
 ): Promise<DashboardSnapshot> {
-  const [totals, daily, hourly, windows, byVersion, byCountry, heat] = await Promise.all([
-    getTotals(db),
-    getDailySeries(db),
-    getHourlySeries(db, nowMs),
-    getWindowCounts(db, nowMs),
-    getByVersion(db),
-    getByCountry(db),
-    getHeat(db),
-  ]);
+  const [totals, daily, hourly, windows, byVersion, byCountry, heat, clients, recent] =
+    await Promise.all([
+      getTotals(db),
+      getDailySeries(db),
+      getHourlySeries(db, nowMs),
+      getWindowCounts(db, nowMs),
+      getByVersion(db),
+      getByCountry(db),
+      getHeat(db),
+      getClientStats(db),
+      getRecentDownloads(db),
+    ]);
 
   const peakDay = daily.reduce<DayBucket | null>(
     (max, d) => (!max || d.count > max.count ? d : max),
@@ -189,5 +294,7 @@ export async function getDashboardSnapshot(
     byVersion,
     byCountry,
     heat,
+    clients,
+    recent,
   };
 }

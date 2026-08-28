@@ -78,3 +78,11 @@ export function rangeStartHour(endHour: string, hours: number): string {
 export function formatHourLabel(hourKey: string): string {
   return `${hourKey.slice(11, 13)}:00`;
 }
+
+/** Epoch ms → "YYYY-MM-DD HH:MM" on the Bangkok clock, for the download log. */
+export function formatBangkokDateTime(epochMs: number): string {
+  const shifted = new Date(epochMs + BANGKOK_OFFSET_MS);
+  const hh = String(shifted.getUTCHours()).padStart(2, "0");
+  const mm = String(shifted.getUTCMinutes()).padStart(2, "0");
+  return `${formatUtcDayKey(shifted)} ${hh}:${mm}`;
+}

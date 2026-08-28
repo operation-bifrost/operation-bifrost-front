@@ -28,13 +28,17 @@ export async function GET({ params, request }: APIContext): Promise<Response> {
     return new Response(null, { status: 404 });
   }
 
-  // CF-IPCountry is added by Cloudflare at the edge (same path as CF-Connecting-IP
-  // used by the comments route); absent in local dev, so it falls back to null.
+  // CF-IPCountry and CF-Connecting-IP are added by Cloudflare at the edge (the
+  // same path the comments route uses for the client IP); both are absent in
+  // local dev, so they fall back to null. User-Agent comes from the client and
+  // may legitimately be missing — it is stored raw and classified at read time.
   const country = request.headers.get("CF-IPCountry");
+  const ip = request.headers.get("CF-Connecting-IP");
+  const userAgent = request.headers.get("User-Agent");
 
   // Best-effort: a stats-write failure must never fail the download.
   try {
-    await recordDownload(env.DB!, { version, country, createdAt: Date.now() });
+    await recordDownload(env.DB!, { version, country, ip, userAgent, createdAt: Date.now() });
   } catch (err) {
     console.error("download: failed to record event", err);
   }
