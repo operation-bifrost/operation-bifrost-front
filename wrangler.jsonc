@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "operationbifrost",
+  "name": "operationbifrost-dev",
   "main": "@astrojs/cloudflare/entrypoints/server",
   "compatibility_date": "2026-05-21",
   "compatibility_flags": ["nodejs_compat"],
