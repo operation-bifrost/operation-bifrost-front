@@ -18,6 +18,27 @@ function snap(total: number): DashboardSnapshot {
     byVersion: total > 0 ? [{ version: "v1.0.0", count: total }] : [],
     byCountry: total > 0 ? [{ country: "TH", count: total }] : [],
     heat: [],
+    clients: {
+      uniqueIps: total > 0 ? 1 : 0,
+      topIps: total > 0 ? [{ ip: "203.0.113.7", count: total }] : [],
+      byBrowser: total > 0 ? [{ label: "Chrome", count: total }] : [],
+      byOs: total > 0 ? [{ label: "Windows", count: total }] : [],
+      byDevice: total > 0 ? [{ label: "desktop", count: total }] : [],
+    },
+    recent:
+      total > 0
+        ? [
+            {
+              id: 1,
+              version: "v1.0.0",
+              country: "TH",
+              ip: "203.0.113.7",
+              userAgent:
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36",
+              createdAt: 1_000,
+            },
+          ]
+        : [],
   };
 }
 
